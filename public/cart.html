@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Budget Pilot</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/cart.css">
+</head>
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <a href="dashboard.html" class="sidebar-logo">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="24" height="24" rx="6" fill="#00106B"/>
+                        <path d="M19 5H5C3.9 5 3 5.9 3 7V17C3 18.1 3.9 19 5 19H19C20.1 19 21 18.1 21 17V7C21 5.9 20.1 5 19 5ZM19 17H5V11H19V17ZM19 9H5V7H19V9Z" fill="white"/>
+                    </svg>
+                </div>
+                <div class="logo-text-group">
+                    <span class="logo-title">Budget Pilot</span>
+                    <span class="logo-tag">SMART FINANCE COPILOT</span>
+                </div>
+            </a>
+
+            <nav class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Dashboard
+                </a>
+                <a href="budgets.html" class="menu-item">
+                    <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                    Budgets
+                </a>
+                <a href="grocery.html" class="menu-item">
+                    <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    Grocery Catalog
+                </a>
+                <a href="cart.html" class="menu-item active">
+                    <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    Shopping Cart
+                </a>
+                <a href="analytics.html" class="menu-item">
+                    <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    Analytics
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <a href="settings.html" class="menu-item menu-settings">
+                    <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Settings
+                </a>
+                <a href="index.php" class="menu-item logout-item">
+                    <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header bar -->
+            <header class="content-header">
+                <div class="header-left">
+                    <h2 class="page-title">Shopping Cart</h2>
+                    <p class="page-subtitle">Review your weekly groceries and budget impact.</p>
+                </div>
+                <div class="header-right">
+                    <!-- Dynamic mini budget tracker widget matching mockup -->
+                    <div class="top-header-budget-widget">
+                        <div class="widget-progress-row">
+                            <span class="lbl-widget">Budget Progress</span>
+                            <span class="val-pct text-red" id="topProgressPct">112%</span>
+                        </div>
+                        <div class="widget-bar-wrap">
+                            <div class="widget-bar-fill bg-red" id="topProgressBar" style="width: 100%;"></div>
+                        </div>
+                        <span class="widget-spend-val">Total spend <strong id="topSpendTotal">$336.50</strong></span>
+                    </div>
+
+                    <!-- User Avatar -->
+                    <div class="profile-avatar-circle" onclick="location.href='settings.html'">
+                        AT
+                    </div>
+                </div>
+            </header>
+
+            <!-- Warnings Alerts -->
+            <div class="cart-alerts-wrap" id="alertBox">
+                <div class="warning-banner-dashed">
+                    <div class="warning-left">
+                        <div class="warning-icon-circle">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                        </div>
+                        <div class="warning-desc">
+                            <h4>You are exceeding your grocery budget</h4>
+                            <p>Your current cart is <span id="alertExceedAmount">$36.50</span> over your $300.00 weekly limit. Swap items with our recommended alternatives below to stay within your goal.</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-red btn-sm" id="btnOptimize">Optimization Tools</button>
+                </div>
+            </div>
+
+            <!-- Two Column Cart Split -->
+            <div class="cart-grid">
+                <!-- Left Column: Itemized list & recommendations -->
+                <div class="cart-col-left">
+                    <div class="dashboard-card itemized-list-card">
+                        <div class="card-heading-row">
+                            <h3 class="card-heading">Itemized List (12 items)</h3>
+                            <button class="clear-all-link" id="btnClearAll">Clear all</button>
+                        </div>
+
+                        <div class="cart-items-wrapper">
+                            <!-- Steak Item -->
+                            <div class="cart-item" data-id="steak" data-price="42.99" data-impact="high">
+                                <img src="https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&w=150&q=80" alt="Ribeye Steak" class="item-img">
+                                <div class="item-details">
+                                    <div class="item-title-row">
+                                        <h4 class="item-name">Organic Grass-Fed Ribeye Steak</h4>
+                                        <span class="item-price-val">$42.99</span>
+                                    </div>
+                                    <p class="item-sub-desc">Weight: 1.2 lbs <span class="tag-badge tag-red">High Impact Item</span></p>
+                                    <div class="item-adjuster-row">
+                                        <div class="qty-adjuster">
+                                            <button class="qty-btn btn-sub">-</button>
+                                            <input type="number" class="qty-input" value="1" min="0" readonly>
+                                            <button class="qty-btn btn-add">+</button>
+                                        </div>
+                                        <button class="btn-remove-item">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Almond Butter Item -->
+                            <div class="cart-item" data-id="butter" data-price="18.50" data-impact="normal">
+                                <img src="https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?auto=format&fit=crop&w=150&q=80" alt="Almond Butter" class="item-img">
+                                <div class="item-details">
+                                    <div class="item-title-row">
+                                        <h4 class="item-name">Artisanal Raw Almond Butter</h4>
+                                        <span class="item-price-val">$37.00</span>
+                                    </div>
+                                    <p class="item-sub-desc">Size: 16oz <span class="tag-badge tag-gray">Weekly Staple</span></p>
+                                    <div class="item-adjuster-row">
+                                        <div class="qty-adjuster">
+                                            <button class="qty-btn btn-sub">-</button>
+                                            <input type="number" class="qty-input" value="2" min="0" readonly>
+                                            <button class="qty-btn btn-add">+</button>
+                                        </div>
+                                        <button class="btn-remove-item">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Avocados Item -->
+                            <div class="cart-item" data-id="avocado" data-price="7.99" data-impact="low">
+                                <img src="https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=150&q=80" alt="Avocados" class="item-img">
+                                <div class="item-details">
+                                    <div class="item-title-row">
+                                        <h4 class="item-name">Organic Hass Avocados (4-Pack)</h4>
+                                        <span class="item-price-val">$7.99</span>
+                                    </div>
+                                    <p class="item-sub-desc">Unit: 1 Pack <span class="tag-badge tag-green">Good Value</span></p>
+                                    <div class="item-adjuster-row">
+                                        <div class="qty-adjuster">
+                                            <button class="qty-btn btn-sub">-</button>
+                                            <input type="number" class="qty-input" value="1" min="0" readonly>
+                                            <button class="qty-btn btn-add">+</button>
+                                        </div>
+                                        <button class="btn-remove-item">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recommendations list -->
+                        <div class="cheaper-alternatives-section">
+                            <h4 class="recommendations-heading">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                                Recommended Cheaper Alternatives
+                            </h4>
+                            
+                            <div class="alternatives-grid">
+                                <!-- Swap steak -->
+                                <div class="alt-row" id="altSteakRow">
+                                    <img src="https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&w=150&q=80" alt="Chicken Breast" class="alt-img">
+                                    <div class="alt-details">
+                                        <h5>Replace Ribeye Steak with:</h5>
+                                        <p class="alt-product-title">Organic Chicken Breast</p>
+                                        <p class="alt-save-pct">$12.49 <strong class="text-green">(Save $30.50)</strong></p>
+                                    </div>
+                                    <button class="btn btn-navy btn-sm btn-swap-save" data-replace="steak" data-name="Organic Chicken Breast" data-price="12.49">Swap & Save</button>
+                                </div>
+
+                                <!-- Swap butter -->
+                                <div class="alt-row" id="altButterRow">
+                                    <img src="https://images.unsplash.com/photo-1590080875628-9a8427f6a735?auto=format&fit=crop&w=150&q=80" alt="Generic Almond Butter" class="alt-img">
+                                    <div class="alt-details">
+                                        <h5>Replace Artisanal Butter with:</h5>
+                                        <p class="alt-product-title">Private Label Almond Butter</p>
+                                        <p class="alt-save-pct">$9.99 <strong class="text-green">(Save $8.51)</strong></p>
+                                    </div>
+                                    <button class="btn btn-navy btn-sm btn-swap-save" data-replace="butter" data-name="Private Label Almond Butter" data-price="9.99">Swap & Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Order Summary and Savings potentials -->
+                <div class="cart-col-right">
+                    <!-- Order summary card -->
+                    <div class="dashboard-card summary-card">
+                        <h3 class="card-heading" style="margin-bottom: 20px;">Order Summary</h3>
+                        
+                        <div class="summary-details-list">
+                            <div class="summary-detail-row">
+                                <span class="lbl-summary">Subtotal (12 items)</span>
+                                <span class="val-summary" id="subtotalVal">$314.48</span>
+                            </div>
+                            <div class="summary-detail-row total-row">
+                                <span class="lbl-summary-bold">Total</span>
+                                <span class="val-summary-bold text-red" id="totalVal">$314.48</span>
+                            </div>
+                        </div>
+
+                        <div class="summary-budget-indicator-box" id="summaryBudgetBarBox">
+                            <div class="indicator-header">
+                                <span class="status-lbl text-red" id="cartOverUnderLabel">Over Budget</span>
+                                <span class="amount-lbl text-red" id="cartOverUnderAmount">-$14.48</span>
+                            </div>
+                            <div class="widget-bar-wrap">
+                                <div class="widget-bar-fill bg-red" id="summaryBudgetBar" style="width: 100%;"></div>
+                            </div>
+                            <span class="indicator-desc">You have exceeding grocery limit by $14.48 for this week.</span>
+                        </div>
+
+                        <button class="btn btn-navy btn-lg btn-checkout" id="btnCheckout">Checkout ></button>
+                        <span class="secure-footer">Securely processed by Budget Pilot</span>
+                    </div>
+
+                    <!-- Savings card -->
+                    <div class="savings-potential-card">
+                        <span class="lbl-savings">Savings Potential</span>
+                        <p class="savings-large-desc">By following our recommendations, you could save:</p>
+                        <span class="savings-large-val" id="savingsPotentialVal">$54.20 this trip</span>
+                        
+                        <div class="savings-pct-bar-wrap">
+                            <div class="savings-icon-glow">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="23" y1="18" x2="17" y2="12"></line><line x1="17" y1="12" x2="13" y2="16"></line><line x1="13" y1="16" x2="8" y2="11"></line><line x1="8" y1="11" x2="1" y2="18"></line><polyline points="17 18 23 18 23 12"></polyline></svg>
+                            </div>
+                            <span class="savings-pct-lbl" id="savingsPctLabel">18% reduction in grocery costs</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="cart.js"></script>
+</body>
+</html>
