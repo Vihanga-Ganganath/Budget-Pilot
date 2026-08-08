@@ -29,6 +29,7 @@ config.php  # (If this contains your MySQL passwords)
 *.sql
 *.sqlite
 *.db
+!public/sql/init.sql
 
 # =========================
 # IDEs & Editors
