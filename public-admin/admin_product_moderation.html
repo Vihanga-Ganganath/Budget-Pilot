@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Moderation - Budget Pilot Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/admin.css">
+</head>
+<body data-page="products">
+
+    <div class="dashboard-layout">
+        <div id="sidebar-mount" data-active="products"></div>
+
+        <main class="main-content">
+            <div id="topbar-mount" data-variant="default"></div>
+
+            <header class="content-header">
+                <div class="header-left">
+                    <h2 class="page-title">Product Moderation</h2>
+                    <p class="page-subtitle">Review and manage pending product submissions and flagged anomalies.</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-outline-navy btn-lg" id="export-list-btn" type="button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Export List
+                    </button>
+                    <button class="btn btn-navy btn-lg" id="auto-approve-btn" type="button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                        Auto-Approve Batch
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stat Cards -->
+            <section class="stat-grid cols-3">
+                <div class="stat-card accent-navy">
+                    <div class="stat-card-label">Pending Reviews <span class="stat-trend up" style="background:rgba(255,255,255,.15);color:#A7F3D0;">↑12%</span></div>
+                    <div class="stat-card-value" id="stat-pending-reviews">1,432</div>
+                    <div class="stat-card-sub">Requires manual verification</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Flagged Duplicates</div>
+                    <div class="stat-card-value" id="stat-flagged-duplicates">84</div>
+                    <div class="stat-card-sub">High probability matches — <a href="#" class="stat-card-link" id="review-duplicates-link">Review Now</a></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Incomplete Data</div>
+                    <div class="stat-card-value" id="stat-incomplete-data">215</div>
+                    <div class="stat-card-sub">Missing critical attributes — <a href="#" class="stat-card-link" id="review-incomplete-link">View List</a></div>
+                </div>
+            </section>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="admin-search-wrapper">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="product-search-input" placeholder="Search SKU or Name">
+                </div>
+                <select class="filter-select" id="category-filter">
+                    <option value="all">All Categories</option>
+                    <option value="dairy">Dairy</option>
+                    <option value="bakery">Bakery</option>
+                    <option value="pantry">Pantry</option>
+                    <option value="meat">Meat</option>
+                </select>
+                <select class="filter-select" id="issue-filter">
+                    <option value="all">Any Issue Type</option>
+                    <option value="duplicate">Duplicate SKU</option>
+                    <option value="incomplete">Incomplete Info</option>
+                    <option value="pending">Pending Review</option>
+                </select>
+                <div class="filter-spacer"></div>
+                <label style="font-size:0.8rem;color:var(--text-light);font-weight:600;">Sort by:</label>
+                <select class="filter-select" id="sort-select">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                </select>
+            </div>
+
+            <!-- Moderation Table -->
+            <div class="admin-table-card">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" class="admin-checkbox" id="select-all-products"></th>
+                            <th>Product Details</th>
+                            <th>Category / Brand</th>
+                            <th>Flagged Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="moderation-table-body">
+                        <!-- rendered by js/admin.js -->
+                    </tbody>
+                </table>
+                <div class="table-footer">
+                    <span class="table-footer-info" id="mod-table-footer-info">Showing entries…</span>
+                    <div class="pagination">
+                        <button class="page-btn active">1</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="./js/admin.js"></script>
+</body>
+</html>

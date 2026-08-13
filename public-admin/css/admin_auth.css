@@ -1,0 +1,281 @@
+/* Admin Auth (Login / Registration) - Budget Pilot Admin Console */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-sans);
+}
+
+body {
+    background-color: var(--bg-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+/* Brand header */
+.admin-brand-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.admin-brand-icon {
+    width: 48px;
+    height: 48px;
+    background-color: var(--primary-navy);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.admin-brand-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.admin-brand-title {
+    font-family: var(--font-title);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--primary-navy);
+    margin-bottom: 4px;
+}
+
+.admin-brand-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+/* Card */
+.admin-auth-card {
+    background-color: var(--bg-card);
+    width: 100%;
+    max-width: 420px;
+    border-radius: 12px;
+    padding: 36px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--border-color);
+}
+
+.admin-form-group {
+    margin-bottom: 20px;
+}
+
+.admin-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.admin-form-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: var(--text-main);
+    text-transform: capitalize;
+}
+
+.admin-forgot-link {
+    font-size: 0.8rem;
+    color: var(--primary-navy);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.admin-forgot-link:hover {
+    text-decoration: underline;
+}
+
+.admin-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.admin-input-icon {
+    position: absolute;
+    left: 14px;
+    color: #94A3B8;
+    display: flex;
+    align-items: center;
+}
+
+.admin-input-icon svg {
+    width: 17px;
+    height: 17px;
+}
+
+.admin-action-icon {
+    position: absolute;
+    right: 14px;
+    color: #94A3B8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.admin-action-icon svg {
+    width: 17px;
+    height: 17px;
+}
+
+.admin-auth-card input[type="email"],
+.admin-auth-card input[type="password"],
+.admin-auth-card input[type="text"] {
+    width: 100%;
+    padding: 12px 14px 12px 42px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--input-bg);
+    font-size: 0.95rem;
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.admin-auth-card input:focus {
+    border-color: var(--primary-navy);
+    background-color: var(--bg-card);
+}
+
+/* Remember me row */
+.admin-remember-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 22px;
+}
+
+.admin-remember-row input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary-navy);
+    cursor: pointer;
+}
+
+.admin-remember-row label {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Password requirements checklist */
+.admin-password-requirements {
+    background-color: #EEF2FF;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 22px;
+}
+
+.admin-password-requirements-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--primary-navy);
+    margin-bottom: 8px;
+}
+
+.admin-requirement-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--text-light);
+    padding: 3px 0;
+}
+
+.admin-requirement-item .req-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid #C7D2FE;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-requirement-item.met {
+    color: var(--accent-green-dark);
+}
+
+.admin-requirement-item.met .req-dot {
+    background-color: var(--accent-green);
+    border-color: var(--accent-green);
+}
+
+.admin-requirement-item.met .req-dot::after {
+    content: "";
+    width: 5px;
+    height: 8px;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+    transform: rotate(45deg) translate(-1px, -1px);
+}
+
+/* Submit button (green, matches admin mockups) */
+.admin-submit-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--accent-green);
+    color: #06371F;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.admin-submit-btn:hover {
+    background-color: var(--accent-green-dark);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Footer links */
+.admin-auth-footer {
+    text-align: center;
+    margin-top: 22px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.admin-auth-footer a {
+    color: var(--primary-navy);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.admin-auth-footer a:hover {
+    text-decoration: underline;
+}
+
+.admin-back-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    text-decoration: none;
+    margin-top: 20px;
+    transition: color 0.2s;
+}
+
+.admin-back-link:hover {
+    color: var(--text-main);
+}
