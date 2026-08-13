@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile & Settings - Budget Pilot</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/settings.css">
+</head>
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <a href="dashboard.html" class="sidebar-logo">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="24" height="24" rx="6" fill="#00106B"/>
+                        <path d="M19 5H5C3.9 5 3 5.9 3 7V17C3 18.1 3.9 19 5 19H19C20.1 19 21 18.1 21 17V7C21 5.9 20.1 5 19 5ZM19 17H5V11H19V17ZM19 9H5V7H19V9Z" fill="white"/>
+                    </svg>
+                </div>
+                <div class="logo-text-group">
+                    <span class="logo-title">Budget Pilot</span>
+                    <span class="logo-tag">SMART FINANCE COPILOT</span>
+                </div>
+            </a>
+
+            <nav class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Dashboard
+                </a>
+                <a href="budgets.html" class="menu-item">
+                    <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                    Budgets
+                </a>
+                <a href="grocery.html" class="menu-item">
+                    <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    Grocery Catalog
+                </a>
+                <a href="cart.html" class="menu-item">
+                    <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    Shopping Cart
+                </a>
+                <a href="analytics.html" class="menu-item">
+                    <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    Analytics
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <a href="settings.html" class="menu-item menu-settings active">
+                    <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Settings
+                </a>
+                <a href="index.php" class="menu-item logout-item">
+                    <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header bar -->
+            <header class="content-header">
+                <div class="header-left">
+                    <h2 class="page-title">Profile & Settings</h2>
+                    <p class="page-subtitle">Manage your personal information and application preferences.</p>
+                </div>
+                <div class="header-right">
+                    <!-- Notification Bell -->
+                    <button class="icon-btn-dash">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        <span class="alert-dot-badge"></span>
+                    </button>
+                    <!-- Shopping Cart Icon -->
+                    <a href="cart.html" class="icon-btn-dash">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                        <span class="cart-badge-count" style="position: absolute; top: -5px; right: -5px; background: #DC2626; color: white; border-radius: 50%; font-size: 0.65rem; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-weight: 700;">12</span>
+                    </a>
+                    <!-- User Avatar -->
+                    <div class="profile-avatar-circle" onclick="location.href='settings.html'">
+                        AT
+                    </div>
+                </div>
+            </header>
+
+            <!-- Profile & Settings Form Elements -->
+            <form id="settingsForm" class="settings-grid" action="javascript:void(0);">
+                <!-- Left Column: Details form, preferences, bio -->
+                <div class="settings-col-left">
+                    <!-- Bio Info Card -->
+                    <div class="dashboard-card bio-card">
+                        <div class="bio-inner">
+                            <div class="avatar-edit-container">
+                                <div class="big-avatar">
+                                    <div class="profile-avatar-circle" style="width: 72px; height: 72px; font-size: 1.8rem; background: var(--accent-green-light); color: var(--accent-green-dark); border: 2px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                                        AT
+                                    </div>
+                                    <span class="camera-badge">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="bio-text">
+                                <h3>Alex Thompson</h3>
+                                <p>Senior Wealth Strategist</p>
+                            </div>
+                            <button class="btn btn-outline-navy btn-sm edit-avatar-btn">Edit Profile</button>
+                        </div>
+                    </div>
+
+                    <!-- Details Card -->
+                    <div class="dashboard-card account-details-card">
+                        <h3 class="card-heading">Account Details</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-control-group">
+                                <span class="form-lbl">FULL NAME</span>
+                                <input type="text" name="full_name" class="input-field" value="Alex Thompson" required>
+                            </div>
+                            <div class="form-control-group">
+                                <span class="form-lbl">EMAIL ADDRESS</span>
+                                <input type="email" name="email_address" class="input-field" value="alex.thompson@example.com" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-control-group">
+                                <span class="form-lbl">MONTHLY INCOME</span>
+                                <div class="input-addon-wrap">
+                                    <span class="input-addon">$</span>
+                                    <input type="number" name="monthly_income" class="input-field addon-field" value="12500" min="0" required>
+                                </div>
+                            </div>
+                            <div class="form-control-group">
+                                <span class="form-lbl">SAVINGS GOAL</span>
+                                <div class="input-addon-wrap">
+                                    <span class="input-addon">$</span>
+                                    <input type="number" name="savings_goal" class="input-field addon-field" value="3200" min="0" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Preferences -->
+                    <div class="dashboard-card financial-prefs-card">
+                        <h3 class="card-heading">Financial Preferences</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-control-group">
+                                <span class="form-lbl">PREFERRED CURRENCY</span>
+                                <select name="currency" class="input-field select-field">
+                                    <option value="USD - US Dollar ($)" selected>USD - US Dollar ($)</option>
+                                    <option value="EUR - Euro (€)">EUR - Euro (€)</option>
+                                    <option value="GBP - Pound Sterling (£)">GBP - Pound Sterling (£)</option>
+                                    <option value="INR - Indian Rupee (₹)">INR - Indian Rupee (₹)</option>
+                                </select>
+                            </div>
+                            <div class="form-control-group">
+                                <span class="form-lbl">FISCAL YEAR START</span>
+                                <select name="fiscal_start" class="input-field select-field">
+                                    <option value="January" selected>January</option>
+                                    <option value="April">April</option>
+                                    <option value="July">July</option>
+                                    <option value="October">October</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Preferences, Security, Data actions -->
+                <div class="settings-col-right">
+                    <!-- Switches preferences -->
+                    <div class="dashboard-card app-settings-card">
+                        <h3 class="card-heading">App Settings</h3>
+                        
+                        <div class="toggle-row">
+                            <div class="toggle-desc">
+                                <div class="toggle-title-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                                    <h4>Dark Mode</h4>
+                                </div>
+                                <p>Switch visual style theme.</p>
+                            </div>
+                            <label class="switch-control">
+                                <input type="checkbox" name="dark_mode" id="darkModeCheckbox">
+                                <span class="switch-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-row">
+                            <div class="toggle-desc">
+                                <div class="toggle-title-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                                    <h4>Smart Alerts</h4>
+                                </div>
+                                <p>Budget & spending alert triggers.</p>
+                            </div>
+                            <label class="switch-control">
+                                <input type="checkbox" name="smart_alerts" checked>
+                                <span class="switch-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Security Alert matching screen mockup -->
+                    <div class="dashboard-card security-card">
+                        <h4 class="card-heading-light">Security Checkup</h4>
+                        <p class="security-text">Your account is 85% secure. Complete the verification for maximum protection.</p>
+                        <button class="btn btn-security-details" id="btnSecurity">View Details</button>
+                    </div>
+
+                    <!-- Data Managers -->
+                    <div class="dashboard-card data-management-card">
+                        <h3 class="card-heading">Data Management</h3>
+                        
+                        <div class="data-action-row" id="btnExportData">
+                            <div class="action-left">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                Export Financial Data
+                            </div>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </div>
+
+                        <div class="data-action-row" id="btnClearCache">
+                            <div class="action-left">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7l-.867 12.142A2 2 0 0 1 16.138 21H7.862a2 2 0 0 1-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v3M4 7h16"></path></svg>
+                                Clear Cache
+                            </div>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </div>
+
+                        <div class="data-action-row deactivate-btn" id="btnDeactivate">
+                            <div class="action-left text-red">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                Deactivate Account
+                            </div>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sticky bottom save/discard bar -->
+                <div class="settings-bottom-bar">
+                    <div class="bottom-bar-content">
+                        <button type="button" class="btn-discard" id="btnDiscard">Discard Changes</button>
+                        <button type="submit" class="btn btn-navy btn-lg btn-save" id="btnSaveChanges">Save All Changes</button>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script src="settings.js"></script>
+</body>
+</html>

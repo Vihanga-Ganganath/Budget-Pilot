@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Pilot - Supplier Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/supplier_login.css">
+</head>
+<body>
+
+    <!-- Logo -->
+    <div class="brand-header">
+        <div class="brand-icon">
+            <div></div>
+        </div>
+        Budget Pilot
+    </div>
+
+    <!-- Login Container -->
+    <div class="login-card">
+        
+        <h1 class="card-title">Welcome Back</h1>
+        <p class="card-subtitle">Manage all your grocery item brands in one place.</p>
+
+        <form action="process_supplier_login.php" method="POST">
+            
+            <!-- Email Input -->
+            <div class="form-group">
+                <div class="form-header">
+                    <label>Email</label>
+                </div>
+                <div class="input-wrapper">
+                    <span class="input-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </span>
+                    <input type="email" name="email" placeholder="name@example.com" required>
+                </div>
+            </div>
+
+            <!-- Password Input -->
+            <div class="form-group">
+                <div class="form-header">
+                    <label>Password</label>
+                    <a href="supplier_forgot_password.php" class="forgot-link">Forgot password?</a>
+                </div>
+                <div class="input-wrapper">
+                    <span class="input-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    </span>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                    <span class="action-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn">
+                Sign In
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+        </form>
+
+        <!-- Footer -->
+        <div class="create-account">
+            New to Budget Pilot? <a href="supplier_register.php">Create Account</a>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <a href="index.php" class="back-link">
+            ← Back to Home
+        </a>
+
+    </div>
+
+</body>
+</html>
