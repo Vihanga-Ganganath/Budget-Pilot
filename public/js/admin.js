@@ -11,17 +11,17 @@
    ============================================================ */
 
 const ADMIN_NAV_ITEMS = [
-    { key: 'dashboard',  href: 'admin_dashboard.html',          label: 'Dashboard',
+    { key: 'dashboard',  href: '/BudgetPilot/admin/dashboard',          label: 'Dashboard',
       icon: '<rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect>' },
-    { key: 'users',      href: 'admin_user_management.html',    label: 'User Management',
+    { key: 'users',      href: '/BudgetPilot/admin/users',    label: 'User Management',
       icon: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>' },
-    { key: 'suppliers',  href: 'admin_supplier_approvals.html', label: 'Supplier Approvals',
+    { key: 'suppliers',  href: '/BudgetPilot/admin/suppliers', label: 'Supplier Approvals',
       icon: '<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>' },
-    { key: 'products',   href: 'admin_product_moderation.html', label: 'Product Moderation',
+    { key: 'products',   href: '/BudgetPilot/admin/products', label: 'Product Moderation',
       icon: '<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line>' },
-    { key: 'security',   href: 'admin_security_audit.html',     label: 'Security &amp; Audit',
+    { key: 'security',   href: '/BudgetPilot/admin/security',     label: 'Security &amp; Audit',
       icon: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>' },
-    { key: 'reports',    href: 'admin_reports.html',             label: 'Reports',
+    { key: 'reports',    href: '/BudgetPilot/admin/reports',             label: 'Reports',
       icon: '<line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>' }
 ];
 
@@ -38,7 +38,7 @@ function renderAdminSidebar() {
 
     mount.outerHTML = `
     <aside class="sidebar">
-        <a href="admin_dashboard.html" class="sidebar-logo">
+        <a href="/BudgetPilot/admin/dashboard" class="sidebar-logo">
             <div class="logo-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="24" height="24" rx="6" fill="#00106B"/>
@@ -54,11 +54,11 @@ function renderAdminSidebar() {
         <nav class="sidebar-menu">${navHtml}</nav>
 
         <div class="sidebar-bottom">
-            <a href="admin_settings.html" class="menu-item menu-settings${active === 'settings' ? ' active' : ''}">
+            <a href="/BudgetPilot/admin/settings" class="menu-item menu-settings${active === 'settings' ? ' active' : ''}">
                 <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                 Settings
             </a>
-            <a href="admin_login.html" class="menu-item logout-item" id="admin-logout-link">
+            <a href="/BudgetPilot/admin/login" class="menu-item logout-item" id="admin-logout-link">
                 <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                 Logout
             </a>
@@ -306,7 +306,7 @@ function wireTopbarInteractions() {
                         <span class="switch-slider"></span>
                     </label>
                 </div>
-                <div class="dropdown-item"><a href="admin_settings.html">Full Settings →</a></div>
+                <div class="dropdown-item"><a href="/BudgetPilot/admin/settings">Full Settings →</a></div>
                 <div class="dropdown-item"><a href="#" id="reset-demo-link">Reset Demo Data</a></div>`);
             setTimeout(() => {
                 const dt = document.getElementById('quick-dark-toggle');
@@ -324,9 +324,9 @@ function wireTopbarInteractions() {
             const panel = document.getElementById('avatar-dropdown');
             toggleDropdown(panel, `
                 <div class="dropdown-header">${data.profile.fullName}</div>
-                <div class="dropdown-item"><a href="admin_settings.html">👤 View Profile</a></div>
-                <div class="dropdown-item"><a href="admin_settings.html">⚙️ Settings</a></div>
-                <div class="dropdown-item"><a href="admin_login.html" id="dropdown-logout">🚪 Logout</a></div>`);
+                <div class="dropdown-item"><a href="/BudgetPilot/admin/settings">👤 View Profile</a></div>
+                <div class="dropdown-item"><a href="/BudgetPilot/admin/settings">⚙️ Settings</a></div>
+                <div class="dropdown-item"><a href="/BudgetPilot/admin/login" id="dropdown-logout">🚪 Logout</a></div>`);
         });
     }
 
@@ -1214,7 +1214,7 @@ function initLoginPage() {
         if (btn) { btn.disabled = true; btn.textContent = 'Signing in…'; }
         setTimeout(() => {
             toast('Signed in successfully. Redirecting…');
-            setTimeout(() => { window.location.href = 'admin_dashboard.html'; }, 500);
+            setTimeout(() => { window.location.href = '/BudgetPilot/admin/dashboard'; }, 500);
         }, 400);
     });
 }
@@ -1236,7 +1236,7 @@ function initRegisterPage() {
         if (btn) { btn.disabled = true; btn.textContent = 'Creating account…'; }
         setTimeout(() => {
             toast('Admin account created. Redirecting to sign in…');
-            setTimeout(() => { window.location.href = 'admin_login.html'; }, 700);
+            setTimeout(() => { window.location.href = '/BudgetPilot/admin/login'; }, 700);
         }, 400);
     });
 }

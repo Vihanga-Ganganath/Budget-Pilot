@@ -7,8 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../../public/css/common.css">
-    <link rel="stylesheet" href="../../../public/css/admin_auth.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/common.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/admin_auth.css">
 </head>
 <body data-page="register">
 
@@ -96,6 +96,6 @@
             document.getElementById('req-number').classList.toggle('met', numberOk);
         }
     </script>
-    <script src="../../../public/js/admin.js"></script>
+    <script src="<?php echo URLROOT; ?>/public/js/admin.js"></script>
 </body>
 </html>

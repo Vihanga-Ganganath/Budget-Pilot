@@ -1,0 +1,9 @@
+Options -Indexes
+RewriteEngine On
+
+# If the user is looking for a real file (like a CSS or Image file), let them see it
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Otherwise, send ALL traffic to index.php
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
