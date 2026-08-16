@@ -1,0 +1,159 @@
+/* ==========================================================================
+   Budget Pilot — notifications
+   Builds on the shared shell in settings.css.
+   ========================================================================== */
+
+.settings{
+  --alert-danger:#C2373C;
+  --alert-warn:#E0A33A;
+  --alert-good:#22A45D;
+  --alert-info:#3A6FD8;
+  --alert-done:#9AA3B2;
+}
+.settings.is-dark{
+  --alert-danger:#E2686C;
+  --alert-warn:#E8B85C;
+  --alert-good:#4FC183;
+  --alert-info:#6E96EA;
+  --alert-done:#8891A3;
+}
+
+/* ---------- Head ---------- */
+.nothead{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:20px;flex-wrap:wrap;
+}
+.nothead .page__sub{margin-bottom:0;}
+#markAllBtn{gap:8px;}
+#markAllBtn svg{width:17px;height:17px;}
+
+/* ---------- Filter chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin:26px 0 22px;}
+.chip{
+  padding:9px 18px;
+  border:1px solid transparent;border-radius:999px;
+  background:var(--control);
+  font-family:inherit;font-size:.88rem;font-weight:500;
+  color:var(--body);cursor:pointer;
+  transition:background .15s ease,color .15s ease;
+}
+.chip:hover{background:var(--line);color:var(--text);}
+.chip--on{background:var(--navy);color:#fff;}
+.settings.is-dark .chip--on{background:var(--accent);color:#101423;}
+.chip--on:hover{background:var(--navy);color:#fff;}
+
+/* ---------- Feed ---------- */
+.notes{display:flex;flex-direction:column;gap:14px;}
+
+.note{
+  position:relative;
+  display:flex;align-items:flex-start;gap:16px;
+  padding:20px 22px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-left:4px solid var(--alert-done);
+  border-radius:12px;
+  box-shadow:0 1px 2px rgba(16,28,86,.05);
+}
+.note--danger{border-left-color:var(--alert-danger);}
+.note--warn{border-left-color:var(--alert-warn);}
+.note--good{border-left-color:var(--alert-good);}
+.note--info{border-left-color:var(--alert-info);}
+.note--done{border-left-color:var(--alert-done);}
+
+/* Unread carries a faint wash of its own colour; read alerts go quiet. */
+.note.is-unread.note--danger{background:linear-gradient(90deg,rgba(194,55,60,.06),transparent 55%);}
+.note.is-unread.note--warn{background:linear-gradient(90deg,rgba(224,163,58,.09),transparent 55%);}
+.note.is-unread.note--good{background:linear-gradient(90deg,rgba(34,164,93,.07),transparent 55%);}
+.note.is-unread.note--info{background:linear-gradient(90deg,rgba(58,111,216,.06),transparent 55%);}
+.note:not(.is-unread) .note__title{color:var(--muted);font-weight:600;}
+.note:not(.is-unread) .note__text{color:var(--muted);}
+.note.is-dismissed{opacity:.62;}
+
+.note__icon{
+  width:44px;height:44px;flex:none;
+  display:grid;place-items:center;
+  border-radius:11px;
+  background:var(--control);color:var(--alert-done);
+}
+.note__icon svg{width:21px;height:21px;}
+.note--danger .note__icon{background:rgba(194,55,60,.12);color:var(--alert-danger);}
+.note--warn .note__icon{background:rgba(224,163,58,.16);color:#B47D18;}
+.note--good .note__icon{background:rgba(34,164,93,.14);color:var(--alert-good);}
+.note--info .note__icon{background:rgba(58,111,216,.12);color:var(--alert-info);}
+
+.note__body{flex:1;min-width:0;}
+.note__head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;}
+.note__title{
+  font-family:var(--font-display);
+  font-size:1rem;font-weight:600;
+  color:var(--accent);margin:0;
+}
+.note--danger.is-unread .note__title{color:var(--alert-danger);}
+.note__time{font-size:.78rem;color:var(--muted);white-space:nowrap;}
+
+.note__text{margin:6px 0 0;color:var(--body);font-size:.93rem;}
+.note__amount{color:var(--alert-danger);font-weight:600;}
+.note--warn .note__amount,
+.note--done .note__amount,
+.note--good .note__amount{color:var(--text);}
+.note__now{color:var(--alert-good);font-weight:600;}
+.note__was{color:var(--muted);margin-left:5px;}
+
+/* ---------- Price alert with a packshot ---------- */
+.note__media{display:flex;align-items:flex-start;gap:14px;margin-top:8px;}
+.note__media img{
+  width:56px;height:56px;flex:none;
+  border-radius:9px;object-fit:cover;
+  border:1px solid var(--line);background:var(--control);
+}
+.note__copy{min-width:0;}
+.note__media .note__text{margin-top:0;}
+.note__save{margin:4px 0 0;font-size:.82rem;font-weight:600;color:var(--alert-good);}
+
+/* ---------- Progress meter ---------- */
+.notemeter{
+  height:7px;margin-top:14px;
+  border-radius:999px;background:var(--control);overflow:hidden;
+}
+.notemeter__fill{display:block;height:100%;border-radius:999px;background:var(--alert-warn);}
+
+/* ---------- Row actions ---------- */
+.note__actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px;}
+.noteact{
+  display:inline-flex;align-items:center;
+  padding:8px 16px;
+  border:1px solid transparent;border-radius:8px;
+  font-family:inherit;font-size:.85rem;font-weight:600;
+  cursor:pointer;background:none;color:var(--body);
+  transition:background .15s ease,color .15s ease;
+}
+.noteact--danger{background:var(--alert-danger);color:#fff;}
+.noteact--danger:hover{background:#A82F34;}
+.noteact--soft{background:var(--control);color:var(--accent);border-color:var(--line);}
+.noteact--soft:hover{background:var(--line);}
+.noteact--plain{padding:8px 6px;color:var(--muted);font-weight:500;}
+.noteact--plain:hover{color:var(--text);}
+
+/* ---------- Empty + history ---------- */
+.empty--big{
+  margin:0;padding:44px 24px;
+  text-align:center;
+  background:var(--surface);
+  border:1px dashed var(--line);border-radius:12px;
+}
+.nothistory{display:flex;justify-content:center;margin-top:30px;}
+.historybtn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 6px;border:0;background:none;
+  font-family:inherit;font-size:.92rem;font-weight:600;
+  color:var(--accent);cursor:pointer;
+}
+.historybtn svg{width:16px;height:16px;}
+.historybtn:hover{text-decoration:underline;}
+
+@media (max-width:640px){
+  .note{padding:16px;gap:12px;}
+  .note__icon{width:38px;height:38px;}
+  .note__head{flex-direction:column;gap:2px;}
+}

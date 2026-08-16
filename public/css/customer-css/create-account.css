@@ -1,0 +1,235 @@
+/* ==========================================================================
+   Budget Pilot — create account page
+   Loaded after auth.css, which supplies the tokens, inputs and strength meter.
+   ========================================================================== */
+
+/* `hidden` must beat any display rule set below (.modal, .btn, and so on). */
+[hidden]{display:none !important;}
+
+body.signup{
+  background:#FFFFFF;
+  margin:0;
+}
+
+/* ---------- Page header ---------- */
+.page-head{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:16px;
+  padding:22px 32px;
+}
+.page-head__back{
+  justify-self:start;
+  font-size:.92rem;
+  font-weight:500;
+  color:#3F4654;
+}
+.page-head__back:hover{color:var(--navy);}
+.page-head .brand{justify-self:center;}
+.page-head__alt{
+  justify-self:end;
+  margin:0;
+  font-size:.92rem;
+  color:#4B5563;
+}
+
+/* ---------- Card ---------- */
+.signup__wrap{
+  display:flex;
+  justify-content:center;
+  padding:60px 20px 80px;
+}
+.signup-card{
+  width:100%;
+  max-width:446px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:44px 38px 40px;
+  box-shadow:0 18px 48px -34px rgba(16,28,86,.55);
+}
+
+.signup__title{
+  font-family:var(--font-display);
+  font-size:2rem;
+  font-weight:700;
+  color:var(--navy);
+  letter-spacing:-.4px;
+  margin:0 0 8px;
+}
+.signup__section{
+  font-family:var(--font-display);
+  font-size:1.28rem;
+  font-weight:600;
+  color:var(--navy);
+  margin:0 0 6px;
+}
+.signup__sub{
+  margin:0 0 26px;
+  color:#5B6472;
+  font-size:.97rem;
+  line-height:1.55;
+}
+
+/* ---------- Labels & layout ---------- */
+.label{
+  display:block;
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.9px;
+  text-transform:uppercase;
+  color:#4B5563;
+  margin-bottom:8px;
+}
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+.rule-line{
+  border:0;
+  border-top:1px solid var(--line);
+  margin:32px 0 30px;
+}
+
+/* extra input variants */
+.input__prefix{color:#6B7280;font-size:.97rem;flex:none;}
+.input--select{position:relative;padding-right:0;}
+.input--select select{
+  flex:1;
+  appearance:none;-webkit-appearance:none;
+  border:0;background:none;outline:none;
+  padding:14px 34px 14px 0;
+  font-family:inherit;font-size:.97rem;color:#1B2333;
+  cursor:pointer;
+}
+.input__chevron{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  color:#6B7280;pointer-events:none;
+}
+.input__chevron svg{width:17px;height:17px;}
+
+/* ---------- Profile photo ---------- */
+.photo{display:flex;align-items:center;gap:16px;}
+.photo__preview{
+  width:64px;height:64px;flex:none;
+  border-radius:50%;
+  background:#EDEFF4;
+  border:1.5px dashed #C3C9D6;
+  background-size:cover;
+  background-position:center;
+  display:grid;place-items:center;
+  color:#9AA2B1;
+  font-family:var(--font-display);
+  font-weight:600;font-size:1.1rem;
+}
+.photo__preview[data-empty="false"]{border-style:solid;border-color:var(--navy);}
+.photo__actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;}
+.photo__hint{margin:0;flex-basis:100%;font-size:.82rem;color:#8A92A0;}
+
+.btn--soft{
+  background:#EDEFF4;color:var(--navy);
+  padding:10px 16px;font-size:.9rem;border-radius:8px;
+}
+.btn--soft:hover{background:#E2E6EF;}
+.btn--text{
+  background:none;color:#6B7280;
+  padding:10px 4px;font-size:.9rem;font-weight:500;
+}
+.btn--text:hover{color:#C2373C;}
+
+/* ---------- Add member button ---------- */
+.add-member{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;
+  margin-top:18px;
+  padding:14px 18px;
+  border:1.5px dashed #C3C9D6;
+  border-radius:10px;
+  background:#fff;
+  color:var(--navy);
+  font-family:var(--font-body);
+  font-size:.95rem;font-weight:600;
+  cursor:pointer;
+  transition:border-color .16s ease,background .16s ease;
+}
+.add-member svg{width:17px;height:17px;}
+.add-member:hover{border-color:var(--navy);background:#F7F8FC;}
+
+/* ---------- Member cards ---------- */
+.members{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:14px;}
+.member{
+  border:1px solid var(--line);
+  border-radius:11px;
+  padding:18px;
+  background:#FAFBFD;
+}
+.member .field{margin-bottom:16px;}
+.member .field:last-of-type{margin-bottom:0;}
+.member .input{background:#fff;}
+
+.member__bar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-bottom:14px;
+}
+.member__caption{
+  margin:0;
+  font-size:.72rem;font-weight:600;
+  letter-spacing:.9px;text-transform:uppercase;
+  color:#8A92A0;
+}
+
+.member__remove{
+  flex:none;border:0;background:none;padding:5px;
+  color:#9AA2B1;cursor:pointer;border-radius:6px;
+}
+.member__remove svg{width:16px;height:16px;}
+.member__remove:hover{color:#C2373C;background:#FBEEEE;}
+
+.member__level{margin:8px 0 0;font-size:.82rem;color:#6B7280;}
+.member__level[data-level="1"]{color:#C2373C;}
+.member__level[data-level="2"]{color:#B67A18;}
+.member__level[data-level="3"]{color:#1E7FB0;}
+.member__level[data-level="4"]{color:#1B8A4C;}
+.member__error{margin-top:12px;}
+.member__error:empty{display:none;}
+.member.is-flagged{border-color:#D9636A;background:#FDF7F7;}
+.member .photo__preview{background-color:#EFF1F6;}
+.member.is-flagged .photo__preview{background-color:#F7EDED;}
+
+/* ---------- Terms ---------- */
+.check{
+  display:flex;align-items:flex-start;gap:10px;
+  margin:26px 0 4px;
+  font-size:.94rem;color:#4B5563;
+  cursor:pointer;
+}
+.check input{
+  width:17px;height:17px;flex:none;margin:2px 0 0;
+  accent-color:var(--navy);cursor:pointer;
+}
+
+.signup__fine{
+  margin:14px 0 0;
+  text-align:center;
+  font-size:.86rem;
+  color:#8A92A0;
+  line-height:1.55;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width:640px){
+  .page-head{
+    grid-template-columns:1fr;
+    justify-items:center;
+    text-align:center;
+    gap:10px;
+    padding:18px 20px;
+  }
+  .page-head__back,.page-head__alt{justify-self:center;}
+  .signup__wrap{padding:28px 16px 56px;}
+  .signup-card{padding:30px 22px 30px;}
+  .signup__title{font-size:1.7rem;}
+  .grid-2{grid-template-columns:1fr;}
+}
