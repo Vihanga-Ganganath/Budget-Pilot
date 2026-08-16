@@ -25,79 +25,8 @@ const ADMIN_NAV_ITEMS = [
       icon: '<line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>' }
 ];
 
-function renderAdminSidebar() {
-    const mount = document.getElementById('sidebar-mount');
-    if (!mount) return;
-    const active = mount.getAttribute('data-active') || '';
 
-    const navHtml = ADMIN_NAV_ITEMS.map(item => `
-        <a href="${item.href}" class="menu-item${active === item.key ? ' active' : ''}">
-            <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${item.icon}</svg>
-            ${item.label}
-        </a>`).join('');
 
-    mount.outerHTML = `
-    <aside class="sidebar">
-        <a href="/BudgetPilot/admin/dashboard" class="sidebar-logo">
-            <div class="logo-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="24" height="24" rx="6" fill="#00106B"/>
-                    <path d="M19 5H5C3.9 5 3 5.9 3 7V17C3 18.1 3.9 19 5 19H19C20.1 19 21 18.1 21 17V7C21 5.9 20.1 5 19 5ZM19 17H5V11H19V17ZM19 9H5V7H19V9Z" fill="white"/>
-                </svg>
-            </div>
-            <div class="logo-text-group">
-                <span class="logo-title">Budget Pilot</span>
-                <span class="logo-tag admin-tag">ADMIN CONSOLE</span>
-            </div>
-        </a>
-
-        <nav class="sidebar-menu">${navHtml}</nav>
-
-        <div class="sidebar-bottom">
-            <a href="/BudgetPilot/admin/settings" class="menu-item menu-settings${active === 'settings' ? ' active' : ''}">
-                <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                Settings
-            </a>
-            <a href="/BudgetPilot/admin/logout" class="menu-item logout-item" id="admin-logout-link">
-                <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                Logout
-            </a>
-        </div>
-    </aside>`;
-}
-
-function renderAdminTopbar() {
-    const mount = document.getElementById('topbar-mount');
-    if (!mount) return;
-    const variant = mount.getAttribute('data-variant') || 'default';
-
-    const rightIcons = variant === 'settings' ? `
-        <button class="icon-btn-dash" id="help-btn" title="Help">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-        </button>` : `
-        <button class="icon-btn-dash" id="notif-bell-btn" title="Notifications">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-            <span class="alert-dot-badge" id="notif-dot"></span>
-        </button>
-        <button class="icon-btn-dash" id="quick-settings-btn" title="Quick settings">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        </button>`;
-
-    mount.outerHTML = `
-    <div class="admin-topbar">
-        <div class="admin-search-wrapper">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" id="global-search-input" placeholder="Search">
-        </div>
-        <div class="admin-topbar-right" style="position:relative;">
-            ${rightIcons}
-            <div id="notif-dropdown" class="dropdown-panel" style="display:none;"></div>
-            <div id="quick-settings-dropdown" class="dropdown-panel" style="display:none;"></div>
-            <img class="admin-avatar-photo" id="avatar-btn" src="https://i.pravatar.cc/150?img=47" alt="Admin">
-            <div id="avatar-dropdown" class="dropdown-panel" style="display:none;"></div>
-        </div>
-    </div>`;
-}
 
 /* ============================================================
    2. DEMO DATA STORE (localStorage-backed)
@@ -261,131 +190,7 @@ document.addEventListener('click', (e) => {
     }
 });
 
-/* ============================================================
-   4. TOPBAR INTERACTIVITY (notifications / quick settings / avatar)
-   ============================================================ */
 
-function wireTopbarInteractions() {
-    const data = getAdminData();
-
-    const bellBtn = document.getElementById('notif-bell-btn');
-    if (bellBtn) {
-        bellBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const panel = document.getElementById('notif-dropdown');
-            const itemsHtml = data.notifications.map(n => `
-                <div class="dropdown-item notif-item">
-                    <div class="notif-item-title">${n.title}</div>
-                    <div class="notif-item-msg">${n.message}</div>
-                    <div class="notif-item-time">${n.time}</div>
-                </div>`).join('');
-            toggleDropdown(panel, `
-                <div class="dropdown-header">Notifications</div>
-                ${itemsHtml}
-                <div class="dropdown-footer"><a href="#" id="mark-all-read">Mark all as read</a></div>`);
-            const dot = document.getElementById('notif-dot');
-            if (dot) dot.style.display = 'none';
-            setTimeout(() => {
-                const markAll = document.getElementById('mark-all-read');
-                if (markAll) markAll.addEventListener('click', (ev) => { ev.preventDefault(); toast('All notifications marked as read.'); closeAllDropdowns(); });
-            }, 0);
-        });
-    }
-
-    const settingsBtn = document.getElementById('quick-settings-btn');
-    if (settingsBtn) {
-        settingsBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const panel = document.getElementById('quick-settings-dropdown');
-            toggleDropdown(panel, `
-                <div class="dropdown-header">Quick Settings</div>
-                <div class="dropdown-item dropdown-toggle-item">
-                    <span>Dark Mode</span>
-                    <label class="switch switch-sm">
-                        <input type="checkbox" id="quick-dark-toggle" ${isDarkModeOn() ? 'checked' : ''}>
-                        <span class="switch-slider"></span>
-                    </label>
-                </div>
-                <div class="dropdown-item"><a href="/BudgetPilot/admin/settings">Full Settings →</a></div>
-                <div class="dropdown-item"><a href="#" id="reset-demo-link">Reset Demo Data</a></div>`);
-            setTimeout(() => {
-                const dt = document.getElementById('quick-dark-toggle');
-                if (dt) dt.addEventListener('change', () => setDarkMode(dt.checked));
-                const resetLink = document.getElementById('reset-demo-link');
-                if (resetLink) resetLink.addEventListener('click', (ev) => { ev.preventDefault(); resetAdminData(); });
-            }, 0);
-        });
-    }
-
-    const avatarBtn = document.getElementById('avatar-btn');
-    if (avatarBtn) {
-        avatarBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const panel = document.getElementById('avatar-dropdown');
-            toggleDropdown(panel, `
-                <div class="dropdown-header">${data.profile.fullName}</div>
-                <div class="dropdown-item"><a href="/BudgetPilot/admin/settings">👤 View Profile</a></div>
-                <div class="dropdown-item"><a href="/BudgetPilot/admin/settings">⚙️ Settings</a></div>
-                <div class="dropdown-item"><a href="/BudgetPilot/admin/logout" id="dropdown-logout">🚪 Logout</a></div>`);
-        });
-    }
-
-    const helpBtn = document.getElementById('help-btn');
-    if (helpBtn) {
-        helpBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const panel = document.getElementById('help-dropdown') || (() => {
-                const p = document.createElement('div');
-                p.id = 'help-dropdown';
-                p.className = 'dropdown-panel';
-                helpBtn.parentElement.appendChild(p);
-                return p;
-            })();
-            toggleDropdown(panel, `
-                <div class="dropdown-header">Help &amp; Support</div>
-                <div class="dropdown-item"><a href="#" id="help-docs">📘 Admin Documentation</a></div>
-                <div class="dropdown-item"><a href="#" id="help-contact">✉️ Contact Support</a></div>
-                <div class="dropdown-item"><a href="#" id="help-shortcuts">⌨️ Keyboard Shortcuts</a></div>`);
-            setTimeout(() => {
-                ['help-docs', 'help-contact', 'help-shortcuts'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) el.addEventListener('click', (ev) => {
-                        ev.preventDefault();
-                        toast('This is a demo action — support tools connect here later.');
-                        closeAllDropdowns();
-                    });
-                });
-            }, 0);
-        });
-    }
-
-    const searchInput = document.getElementById('global-search-input');
-    if (searchInput) {
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && searchInput.value.trim()) {
-                toast(`Searching for "${searchInput.value.trim()}"…`, 'success');
-            }
-        });
-    }
-}
-
-function isDarkModeOn() {
-    return document.body.classList.contains('dark-theme');
-}
-
-function setDarkMode(on) {
-    document.body.classList.toggle('dark-theme', on);
-    const data = getAdminData();
-    data.profile.darkMode = on;
-    saveAdminData(data);
-    const settingsToggle = document.getElementById('dark-mode-toggle');
-    if (settingsToggle) settingsToggle.checked = on;
-}
-
-function applyStoredDarkMode() {
-    const data = getAdminData();
-    if (data.profile.darkMode) document.body.classList.add('dark-theme');
-}
 
 /* ============================================================
    5. CSV / FILE DOWNLOAD HELPER
@@ -1197,14 +1002,111 @@ function initSettingsPage() {
 
 
 /* ============================================================
+   4. TOPBAR INTERACTIVITY (notifications / quick settings / avatar)
+   ============================================================ */
+
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const dropdowns = [
+        { btn: 'avatar-btn', panel: 'avatar-dropdown' },
+        { btn: 'notif-bell-btn', panel: 'notif-dropdown' },
+        { btn: 'quick-settings-btn', panel: 'quick-settings-dropdown' },
+        { btn: 'help-btn', panel: 'help-dropdown' }
+    ];
+
+    // 1. Dropdown Buttons ක්ලික් කිරීම
+    dropdowns.forEach(item => {
+        const btn = document.getElementById(item.btn);
+        const panel = document.getElementById(item.panel);
+        
+        if (btn && panel) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                // අනිත් ඔක්කොම වහනවා
+                dropdowns.forEach(d => {
+                    const p = document.getElementById(d.panel);
+                    if (p && p !== panel) p.style.display = 'none';
+                });
+                // ක්ලික් කරපු එක Open/Close කරනවා
+                panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            });
+        }
+    });
+
+    // 2. පිටතින් ක්ලික් කළාම ඔක්කොම වැහීම
+    document.addEventListener('click', function() {
+        dropdowns.forEach(d => {
+            const p = document.getElementById(d.panel);
+            if (p) p.style.display = 'none';
+        });
+    });
+
+    // 3. Dropdown එක ඇතුළේ ක්ලික් කළාම වැහෙන එක නවත්වනවා
+    document.querySelectorAll('.dropdown-panel').forEach(panel => {
+        panel.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    });
+
+    // ==========================================
+    // 4. Dark Mode Logic එක
+    // ==========================================
+    const darkModeToggle = document.getElementById('quick-dark-toggle');
+    
+    // කලින් Dark Mode දාලා නම් ඒක මතක තියාගන්න (Local Storage එකෙන්)
+    if (localStorage.getItem('budgetPilotDarkMode') === 'true') {
+        document.body.classList.add('dark-theme');
+        if (darkModeToggle) darkModeToggle.checked = true;
+    }
+
+    // Toggle බට්න් එක එබුවාම
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.body.classList.add('dark-theme');
+                localStorage.setItem('budgetPilotDarkMode', 'true');
+            } else {
+                document.body.classList.remove('dark-theme');
+                localStorage.setItem('budgetPilotDarkMode', 'false');
+            }
+        });
+    }
+});
+
+
+// ==========================================
+// Dark Mode Helper Functions (Restored)
+// ==========================================
+function isDarkModeOn() {
+    return document.body.classList.contains('dark-theme');
+}
+
+function setDarkMode(on) {
+    document.body.classList.toggle('dark-theme', on);
+    const data = getAdminData();
+    data.profile.darkMode = on;
+    saveAdminData(data);
+    const settingsToggle = document.getElementById('dark-mode-toggle');
+    if (settingsToggle) settingsToggle.checked = on;
+    const quickToggle = document.getElementById('quick-dark-toggle');
+    if (quickToggle) quickToggle.checked = on;
+}
+
+function applyStoredDarkMode() {
+    const data = getAdminData();
+    if (data.profile.darkMode) document.body.classList.add('dark-theme');
+}
+
+
+/* ============================================================
    13. BOOTSTRAP
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
     applyStoredDarkMode();
-    renderAdminSidebar();
-    renderAdminTopbar();
-    wireTopbarInteractions();
+    
+    // අපි Sidebar සහ Topbar PHP වලින් හදපු නිසා, කලින් JS එකෙන් ඒවා හදපු 
+    // functions දැන් මෙතනින් කෝල් කරන්නේ නැහැ. (ඒවා මකලා තියෙන්නේ)
 
     const page = document.body.getAttribute('data-page');
     switch (page) {
@@ -1215,7 +1117,5 @@ document.addEventListener('DOMContentLoaded', () => {
         case 'security': initSecurityAuditPage(); break;
         case 'reports': initReportsPage(); break;
         case 'settings': initSettingsPage(); break;
-        case 'login': initLoginPage(); break;
-        case 'register': initRegisterPage(); break;
     }
 });

@@ -13,10 +13,10 @@
 <body data-page="settings">
 
     <div class="dashboard-layout">
-        <div id="sidebar-mount" data-active="settings"></div>
+        <?php require '../app/Views/admin/_sidebar.php'; ?>
 
         <main class="main-content">
-            <div id="topbar-mount" data-variant="settings"></div>
+            <?php require '../app/Views/admin/_topbar.php'; ?>
 
             <header class="content-header">
                 <div class="header-left">

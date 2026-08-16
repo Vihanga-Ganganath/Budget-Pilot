@@ -14,11 +14,11 @@
 
     <div class="dashboard-layout">
         <!-- Sidebar Navigation (rendered by js/admin.js so every page is identical) -->
-        <div id="sidebar-mount" data-active="dashboard"></div>
+        <?php require '../app/Views/admin/_sidebar.php'; ?>
 
         <!-- Main Content -->
         <main class="main-content">
-            <div id="topbar-mount" data-variant="default"></div>
+            <?php require '../app/Views/admin/_topbar.php'; ?>
 
             <header class="content-header">
                 <div class="header-left">
