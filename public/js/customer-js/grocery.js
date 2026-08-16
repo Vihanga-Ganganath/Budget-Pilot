@@ -11,7 +11,7 @@
   var profile = profileId ? BP.getProfile(profileId) : null;
 
   if (!profile) {
-    window.location.replace('customer-login.html?signin=required');
+    window.location.replace('login.php?signin=required');
     return;
   }
 
@@ -75,7 +75,7 @@
   /* Each brand has its own picture. Falls back to the product-level one, then
      to a plain tile if neither is filled in. */
   function offerImage(item, offer) {
-    return (offer && offer.image ? offer.image : (item.image || '')).trim();
+    return BP.assetUrl((offer && offer.image ? offer.image : (item.image || '')).trim());
   }
 
   function unitWord(offer) { return offer.unitLabel === 'each' ? 'item' : offer.unitLabel; }
@@ -236,7 +236,7 @@
       badge.textContent = 'Best Value';
     }
 
-    var href = 'product.html?id=' + item.id + '&brand=' + encodeURIComponent(offer.brand);
+    var href = 'product.php?id=' + item.id + '&brand=' + encodeURIComponent(offer.brand);
     art.setAttribute('href', href);
     var link = node.querySelector('.product__link');
     link.textContent = item.name;
@@ -554,8 +554,8 @@
     ] : [{ label: 'Close' }]);
   }
 
-  el('cartBtn').addEventListener('click', function () { window.location.href = 'cart.html'; });
-  if (el('cartNav')) el('cartNav').addEventListener('click', function () { window.location.href = 'cart.html'; });
+  el('cartBtn').addEventListener('click', function () { window.location.href = 'cart.php'; });
+  if (el('cartNav')) el('cartNav').addEventListener('click', function () { window.location.href = 'cart.php'; });
 
   /* ==================================================================
      Wiring
@@ -602,7 +602,7 @@
 
   el('logoutBtn').addEventListener('click', function () {
     BP.clearSession();
-    window.location.href = 'customer-login.html';
+    window.location.href = 'login.php';
   });
 
   document.querySelectorAll('[data-soon]').forEach(function (btn) {

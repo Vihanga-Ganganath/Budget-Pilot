@@ -11,7 +11,7 @@
   var profile = profileId ? BP.getProfile(profileId) : null;
 
   if (!profile) {
-    window.location.replace('customer-login.html?signin=required');
+    window.location.replace('login.php?signin=required');
     return;
   }
 
@@ -51,7 +51,7 @@
   }
 
   function imageOf(item, offer) {
-    return (offer && offer.image ? offer.image : (item.image || '')).trim();
+    return BP.assetUrl((offer && offer.image ? offer.image : (item.image || '')).trim());
   }
 
   function perUnit(offer) { return offer.price / offer.unitQty; }
@@ -158,7 +158,7 @@
       if (!item || !offer) return;
 
       var node = el('lineTemplate').content.firstElementChild.cloneNode(true);
-      var href = 'product.html?id=' + item.id + '&brand=' + encodeURIComponent(offer.brand);
+      var href = 'product.php?id=' + item.id + '&brand=' + encodeURIComponent(offer.brand);
 
       var art = node.querySelector('.line__art');
       var photo = node.querySelector('.line__photo');
@@ -432,7 +432,7 @@
 
           closeModal();
           paintAll();
-          window.location.href = 'budgets.html?spent=' + encodeURIComponent(total.toFixed(2));
+          window.location.href = 'budgets.php?spent=' + encodeURIComponent(total.toFixed(2));
         } }
     ]);
   });
@@ -511,7 +511,7 @@
 
   el('logoutBtn').addEventListener('click', function () {
     BP.clearSession();
-    window.location.href = 'customer-login.html';
+    window.location.href = 'login.php';
   });
 
   document.querySelectorAll('[data-soon]').forEach(function (btn) {

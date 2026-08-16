@@ -154,7 +154,7 @@
     /* The "+" button goes straight to the add-members section. */
     var add = document.createElement('a');
     add.className = 'profile profile--add';
-    add.href = 'create-account.html#members';
+    add.href = 'register.php#members';
     add.setAttribute('aria-label', 'Add a profile');
     add.innerHTML = '<span aria-hidden="true">+</span>';
     profileRow.appendChild(add);
@@ -329,7 +329,7 @@
 
     formError.textContent = '';
     BP.setSession(check.profile.id);
-    window.location.href = 'settings.html';
+    window.location.href = 'dashboard.php';
   }
 
   if (signInBtn) signInBtn.addEventListener('click', submit);

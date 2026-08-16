@@ -13,16 +13,16 @@
 <body class="signup">
 
 <header class="page-head">
-  <a class="page-head__back" href="index.php">← Back to Home</a>
+  <a class="page-head__back" href="<?php echo URLROOT; ?>/customer/index">← Back to Home</a>
 
-  <a class="brand" href="index.php" aria-label="Budget Pilot home">
+  <a class="brand" href="<?php echo URLROOT; ?>/customer/index" aria-label="Budget Pilot home">
     <span class="brand__mark" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="#101C56" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="#101C56"/></svg>
     </span>
     <span class="brand__name">Budget Pilot</span>
   </a>
 
-  <p class="page-head__alt"><a class="link" href="customer-login.php">Back to Login</a>
+  <p class="page-head__alt"><a class="link" href="<?php echo URLROOT; ?>/customer/login">Back to Login</a>
 </header>
 
 <main class="signup__wrap">
@@ -176,7 +176,7 @@
 
     <label class="check">
       <input type="checkbox" id="terms" />
-      <span>I agree to the <a class="link" href="terms.php" target="_blank" rel="noopener">Terms of Service</a> and <a class="link" href="privacy.php" target="_blank" rel="noopener">Privacy Policy</a></span>
+      <span>I agree to the <a class="link" href="<?php echo URLROOT; ?>/customer/terms" target="_blank" rel="noopener">Terms of Service</a> and <a class="link" href="<?php echo URLROOT; ?>/customer/privacy" target="_blank" rel="noopener">Privacy Policy</a></span>
     </label>
     <p class="field__error" id="termsError" role="alert"></p>
     </div><!-- /#financeSection -->
@@ -242,6 +242,7 @@
   </li>
 </template>
 
+<script>window.URLROOT = "<?php echo URLROOT; ?>";</script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js"></script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/create-account.js"></script>
 </body>

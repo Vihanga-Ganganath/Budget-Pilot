@@ -399,7 +399,7 @@
       return;
     }
 
-    persist(result.members, 'customer-login.html?added=' + result.members.length);
+    persist(result.members, 'login.php?added=' + result.members.length);
   }
 
   /* ---- Full sign-up submit ---- */
@@ -488,7 +488,7 @@
       savings: savings.value
     };
 
-    persist([owner].concat(members), 'customer-login.html?created=1');
+    persist([owner].concat(members), 'login.php?created=1');
   }
 
   createBtn.addEventListener('click', function () {
@@ -520,7 +520,7 @@
     if (modeNotice) {
       modeNotice.hidden = false;
       modeNotice.innerHTML = 'Adding to an existing account. ' +
-        '<a class="link" href="create-account.html">Create a new account instead</a>';
+        '<a class="link" href="register.php">Create a new account instead</a>';
     }
 
     addMember();   // start with one blank card ready to fill

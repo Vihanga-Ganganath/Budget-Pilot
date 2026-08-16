@@ -10,7 +10,7 @@
   var profile = profileId ? BP.getProfile(profileId) : null;
 
   if (!profile) {
-    window.location.replace('customer-login.html?signin=required');
+    window.location.replace('login.php?signin=required');
     return;
   }
 
@@ -65,7 +65,7 @@
       return;
     }
 
-    img.src = source;
+    img.src = BP.assetUrl(source);
     img.alt = category.label;
 
     /* A wrong path shouldn't leave a broken-image icon on the card. */
@@ -504,7 +504,7 @@
 
   el('logoutBtn').addEventListener('click', function () {
     BP.clearSession();
-    window.location.href = 'customer-login.html';
+    window.location.href = 'login.php';
   });
 
   document.querySelectorAll('[data-soon]').forEach(function (btn) {

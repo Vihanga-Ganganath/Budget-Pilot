@@ -13,7 +13,7 @@
 
 <header class="topbar" id="topbar">
   <div class="topbar__inner">
-    <a class="brand" href="index.php">
+    <a class="brand" href="<?php echo URLROOT; ?>/customer/index">
       <span class="brand__mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="currentColor" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="currentColor"/></svg>
       </span>
@@ -26,12 +26,12 @@
     <nav class="topnav" aria-label="Sections">
       <a href="index.html#how">How it works</a>
       <a href="index.html#features">What you get</a>
-      <a href="privacy.php">Privacy</a>
+      <a href="<?php echo URLROOT; ?>/customer/privacy">Privacy</a>
     </nav>
 
     <div class="topbar__actions">
-      <a class="btn btn--quiet" href="customer-login.php">Sign in</a>
-      <a class="btn btn--lime" href="create-account.php">Create account</a>
+      <a class="btn btn--quiet" href="<?php echo URLROOT; ?>/customer/login">Sign in</a>
+      <a class="btn btn--lime" href="<?php echo URLROOT; ?>/customer/register">Create account</a>
     </div>
   </div>
 </header>
@@ -87,7 +87,7 @@
         <li>
           Sign-in is checked in your browser rather than on a server. Treat it as a
           convenience that separates profiles, not as a security control — see the
-          <a href="privacy.php">Privacy page</a> for what that means in practice.
+          <a href="<?php echo URLROOT; ?>/customer/privacy">Privacy page</a> for what that means in practice.
         </li>
         <li>
           Removing a profile is permanent and takes its access with it. The account holder
@@ -160,7 +160,7 @@
     </section>
 
     <p class="doc__foot">
-      See also the <a href="privacy.php">Privacy page</a>.
+      See also the <a href="<?php echo URLROOT; ?>/customer/privacy">Privacy page</a>.
     </p>
   </div>
 </main>
@@ -169,9 +169,9 @@
   <div class="footer__bottom footer__bottom--solo">
     <p>© 2026 Budget Pilot. Coursework project.</p>
     <ul class="footer__legal">
-      <li><a href="index.php">Home</a></li>
-      <li><a href="privacy.php">Privacy</a></li>
-      <li><a href="terms.php">Terms</a></li>
+      <li><a href="<?php echo URLROOT; ?>/customer/index">Home</a></li>
+      <li><a href="<?php echo URLROOT; ?>/customer/privacy">Privacy</a></li>
+      <li><a href="<?php echo URLROOT; ?>/customer/terms">Terms</a></li>
     </ul>
   </div>
 </footer>

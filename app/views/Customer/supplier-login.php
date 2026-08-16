@@ -13,7 +13,7 @@
 
 <main class="auth__wrap">
 
-  <a class="brand brand--center" href="index.php" aria-label="Budget Pilot home">
+  <a class="brand brand--center" href="<?php echo URLROOT; ?>/customer/index" aria-label="Budget Pilot home">
     <span class="brand__mark" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="#101C56" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="#101C56"/></svg>
     </span>
@@ -22,8 +22,8 @@
 
   <section class="auth-card">
     <div class="tabs" role="tablist" aria-label="Account type">
-      <a class="tab" href="customer-login.php" role="tab" aria-selected="false">Customer Account</a>
-      <a class="tab is-active" href="supplier-login.php" role="tab" aria-selected="true">Supplier Portal</a>
+      <a class="tab" href="<?php echo URLROOT; ?>/customer/login" role="tab" aria-selected="false">Customer Account</a>
+      <a class="tab is-active" href="<?php echo URLROOT; ?>/customer/supplierLogin" role="tab" aria-selected="true">Supplier Portal</a>
     </div>
 
     <div class="auth-card__body">
@@ -72,16 +72,17 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
         </button>
 
-        <p class="auth__switch">New to Budget Pilot? <a class="link" href="create-account.php">Create Account</a></p>
+        <p class="auth__switch">New to Budget Pilot? <a class="link" href="<?php echo URLROOT; ?>/customer/register">Create Account</a></p>
       </div>
 
       <div class="auth__foot">
-        <a class="auth__back" href="index.php">← Back to Home</a>
+        <a class="auth__back" href="<?php echo URLROOT; ?>/customer/index">← Back to Home</a>
       </div>
     </div>
   </section>
 </main>
 
+<script>window.URLROOT = "<?php echo URLROOT; ?>";</script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js"></script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/auth.js"></script>
 </body>

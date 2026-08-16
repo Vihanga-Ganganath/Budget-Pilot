@@ -17,7 +17,7 @@
   var profile = profileId ? BP.getProfile(profileId) : null;
 
   if (!profile) {
-    window.location.replace('customer-login.html?signin=required');
+    window.location.replace('login.php?signin=required');
     return;
   }
 
@@ -29,7 +29,7 @@
 
   el('logoutBtn').addEventListener('click', function () {
     BP.clearSession();
-    window.location.href = 'customer-login.html';
+    window.location.href = 'login.php';
   });
 
   var avatar = el('appbarAvatar');

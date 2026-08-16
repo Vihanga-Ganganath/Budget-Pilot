@@ -149,7 +149,7 @@ window.BPNotify = (function () {
           text: 'Your ' + c.label + ' budget has gone past its limit by {amount}. ' +
                 'Adjust your categories to stay on track.',
           amount: spent - planned,
-          actions: [{ label: 'Review budget', href: 'budgets.html', style: 'danger' }]
+          actions: [{ label: 'Review budget', href: 'budgets.php', style: 'danger' }]
         });
         return;
       }
@@ -280,7 +280,7 @@ window.BPNotify = (function () {
         was: row.dear.price,
         percent: row.pct,
         image: row.cheap.image || row.item.image || '',
-        actions: [{ label: 'View product', href: 'product.html?id=' + row.item.id, style: 'soft' }]
+        actions: [{ label: 'View product', href: 'product.php?id=' + row.item.id, style: 'soft' }]
       });
     });
 
@@ -303,7 +303,7 @@ window.BPNotify = (function () {
         title: 'New verified products',
         text: counts[top] + ' listings from "' + top + '" have been checked for price ' +
               'consistency across the catalog.',
-        actions: [{ label: 'Open catalog', href: 'grocery.html', style: 'soft' }]
+        actions: [{ label: 'Open catalog', href: 'grocery.php', style: 'soft' }]
       });
     }
 

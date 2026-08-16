@@ -11,7 +11,7 @@
   var profile = profileId ? BP.getProfile(profileId) : null;
 
   if (!profile) {
-    window.location.replace('customer-login.html?signin=required');
+    window.location.replace('login.php?signin=required');
     return;
   }
 
@@ -919,7 +919,7 @@
       { label: 'Deactivate', style: 'btn--danger', action: function () {
           BP.removeProfile(profile.id);
           BP.clearSession();
-          window.location.href = 'customer-login.html?deactivated=1';
+          window.location.href = 'login.php?deactivated=1';
         } }
     ]);
   });
@@ -952,16 +952,16 @@
 
   el('homeLink').addEventListener('click', function (e) {
     e.preventDefault();
-    leaveTo('index.html', false);
+    leaveTo('index.php', false);
   });
 
   el('loginLink').addEventListener('click', function (e) {
     e.preventDefault();
-    leaveTo('customer-login.html', false);
+    leaveTo('login.php', false);
   });
 
   el('logoutBtn').addEventListener('click', function () {
-    leaveTo('customer-login.html', true);
+    leaveTo('login.php', true);
   });
 
   document.querySelectorAll('[data-soon]').forEach(function (btn) {

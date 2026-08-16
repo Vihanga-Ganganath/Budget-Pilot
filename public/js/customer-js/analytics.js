@@ -17,7 +17,7 @@
   var profile = profileId ? BP.getProfile(profileId) : null;
 
   if (!profile) {
-    window.location.replace('customer-login.html?signin=required');
+    window.location.replace('login.php?signin=required');
     return;
   }
 
@@ -270,7 +270,7 @@
   if (target <= 0) {
     line(['Set your monthly limits on the ']);
     var link = document.createElement('a');
-    link.href = 'budgets.html';
+    link.href = 'budgets.php';
     link.textContent = 'Budgets page';
     copy.appendChild(link);
     copy.appendChild(document.createTextNode(' and this report fills in from there.'));
@@ -802,7 +802,7 @@
 
   el('logoutBtn').addEventListener('click', function () {
     BP.clearSession();
-    window.location.href = 'customer-login.html';
+    window.location.href = 'login.php';
   });
 
   document.querySelectorAll('[data-soon]').forEach(function (btn) {

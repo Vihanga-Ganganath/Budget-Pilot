@@ -16,7 +16,7 @@
 <div class="shell">
 
   <aside class="sidebar">
-    <a class="sidebar__brand" href="index.php">
+    <a class="sidebar__brand" href="<?php echo URLROOT; ?>/customer/index">
       <span class="sidebar__mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="#fff" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="#fff"/></svg>
       </span>
@@ -27,38 +27,38 @@
     </a>
 
     <nav class="sidebar__nav" aria-label="Sections">
-      <a class="navlink" href="index.php">
+      <a class="navlink" href="<?php echo URLROOT; ?>/customer/index">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/></svg>
         Home
       </a>
-      <a class="navlink" href="dashboard.php">
+      <a class="navlink" href="<?php echo URLROOT; ?>/customer/dashboard">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg>
         Dashboard
       </a>
-      <a class="navlink navlink--active" href="budgets.php" aria-current="page">
+      <a class="navlink navlink--active" href="<?php echo URLROOT; ?>/customer/budgets" aria-current="page">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 10h19"/></svg>
         Budgets
       </a>
-      <a class="navlink" href="grocery.php">
+      <a class="navlink" href="<?php echo URLROOT; ?>/customer/grocery">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h18l-1.5 11H4.5z"/><path d="M3 9l1.5-4h15L21 9"/></svg>
         Grocery Catalog
       </a>
-      <a class="navlink" href="cart.php">
+      <a class="navlink" href="<?php echo URLROOT; ?>/customer/cart">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/><path d="M2.5 3h2.2l2.6 12.4a1.6 1.6 0 0 0 1.6 1.3h8.9a1.6 1.6 0 0 0 1.6-1.3L21 7H6"/></svg>
         Shopping Cart
       </a>
-      <a class="navlink" href="analytics.php">
+      <a class="navlink" href="<?php echo URLROOT; ?>/customer/analytics">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l5-6 4 3 5-7 4 4"/></svg>
         Analytics
       </a>
-      <a class="navlink" href="household.php" data-main-only>
+      <a class="navlink" href="<?php echo URLROOT; ?>/customer/household" data-main-only>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16.5 5.2a3.2 3.2 0 0 1 0 6"/><path d="M18 14.8c2 .7 3.2 2.4 3.5 5.2"/></svg>
         Household
       </a>
     </nav>
 
     <div class="sidebar__foot">
-      <a class="navlink" href="settings.php">
+      <a class="navlink" href="<?php echo URLROOT; ?>/customer/settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-3-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.3 6l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 2.9-1.2V2a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 3 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9H22a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
         Settings
       </a>
@@ -72,10 +72,10 @@
   <div class="main">
     <header class="appbar">
       <div class="appbar__actions">
-        <a class="icon-btn" href="notifications.php" data-bell aria-label="Notifications">
+        <a class="icon-btn" href="<?php echo URLROOT; ?>/customer/notifications" data-bell aria-label="Notifications">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
         </a>
-        <a class="icon-btn" href="cart.php" aria-label="Shopping cart">
+        <a class="icon-btn" href="<?php echo URLROOT; ?>/customer/cart" aria-label="Shopping cart">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.6"/><circle cx="19" cy="21" r="1.6"/><path d="M2.5 3h2.2l2.6 12.4a1.6 1.6 0 0 0 1.6 1.3h8.9a1.6 1.6 0 0 0 1.6-1.3L21 7H6"/></svg>
         </a>
         <span class="appbar__avatar" id="appbarAvatar" aria-hidden="true"></span>
@@ -83,7 +83,7 @@
     </header>
 
     <div class="content">
-      <a class="backlink" href="budgets.php">
+      <a class="backlink" href="<?php echo URLROOT; ?>/customer/budgets">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
         Back to Budget Setup
       </a>
@@ -201,6 +201,7 @@
   </button>
 </template>
 
+<script>window.URLROOT = "<?php echo URLROOT; ?>";</script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js"></script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/notify.js"></script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/household-ui.js"></script>

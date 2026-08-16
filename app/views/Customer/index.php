@@ -14,7 +14,7 @@
 <!-- ============ TOP BAR ============ -->
 <header class="topbar" id="topbar">
   <div class="topbar__inner">
-    <a class="brand" href="index.php">
+    <a class="brand" href="<?php echo URLROOT; ?>/customer/index">
       <span class="brand__mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="currentColor" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="currentColor"/></svg>
       </span>
@@ -31,8 +31,8 @@
     </nav>
 
     <div class="topbar__actions">
-      <a class="btn btn--quiet" href="customer-login.php">Sign in</a>
-      <a class="btn btn--lime" href="create-account.php">Create account</a>
+      <a class="btn btn--quiet" href="<?php echo URLROOT; ?>/customer/login">Sign in</a>
+      <a class="btn btn--lime" href="<?php echo URLROOT; ?>/customer/register">Create account</a>
     </div>
   </div>
 </header>
@@ -58,8 +58,8 @@
         </p>
 
         <div class="hero__actions">
-          <a class="btn btn--lime btn--lg" href="create-account.php">Start your budget</a>
-          <a class="btn btn--outline btn--lg" href="customer-login.php">I already have an account</a>
+          <a class="btn btn--lime btn--lg" href="<?php echo URLROOT; ?>/customer/register">Start your budget</a>
+          <a class="btn btn--outline btn--lg" href="<?php echo URLROOT; ?>/customer/login">I already have an account</a>
         </div>
 
         <dl class="proof">
@@ -280,10 +280,10 @@
         Customers budget and shop. Suppliers list products and keep their prices current.
       </p>
       <div class="cta__actions">
-        <a class="btn btn--lime btn--lg" href="customer-login.php">Sign in as a customer</a>
-        <a class="btn btn--outline btn--lg" href="supplier-login.php">Sign in as a supplier</a>
+        <a class="btn btn--lime btn--lg" href="<?php echo URLROOT; ?>/customer/login">Sign in as a customer</a>
+        <a class="btn btn--outline btn--lg" href="<?php echo URLROOT; ?>/customer/supplierLogin">Sign in as a supplier</a>
       </div>
-      <p class="cta__fine">New here? <a href="create-account.php">Create an account</a> — it takes a minute.</p>
+      <p class="cta__fine">New here? <a href="<?php echo URLROOT; ?>/customer/register">Create an account</a> — it takes a minute.</p>
     </div>
   </section>
 </main>
@@ -292,7 +292,7 @@
 <footer class="footer">
   <div class="footer__grid">
     <div class="footer__brand">
-      <a class="brand brand--footer" href="index.php">
+      <a class="brand brand--footer" href="<?php echo URLROOT; ?>/customer/index">
         <span class="brand__mark" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="currentColor" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="currentColor"/></svg>
         </span>
@@ -307,21 +307,21 @@
     <nav class="footer__col" aria-label="Product">
       <h4 class="footer__heading">Product</h4>
       <ul class="footer__links">
-        <li><a href="dashboard.php">Dashboard</a></li>
-        <li><a href="budgets.php">Budgets</a></li>
-        <li><a href="grocery.php">Grocery catalog</a></li>
-        <li><a href="analytics.php">Analytics</a></li>
+        <li><a href="<?php echo URLROOT; ?>/customer/dashboard">Dashboard</a></li>
+        <li><a href="<?php echo URLROOT; ?>/customer/budgets">Budgets</a></li>
+        <li><a href="<?php echo URLROOT; ?>/customer/grocery">Grocery catalog</a></li>
+        <li><a href="<?php echo URLROOT; ?>/customer/analytics">Analytics</a></li>
       </ul>
     </nav>
 
     <nav class="footer__col" aria-label="Account">
       <h4 class="footer__heading">Account</h4>
       <ul class="footer__links">
-        <li><a href="customer-login.php">Customer sign in</a></li>
-        <li><a href="supplier-login.php">Supplier sign in</a></li>
-        <li><a href="create-account.php">Create an account</a></li>
-        <li><a href="settings.php">Settings</a></li>
-        <li><a href="privacy.php">Privacy</a></li>
+        <li><a href="<?php echo URLROOT; ?>/customer/login">Customer sign in</a></li>
+        <li><a href="<?php echo URLROOT; ?>/customer/supplierLogin">Supplier sign in</a></li>
+        <li><a href="<?php echo URLROOT; ?>/customer/register">Create an account</a></li>
+        <li><a href="<?php echo URLROOT; ?>/customer/settings">Settings</a></li>
+        <li><a href="<?php echo URLROOT; ?>/customer/privacy">Privacy</a></li>
       </ul>
     </nav>
 
@@ -340,8 +340,8 @@
   <div class="footer__bottom">
     <p>© 2026 Budget Pilot. Coursework project.</p>
     <ul class="footer__legal">
-      <li><a href="privacy.php">Privacy</a></li>
-      <li><a href="terms.php">Terms</a></li>
+      <li><a href="<?php echo URLROOT; ?>/customer/privacy">Privacy</a></li>
+      <li><a href="<?php echo URLROOT; ?>/customer/terms">Terms</a></li>
     </ul>
   </div>
 </footer>

@@ -39,7 +39,7 @@
 
     var link = document.createElement('a');
     link.className = 'cat__log';
-    link.href = 'expense.html?category=' + encodeURIComponent(category.key);
+    link.href = 'expense.php?category=' + encodeURIComponent(category.key);
     link.innerHTML = ICON;
     link.appendChild(document.createTextNode('Log an expense'));
     link.setAttribute('aria-label', 'Log an expense against ' + category.label);

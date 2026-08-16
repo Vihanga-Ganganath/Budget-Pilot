@@ -24,8 +24,12 @@ class Core {
 
         // 2. Check for the second part of the URL (e.g., 'dashboard' or 'login')
         if (isset($url[1])) {
-            if (method_exists($this->currentController, $url[1])) {
-                $this->currentMethod = $url[1];
+            // Allow links like "dashboard.php" (used by relative hrefs in views)
+            // to match the "dashboard" method just like a clean "dashboard" segment would.
+            $requestedMethod = preg_replace('/\.php$/i', '', $url[1]);
+
+            if (method_exists($this->currentController, $requestedMethod)) {
+                $this->currentMethod = $requestedMethod;
                 unset($url[1]);
             }
         }

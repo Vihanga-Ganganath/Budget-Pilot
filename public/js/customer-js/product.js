@@ -11,7 +11,7 @@
   var profile = profileId ? BP.getProfile(profileId) : null;
 
   if (!profile) {
-    window.location.replace('customer-login.html?signin=required');
+    window.location.replace('login.php?signin=required');
     return;
   }
 
@@ -33,7 +33,7 @@
   var item = CAT.ITEMS.filter(function (i) { return i.id === param('id'); })[0];
 
   if (!item) {
-    window.location.replace('grocery.html');
+    window.location.replace('grocery.php');
     return;
   }
 
@@ -60,7 +60,7 @@
 
   function perUnit(o) { return o.price / o.unitQty; }
   function unitWord(o) { return o.unitLabel === 'each' ? 'ea' : o.unitLabel; }
-  function imageFor(o) { return (o && o.image ? o.image : (item.image || '')).trim(); }
+  function imageFor(o) { return BP.assetUrl((o && o.image ? o.image : (item.image || '')).trim()); }
 
   function categoryLabel(key) {
     var found = CAT.CATEGORIES.filter(function (c) { return c.key === key; })[0];
@@ -188,7 +188,7 @@
 
   function paintSummary() {
     el('crumbCategory').textContent = categoryLabel(item.category);
-    el('crumbCategory').href = 'grocery.html?category=' + item.category;
+    el('crumbCategory').href = 'grocery.php?category=' + item.category;
     el('crumbName').textContent = item.name;
     el('productName').textContent = item.name;
     document.title = item.name + ' — Budget Pilot';
@@ -474,8 +474,8 @@
     say(offer.brand + ' ' + item.name + ' added to cart.');
   });
 
-  el('cartBtn').addEventListener('click', function () { window.location.href = 'cart.html'; });
-  if (el('cartNav')) el('cartNav').addEventListener('click', function () { window.location.href = 'cart.html'; });
+  el('cartBtn').addEventListener('click', function () { window.location.href = 'cart.php'; });
+  if (el('cartNav')) el('cartNav').addEventListener('click', function () { window.location.href = 'cart.php'; });
 
   /* ---- Save for later ---- */
   el('saveBtn').addEventListener('click', function () {
@@ -495,7 +495,7 @@
 
     /* Keep the address bar in step so the page can be shared or reloaded. */
     if (window.history && window.history.replaceState) {
-      window.history.replaceState({}, '', 'product.html?id=' + item.id + '&brand=' + encodeURIComponent(brand));
+      window.history.replaceState({}, '', 'product.php?id=' + item.id + '&brand=' + encodeURIComponent(brand));
     }
     paintAll();
   }
@@ -520,7 +520,7 @@
 
   el('logoutBtn').addEventListener('click', function () {
     BP.clearSession();
-    window.location.href = 'customer-login.html';
+    window.location.href = 'login.php';
   });
 
   document.querySelectorAll('[data-soon]').forEach(function (btn) {

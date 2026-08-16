@@ -15,6 +15,15 @@ window.BudgetPilot = (function () {
 
   var KEY = 'budgetPilot.v1';
 
+  /* Resolves a catalog/category image path (e.g. "img/1.1.jpg") against the
+     app's public assets folder, so it works no matter which URL the current
+     page was reached through. */
+  function assetUrl(path) {
+    if (!path) return path;
+    var root = window.URLROOT || '';
+    return root + '/public/assets/' + String(path).replace(/^\/+/, '');
+  }
+
   /* ---------- Storage ---------- */
 
   function read() {
@@ -804,6 +813,7 @@ window.BudgetPilot = (function () {
 
   return {
     available: available,
+    assetUrl: assetUrl,
     getProfiles: getProfiles,
     saveProfiles: saveProfiles,
     removeProfile: removeProfile,
