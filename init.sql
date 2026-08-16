@@ -23,13 +23,13 @@ CREATE TABLE users (
     role ENUM('customer', 'supplier', 'admin') DEFAULT 'customer',
     household_role ENUM('head', 'member') DEFAULT 'head', 
     name VARCHAR(100) NOT NULL,
-    email VARCHAR(150) NOT NULL, -- Removed UNIQUE from here
+    email VARCHAR(150) NOT NULL, 
     password_hash VARCHAR(255) NOT NULL, 
-    phone_number VARCHAR(20), -- Removed UNIQUE to allow same phone for diff roles
-    nic VARCHAR(20),          -- Removed UNIQUE
+    phone_number VARCHAR(20), 
+    nic VARCHAR(20),          
     date_of_birth DATE, 
     gender ENUM('male', 'female', 'other', 'prefer_not_to_say'),
-    is_locked BOOLEAN DEFAULT FALSE, 
+    account_status ENUM('active', 'locked', 'suspended') DEFAULT 'active', -- අලුත් Status Column එක
     two_factor_enabled BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

@@ -31,6 +31,7 @@
                 </div>
             </header>
 
+            
             <!-- Stat Cards -->
             <section class="stat-grid">
                 <div class="stat-card">
@@ -38,31 +39,38 @@
                         Total Users
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
                     </div>
-                    <div class="stat-card-value" id="stat-total-users">12,458</div>
+                    <!-- Total ගාණ -->
+                    <div class="stat-card-value" id="stat-total-users"><?php echo $data['stats']->total_users; ?></div>
                     <div class="stat-card-sub"><span class="stat-trend up">↑ 12%</span> vs last month</div>
                 </div>
+
                 <div class="stat-card">
                     <div class="stat-card-label">
                         Active
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                     </div>
-                    <div class="stat-card-value" id="stat-active-users">11,204</div>
-                    <div class="stat-card-sub">90% of total users</div>
+                    <!-- Active ගාණ -->
+                    <div class="stat-card-value" id="stat-active-users"><?php echo $data['stats']->active_users ?: 0; ?></div>
+                    <div class="stat-card-sub">Current active accounts</div>
                 </div>
+
                 <div class="stat-card">
                     <div class="stat-card-label">
                         Suspended
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
                     </div>
-                    <div class="stat-card-value" id="stat-suspended-users">843</div>
-                    <div class="stat-card-sub"><span class="stat-trend down">↑ 5%</span> vs last month</div>
+                    <!-- Suspended ගාණ -->
+                    <div class="stat-card-value" id="stat-suspended-users"><?php echo $data['stats']->suspended_users ?: 0; ?></div>
+                    <div class="stat-card-sub">Blocked from platform</div>
                 </div>
+
                 <div class="stat-card accent-navy">
                     <div class="stat-card-label">
                         Locked Accounts
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                     </div>
-                    <div class="stat-card-value" id="stat-locked-users">411</div>
+                    <!-- Locked ගාණ -->
+                    <div class="stat-card-value" id="stat-locked-users"><?php echo $data['stats']->locked_users ?: 0; ?></div>
                     <div class="stat-card-sub">Requires immediate action</div>
                 </div>
             </section>
@@ -106,12 +114,76 @@
                         </tr>
                     </thead>
                     <tbody id="user-table-body">
-                        <!-- rendered by js/admin.js -->
+                        <?php if(!empty($data['users'])) : ?>
+                            <?php foreach($data['users'] as $user) : ?>
+                                <?php 
+                                    // 1. නමේ මුල් අකුර
+                                    $initial = strtoupper(substr($user->name, 0, 1));
+                                    
+                                    // 2. Role එකට අදාළ පාට
+                                    $roleClass = 'pill-gray';
+                                    if($user->role == 'admin') { $roleClass = 'pill-navy'; }
+                                    elseif($user->role == 'supplier') { $roleClass = 'pill-blue'; }
+                                    
+                                    // 3. අලුත් Status එකට අදාළ පාට තෝරාගැනීම
+                                    $status = strtoupper($user->account_status);
+                                    $statusClass = 'pill-green'; // Default is active
+                                    
+                                    if($user->account_status == 'locked') {
+                                        $statusClass = 'pill-red';
+                                    } elseif($user->account_status == 'suspended') {
+                                        $statusClass = 'pill-amber';
+                                    }
+                                ?>
+                                
+                                <!-- එකවුන්ට් එක active නැත්නම් රතු පාට Background එකක් (flagged-row) වැටෙන්න -->
+                                <tr class="<?php echo $user->account_status != 'active' ? 'flagged-row' : ''; ?>" data-user-id="<?php echo $user->id; ?>">
+                                    <td><input type="checkbox" class="admin-checkbox row-checkbox"></td>
+                                    <td>
+                                        <div class="cell-user">
+                                            <div class="cell-avatar" style="background:#E0E7FF;color:#3730A3;"><?php echo $initial; ?></div>
+                                            <div>
+                                                <div class="cell-name"><?php echo $user->name; ?></div>
+                                                <div class="cell-sub"><?php echo $user->email; ?></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="pill <?php echo $roleClass; ?>"><?php echo strtoupper($user->role); ?></span></td>
+                                    <td><span class="pill <?php echo $statusClass; ?>"><span class="pill-dot"></span><?php echo $status; ?></span></td>
+                                    <td><?php echo $user->last_login_at ? date('Y-m-d H:i', strtotime($user->last_login_at)) : 'Never'; ?></td>
+                                    <td style="position:relative;"><button class="row-actions-btn" data-user-id="<?php echo $user->id; ?>">⋮</button></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <tr><td colspan="6" style="text-align:center;color:var(--text-light);padding:32px;">No users found in database.</td></tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
                 <div class="table-footer">
-                    <span class="table-footer-info" id="table-footer-info">Showing entries…</span>
-                    <div class="pagination" id="pagination-container"></div>
+                    <span class="table-footer-info" id="table-footer-info">
+                        Showing <?php echo ($data['totalUsers'] > 0) ? $data['offset'] + 1 : 0; ?> to 
+                        <?php echo min($data['offset'] + $data['limit'], $data['totalUsers']); ?> 
+                        of <?php echo $data['totalUsers']; ?> entries
+                    </span>
+                    
+                    <div class="pagination" id="pagination-container">
+                        <!-- කලින් පිටුවට යන බොත්තම -->
+                        <?php if($data['currentPage'] > 1) : ?>
+                            <a href="?page=<?php echo $data['currentPage'] - 1; ?>" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; color: #334155; text-decoration: none; background: white;">&lsaquo;</a>
+                        <?php endif; ?>
+
+                        <!-- පිටු අංක ටික -->
+                        <?php for($i = 1; $i <= $data['totalPages']; $i++) : ?>
+                            <a href="?page=<?php echo $i; ?>" style="padding: 6px 14px; margin: 0 4px; border-radius: 6px; text-decoration: none; display: inline-block; font-weight: 600; <?php echo ($i == $data['currentPage']) ? 'background: #1e293b; color: #ffffff;' : 'background: #ffffff; color: #334155; border: 1px solid #cbd5e1;'; ?>">
+                                <?php echo $i; ?>
+                            </a>
+                        <?php endfor; ?>
+
+                        <!-- ඊළඟ පිටුවට යන බොත්තම -->
+                        <?php if($data['currentPage'] < $data['totalPages']) : ?>
+                            <a href="?page=<?php echo $data['currentPage'] + 1; ?>" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; color: #334155; text-decoration: none; background: white;">&rsaquo;</a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </main>

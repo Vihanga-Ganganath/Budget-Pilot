@@ -1,0 +1,17 @@
+INSERT INTO users (name, email, role, account_status, password_hash, last_login_at) VALUES
+-- ඔයාගේ ප්‍රධාන Admin ගිණුම (මේකෙන් තමයි ඔයා ලොග් වෙන්න ඕනේ)
+('System Admin', 'admin@budgetpilot.com', 'admin', 'active', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '2026-08-16 12:30:00'),
+
+-- අනිත් ඩෙමෝ යූසර්ස්ලා ටික (Active, Locked සහ Suspended මිශ්‍ර කරලා)
+('Alex Perera', 'alex.p@example.com', 'customer', 'active', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '2026-08-16 12:30:00'),
+('GreenHarvest Foods', 'vendor@greenharvest.co', 'supplier', 'active', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '2026-08-15 09:15:00'),
+('Sarah Perera', 'sarah.admin@budgetpilot.com', 'admin', 'active', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '2026-08-16 14:45:00'),
+('Marcus Vance', 'm.vance@unknown.net', 'customer', 'locked', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '2025-10-12 10:00:00'),
+('Priya Fernando', 'priya.f@example.com', 'customer', 'active', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '2026-08-13 16:20:00'),
+('Nimal Dairy Co.', 'contact@nimaldairy.lk', 'supplier', 'suspended', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '2026-08-01 08:00:00'),
+('Dilki Silva', 'dilki.s@budgetpilot.com', 'admin', 'active', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '2026-08-15 11:30:00'),
+('Kasun Jayawardena', 'kasun.j@example.com', 'customer', 'active', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '2026-08-16 09:45:00'),
+('FreshMart Lanka', 'orders@freshmart.lk', 'supplier', 'active', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '2026-08-16 08:30:00'),
+('Unknown User', 'temp0234@mailinator.com', 'customer', 'locked', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '2025-09-30 14:00:00'),
+('Ishara Bandara', 'ishara.b@example.com', 'customer', 'active', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '2026-08-16 13:50:00'),
+('CityFresh Grocers', 'hello@cityfresh.lk', 'supplier', 'suspended', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '2026-07-16 10:15:00');

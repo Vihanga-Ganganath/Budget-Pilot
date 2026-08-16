@@ -285,66 +285,7 @@ function initDashboardPage() {
 
 let userMgmtState = { page: 1, pageSize: 6, filterRole: 'all', filterStatus: 'all', search: '' };
 
-function initUserManagementPage() {
-    renderUserStats();
-    renderUserTable();
 
-    const searchInput = document.getElementById('user-search-input');
-    if (searchInput) searchInput.addEventListener('input', () => {
-        userMgmtState.search = searchInput.value.toLowerCase();
-        userMgmtState.page = 1;
-        renderUserTable();
-    });
-
-    const roleFilter = document.getElementById('role-filter');
-    if (roleFilter) roleFilter.addEventListener('change', () => {
-        userMgmtState.filterRole = roleFilter.value;
-        userMgmtState.page = 1;
-        renderUserTable();
-    });
-
-    const statusFilter = document.getElementById('status-filter');
-    if (statusFilter) statusFilter.addEventListener('change', () => {
-        userMgmtState.filterStatus = statusFilter.value;
-        userMgmtState.page = 1;
-        renderUserTable();
-    });
-
-    const moreFiltersBtn = document.getElementById('more-filters-btn');
-    if (moreFiltersBtn) moreFiltersBtn.addEventListener('click', () => {
-        toast('Showing all available filters.');
-    });
-
-    const selectAll = document.getElementById('select-all-checkbox');
-    if (selectAll) selectAll.addEventListener('change', () => {
-        document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = selectAll.checked);
-    });
-
-    // Add Admin User modal
-    const addForm = document.getElementById('add-admin-form');
-    if (addForm) addForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const data = getAdminData();
-        const name = addForm.full_name.value.trim();
-        const email = addForm.email.value.trim();
-        if (!name || !email) return;
-        const newUser = {
-            id: Date.now(),
-            name, email,
-            role: 'ADMIN', status: 'ACTIVE', lastLogin: 'Just now',
-            initial: name.charAt(0).toUpperCase(), color: '#3730A3', bg: '#E0E7FF'
-        };
-        data.users.unshift(newUser);
-        data.totalUsersCount += 1;
-        data.activeUsersCount += 1;
-        saveAdminData(data);
-        addForm.reset();
-        document.getElementById('add-admin-modal').style.display = 'none';
-        renderUserStats();
-        renderUserTable();
-        toast(`${name} was added as an Admin.`);
-    });
-}
 
 function getFilteredUsers() {
     const data = getAdminData();
@@ -1111,7 +1052,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const page = document.body.getAttribute('data-page');
     switch (page) {
         case 'dashboard': initDashboardPage(); break;
-        case 'users': initUserManagementPage(); break;
         case 'suppliers': initSupplierApprovalsPage(); break;
         case 'products': initProductModerationPage(); break;
         case 'security': initSecurityAuditPage(); break;

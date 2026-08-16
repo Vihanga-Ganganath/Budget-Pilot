@@ -28,17 +28,42 @@ class AdminController extends Controller {
     }
 
     public function users() {
-
         // 🔒 පිටුව ආරක්ෂා කිරීම: කවුරුහරි ලොග් වෙලා නැත්නම් හෝ Admin නෙවෙයි නම්
         if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
-            // එයාව බලෙන්ම Login පිටුවට Redirect කරනවා
             header('Location: ' . URLROOT . '/admin/login');
-            exit(); // මෙතනින් කේතය රන් වෙන එක සම්පූර්ණයෙන්ම නවත්වනවා
+            exit();
         }
 
-        // ලොග් වෙලා ඉන්න Admin කෙනෙක් නම් විතරක් admin_user_management View එක ලෝඩ් කරනවා
+        // Model එක Load කරගැනීම
+        $userModel = $this->model('User'); 
+        
+        // ඩේටාබේස් එකෙන් Stats ලබා ගැනීම
+        $stats = $userModel->getUserStats();
 
-        $this->view('admin/admin_user_management'); // Make sure this file exists in Views/admin/
+        // --- Pagination ගණනය කිරීම් ---
+        $limit = 6; 
+        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1; 
+        $offset = ($currentPage - 1) * $limit; 
+        
+        $totalUsers = $stats->total_users;
+        $totalPages = ceil($totalUsers / $limit); 
+
+        // අදාළ පිටුවට අදාළ යූසර්ස්ලා පමණක් ලබා ගැනීම
+        $users = $userModel->getUsers($limit, $offset);
+
+        // View එකට යැවිය යුතු සියලුම දත්ත එකතු කිරීම
+        $data = [
+            'users' => $users,
+            'stats' => $stats,
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages,
+            'limit' => $limit,
+            'offset' => $offset,
+            'totalUsers' => $totalUsers
+        ];
+
+        // View එක Load කිරීම
+        $this->view('admin/admin_user_management', $data);
     }
 
     public function suppliers() {
