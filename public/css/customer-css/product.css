@@ -1,0 +1,321 @@
+/* ==========================================================================
+   Budget Pilot — product detail
+   Loaded after settings.css and grocery.css.
+   ========================================================================== */
+
+/* ---------- Breadcrumb ---------- */
+.crumbs{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin-bottom:20px;
+  font-size:.92rem;color:var(--muted);
+}
+.crumbs a{color:var(--body);}
+.crumbs a:hover{color:var(--accent);text-decoration:underline;}
+.crumbs span:last-child{color:var(--text);font-weight:600;}
+
+/* ---------- Layout ---------- */
+.detail{
+  display:grid;
+  grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);
+  gap:22px;
+  align-items:start;
+  margin-bottom:30px;
+}
+.detail__left,.detail__right{display:grid;gap:22px;align-content:start;}
+
+/* ---------- Gallery ---------- */
+.gallery__main{
+  position:relative;
+  /* Square, so square product shots fill the frame instead of floating in it. */
+  aspect-ratio:1 / 1;
+  max-height:520px;
+  background:var(--tile, #EDEFF4);
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+}
+.gallery__main.has-photo{background:#fff;}
+.gallery__photo{
+  width:100%;height:100%;
+  object-fit:contain;
+  padding:4px;
+  display:block;
+  transform:scale(var(--hero-zoom, 1.06));
+}
+.gallery__empty{
+  margin:0;padding:0 24px;
+  text-align:center;font-size:.9rem;color:var(--muted);
+}
+
+.tag{
+  position:absolute;z-index:2;
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 14px;
+  border-radius:99px;
+  font-size:.82rem;font-weight:600;
+}
+.tag svg{width:15px;height:15px;}
+.tag--verified{top:16px;left:16px;background:#9BEE95;color:#14532D;}
+.tag--brand{top:56px;left:16px;background:var(--navy);color:#fff;}
+
+.gallery__thumbs{
+  display:flex;gap:12px;flex-wrap:wrap;
+  margin-top:14px;
+}
+.thumb{
+  /* Square, to match square product shots. */
+  width:88px;height:88px;
+  padding:0;
+  border:2px solid var(--line);
+  border-radius:10px;
+  background:var(--surface);
+  overflow:hidden;
+  padding:0;cursor:pointer;
+  display:grid;place-items:center;
+  transition:border-color .16s ease;
+}
+.thumb:has(img){background:#fff;}
+.thumb img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+  /* Studio shots carry their own white margin, so crop in a little.
+     Raise --photo-zoom if your pictures still look small, lower it to 1
+     if anything important gets cut off. */
+  transform:scale(var(--photo-zoom, 1.14));
+}
+.thumb__label{
+  font-size:.74rem;font-weight:600;color:var(--muted);
+  padding:4px;text-align:center;line-height:1.3;
+}
+.thumb:hover{border-color:#C9CFE4;}
+.thumb.is-on{border-color:var(--navy);}
+
+/* ---------- Facts ---------- */
+.facts__title{
+  display:flex;align-items:center;gap:9px;
+  margin:0 0 16px;
+  font-family:var(--font-display);
+  font-size:1.06rem;font-weight:600;color:var(--text);
+}
+.facts__title svg{width:19px;height:19px;color:var(--accent);}
+.facts__list{display:grid;gap:2px;}
+.facts__row{
+  display:flex;justify-content:space-between;gap:16px;
+  padding:9px 0;
+  border-bottom:1px solid var(--line);
+  font-size:.94rem;
+}
+.facts__row:last-child{border-bottom:0;}
+.facts__row span{color:var(--body);}
+.facts__row strong{color:var(--text);font-weight:600;}
+.facts__note{margin:12px 0 0;font-size:.78rem;color:var(--muted);}
+
+/* ---------- Summary ---------- */
+.summary__head{display:flex;align-items:flex-start;gap:14px;}
+.summary__name{
+  flex:1;min-width:0;margin:0;
+  font-family:var(--font-display);
+  font-size:1.35rem;font-weight:600;color:var(--accent);
+  line-height:1.3;
+}
+.summary__save{
+  flex:none;border:0;background:none;padding:4px;
+  color:var(--muted);cursor:pointer;border-radius:8px;
+}
+.summary__save svg{width:22px;height:22px;}
+.summary__save:hover{color:var(--danger);}
+.summary__save[aria-pressed="true"]{color:var(--danger);}
+.summary__save[aria-pressed="true"] svg{fill:currentColor;}
+
+.rating{
+  display:flex;align-items:center;gap:8px;
+  margin:6px 0 14px;
+  font-size:.92rem;color:var(--muted);
+}
+.rating__stars{color:#E8A33D;letter-spacing:1px;font-size:1rem;}
+.rating strong{color:var(--text);}
+
+.pricebox{
+  display:grid;grid-template-columns:1fr 1fr;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:var(--control);
+  overflow:hidden;
+  margin-bottom:18px;
+}
+.pricebox__cell{padding:12px 15px;}
+.pricebox__cell + .pricebox__cell{border-left:1px solid var(--line);}
+.pricebox__label{
+  display:block;
+  font-size:.72rem;font-weight:600;
+  letter-spacing:.9px;text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+.pricebox__value{
+  font-family:var(--font-display);
+  font-size:1.35rem;font-weight:700;color:var(--accent);
+}
+.pricebox__value--sm{font-size:1.1rem;}
+
+.brandline{
+  margin:0 0 8px;
+  font-size:.72rem;font-weight:600;
+  letter-spacing:.9px;text-transform:uppercase;color:var(--muted);
+}
+
+.specs{margin:14px 0 0;}
+.specs__row{
+  display:flex;justify-content:space-between;gap:16px;
+  padding:9px 0;
+  border-bottom:1px solid var(--line);
+  font-size:.94rem;
+}
+.specs__row dt{color:var(--body);margin:0;}
+.specs__row dd{margin:0;color:var(--text);font-weight:600;text-align:right;}
+
+.summary__sub{
+  margin:16px 0 8px;
+  font-family:var(--font-display);
+  font-size:1rem;font-weight:600;color:var(--accent);
+}
+.summary__desc{margin:0 0 18px;font-size:.94rem;line-height:1.65;color:var(--body);}
+
+.summary__actions{display:flex;gap:10px;flex-wrap:wrap;}
+.summary__actions .btn{
+  flex:1;min-width:150px;
+  padding:11px 16px;
+  font-size:.9rem;
+  gap:7px;
+}
+.summary__actions .btn svg{width:16px;height:16px;}
+
+/* ---------- Verified banner ---------- */
+.verified{
+  display:flex;align-items:flex-start;gap:14px;
+  background:var(--navy);
+  border-radius:14px;
+  padding:18px 20px;
+  color:#fff;
+}
+.verified__icon{width:26px;height:26px;flex:none;color:#A9B4E0;margin-top:2px;}
+.verified__title{
+  margin:0 0 6px;
+  font-family:var(--font-display);
+  font-size:1.05rem;font-weight:600;
+}
+.verified__text{margin:0;font-size:.9rem;line-height:1.6;color:#C3CAE8;}
+
+/* ---------- Insights ---------- */
+.section__title{
+  font-family:var(--font-display);
+  font-size:1.15rem;font-weight:600;color:var(--accent);
+  margin:0 0 14px;
+}
+/* Beside the product facts: two brands fit on one line, a third wraps onto
+   a second line rather than all three squeezing together. */
+.alts{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.alternatives{margin-top:2px;}
+.alternatives{margin-top:4px;}
+/* Each card is a link (or a button for the brand on screen), so it needs to
+   look and behave like one. */
+.alt{
+  display:flex;flex-direction:column;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:13px 14px;
+  font:inherit;
+  text-align:left;
+  text-decoration:none;
+  cursor:pointer;
+  transition:border-color .16s ease,transform .16s ease,box-shadow .16s ease;
+}
+.alt:hover{
+  border-color:var(--navy);
+  transform:translateY(-2px);
+  box-shadow:0 10px 22px -16px rgba(10,14,30,.6);
+}
+.alt:focus-visible{outline:2px solid var(--green);outline-offset:2px;}
+.alt__head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.pill{
+  font-size:.66rem;font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;
+  padding:4px 9px;border-radius:99px;
+  white-space:nowrap;
+}
+.pill--best{background:#DCF5E6;color:#1B7A46;}
+.pill--bulk{background:#E0E6F8;color:var(--navy);}
+.pill--current{background:var(--navy);color:#fff;}
+.settings.is-dark .pill--current{background:#4A5896;}
+.settings.is-dark .pill--best{background:#1E4534;color:#8FE0AE;}
+.settings.is-dark .pill--bulk{background:#2B3358;color:#B9C4F0;}
+.alt__price{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--accent);}
+
+.alt__body{display:flex;gap:10px;align-items:center;margin-bottom:10px;}
+.alt__thumb{
+  width:48px;height:48px;flex:none;
+  overflow:hidden;
+  border-radius:10px;
+  background:var(--control);
+  border:1px solid var(--line);
+  display:grid;place-items:center;
+  overflow:hidden;
+  font-family:var(--font-display);font-weight:600;font-size:.8rem;color:var(--muted);
+}
+.alt__thumb:has(img){background:#fff;}
+.alt__thumb img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+  transform:scale(var(--photo-zoom, 1.14));
+}
+.alt__text{flex:1;min-width:0;}
+.alt__brand{display:block;color:var(--text);font-weight:600;font-size:.92rem;}
+.alt__note{display:block;font-size:.8rem;line-height:1.4;color:var(--muted);}
+.alt__note.is-save{color:#1B7A46;font-weight:600;}
+.alt--current{border-color:var(--navy);box-shadow:0 0 0 1px var(--navy) inset;}
+.alt--empty{grid-column:1 / -1;cursor:default;}
+.alt--empty:hover{border-color:var(--line);transform:none;box-shadow:none;}
+
+.alt__cue{
+  margin-top:auto;
+  display:inline-flex;align-items:center;gap:6px;
+  color:var(--accent);font-size:.8rem;font-weight:600;
+}
+.alt:hover .alt__cue{text-decoration:underline;}
+.alt--empty{justify-content:center;color:var(--muted);font-size:.9rem;}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){
+  .detail{grid-template-columns:1fr;}
+  /* Full width once the two columns collapse, so more can share a line. */
+  .alts{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));}
+}
+@media (max-width:560px){
+  .alts{grid-template-columns:1fr;}
+}
+@media (max-width:560px){
+  .pricebox{grid-template-columns:1fr;}
+  .pricebox__cell + .pricebox__cell{border-left:0;border-top:1px solid var(--line);}
+  .thumb{width:84px;height:64px;}
+}
+
+/* Compare-table thumbnails, sized to fill their cell. */
+.ctable td:has(.ctable__thumb){overflow:hidden;}
+.ctable__thumb{
+  width:52px;height:52px;
+  object-fit:cover;
+  transform:scale(var(--photo-zoom, 1.14));
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:8px;
+  display:block;
+}

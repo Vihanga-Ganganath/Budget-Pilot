@@ -1,0 +1,123 @@
+/* ==========================================================================
+   Budget Pilot — household
+   Builds on the shared shell in settings.css.
+   ========================================================================== */
+
+.hhead{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:20px;flex-wrap:wrap;margin-bottom:26px;
+}
+.hhead .page__sub{margin-bottom:0;}
+.hhead .btn{gap:8px;}
+.hhead .btn svg{width:17px;height:17px;}
+
+/* ---------- Summary strip ---------- */
+.hhsum{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;margin-bottom:22px;
+}
+.hhsum__box{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:20px 22px;
+}
+.hhsum__label{
+  margin:0 0 6px;
+  font-family:var(--font-body);
+  font-size:.78rem;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+}
+.hhsum__value{
+  font-family:var(--font-display);
+  font-size:1.6rem;font-weight:600;color:var(--accent);
+}
+.hhsum__value.is-over{color:var(--danger);}
+
+/* ---------- Cards ---------- */
+.card + .card{margin-top:22px;}
+.card__head{margin-bottom:16px;}
+.card__hint{margin:4px 0 0;font-size:.86rem;color:var(--muted);}
+
+/* ---------- People ---------- */
+.people{display:flex;flex-direction:column;gap:6px;margin-top:14px;}
+.person{
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr) auto 120px 42px;
+  align-items:center;gap:14px;
+  padding:12px 10px;border-radius:10px;
+}
+.person:hover{background:var(--control);}
+
+.face{
+  width:42px;height:42px;border-radius:50%;
+  background:var(--control) center/cover no-repeat;
+  display:grid;place-items:center;
+  font-family:var(--font-display);font-weight:600;font-size:.85rem;color:#fff;
+}
+
+.person__text{min-width:0;}
+.person__name{
+  margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  font-family:var(--font-display);font-size:.98rem;font-weight:600;color:var(--text);
+}
+.person__meta{margin:2px 0 0;font-size:.82rem;color:var(--muted);}
+.person__amount{
+  font-family:var(--font-display);font-size:1.02rem;font-weight:600;color:var(--text);
+  white-space:nowrap;
+}
+.person__bar{
+  display:block;height:7px;border-radius:999px;
+  background:var(--control);overflow:hidden;
+}
+.person__bar i{display:block;height:100%;border-radius:999px;background:var(--green);}
+.person__pct{font-size:.78rem;color:var(--muted);text-align:right;}
+
+.tagpill{
+  padding:2px 9px;border-radius:999px;
+  background:var(--control);
+  font-family:var(--font-body);font-size:.68rem;font-weight:600;
+  letter-spacing:.04em;color:var(--muted);
+}
+.tagpill--main{background:var(--lime);color:#14532D;}
+
+/* ---------- Filter chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+.chip{
+  padding:8px 16px;
+  border:1px solid transparent;border-radius:999px;
+  background:var(--control);
+  font-family:inherit;font-size:.86rem;font-weight:500;
+  color:var(--body);cursor:pointer;
+  transition:background .15s ease,color .15s ease;
+}
+.chip:hover{background:var(--line);color:var(--text);}
+.chip--on{background:var(--navy);color:#fff;}
+.settings.is-dark .chip--on{background:var(--accent);color:#101423;}
+
+/* ---------- Transaction feed ---------- */
+.feed{display:flex;flex-direction:column;}
+.row{
+  display:grid;grid-template-columns:10px minmax(0,1fr) auto;
+  align-items:center;gap:14px;
+  padding:14px 8px;
+  border-bottom:1px solid var(--line);
+}
+.row:last-child{border-bottom:0;}
+.row__dot{width:10px;height:10px;border-radius:50%;}
+.row__name{margin:0;font-family:var(--font-display);font-size:.95rem;font-weight:600;color:var(--text);}
+.row__meta{margin:2px 0 0;font-size:.82rem;color:var(--muted);}
+.row__amount{
+  font-family:var(--font-display);font-weight:600;color:var(--danger);
+  white-space:nowrap;
+}
+
+/* ---------- Denied ---------- */
+.denied{max-width:52ch;}
+.denied .btn{margin-top:8px;}
+
+@media (max-width:820px){
+  .hhsum{grid-template-columns:1fr;}
+  .person{grid-template-columns:40px minmax(0,1fr) auto;}
+  .person__bar,.person__pct{display:none;}
+}
