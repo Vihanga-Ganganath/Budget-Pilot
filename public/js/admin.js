@@ -58,7 +58,7 @@ function renderAdminSidebar() {
                 <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                 Settings
             </a>
-            <a href="/BudgetPilot/admin/login" class="menu-item logout-item" id="admin-logout-link">
+            <a href="/BudgetPilot/admin/logout" class="menu-item logout-item" id="admin-logout-link">
                 <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                 Logout
             </a>
@@ -326,7 +326,7 @@ function wireTopbarInteractions() {
                 <div class="dropdown-header">${data.profile.fullName}</div>
                 <div class="dropdown-item"><a href="/BudgetPilot/admin/settings">👤 View Profile</a></div>
                 <div class="dropdown-item"><a href="/BudgetPilot/admin/settings">⚙️ Settings</a></div>
-                <div class="dropdown-item"><a href="/BudgetPilot/admin/login" id="dropdown-logout">🚪 Logout</a></div>`);
+                <div class="dropdown-item"><a href="/BudgetPilot/admin/logout" id="dropdown-logout">🚪 Logout</a></div>`);
         });
     }
 
@@ -1195,51 +1195,6 @@ function initSettingsPage() {
     });
 }
 
-/* ============================================================
-   12b. PAGE: LOGIN / REGISTER (no backend yet — demo auth flow)
-   ============================================================ */
-
-function initLoginPage() {
-    const form = document.getElementById('admin-login-form');
-    if (!form) return;
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = form.email.value.trim();
-        const password = form.password.value;
-        if (!email || !password) {
-            toast('Please enter both email and password.', 'error');
-            return;
-        }
-        const btn = form.querySelector('.admin-submit-btn');
-        if (btn) { btn.disabled = true; btn.textContent = 'Signing in…'; }
-        setTimeout(() => {
-            toast('Signed in successfully. Redirecting…');
-            setTimeout(() => { window.location.href = '/BudgetPilot/admin/dashboard'; }, 500);
-        }, 400);
-    });
-}
-
-function initRegisterPage() {
-    const form = document.getElementById('admin-register-form');
-    if (!form) return;
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const value = form.password.value;
-        const lengthOk = value.length >= 8;
-        const specialOk = /[!@#$%^&*]/.test(value);
-        const numberOk = /[0-9]/.test(value);
-        if (!lengthOk || !specialOk || !numberOk) {
-            toast('Password does not meet all requirements yet.', 'error');
-            return;
-        }
-        const btn = form.querySelector('.admin-submit-btn');
-        if (btn) { btn.disabled = true; btn.textContent = 'Creating account…'; }
-        setTimeout(() => {
-            toast('Admin account created. Redirecting to sign in…');
-            setTimeout(() => { window.location.href = '/BudgetPilot/admin/login'; }, 700);
-        }, 400);
-    });
-}
 
 /* ============================================================
    13. BOOTSTRAP

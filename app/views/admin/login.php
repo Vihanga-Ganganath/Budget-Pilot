@@ -25,7 +25,7 @@
 
     <!-- Login Card -->
     <div class="admin-auth-card">
-        <form id="admin-login-form" action="process_admin_login.php" method="POST">
+        <form action="<?php echo URLROOT; ?>/admin/login" method="POST">
 
             <div class="admin-form-group">
                 <div class="admin-form-header">
@@ -71,5 +71,33 @@
     <a href="index.php" class="admin-back-link">← Back to Home</a>
 
     <script src="<?php echo URLROOT; ?>/public/js/admin.js"></script>
+
+    <!-- ... ඔයාගේ Login Form එක සහ අනිත් HTML කේත ... -->
+
+    <script src="<?php echo URLROOT; ?>/public/js/admin.js"></script>
+
+    <!-- PHP වලින් Error එකක් ඇවිත් තියෙනවා නම් Toast එක පෙන්වන්න -->
+    <?php if(!empty($data['error'])) : ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                toast('<?php echo $data['error']; ?>', 'error');
+            });
+        </script>
+    <?php endif; ?>
+
+    <!-- PHP වලින් Success එකක් ඇවිත් තියෙනවා නම් Toast එක පෙන්වලා Dashboard එකට යවන්න -->
+    <?php if(!empty($data['success'])) : ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                toast('<?php echo $data['success']; ?>', 'success');
+                
+                // තත්පරයකට පස්සේ ඇත්තටම Dashboard එකට Redirect කරනවා!
+                setTimeout(() => { 
+                    window.location.href = '<?php echo URLROOT; ?>/admin/dashboard'; 
+                }, 1000);
+            });
+        </script>
+    <?php endif; ?>
+
 </body>
 </html>

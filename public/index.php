@@ -1,4 +1,6 @@
 <?php
+// පද්ධතියේ Sessions ආරම්භ කිරීම
+session_start();
 // 1. Load the configuration file (This is where URLROOT is!)
 require_once '../app/Config/config.php';
 
