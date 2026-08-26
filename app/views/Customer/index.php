@@ -281,7 +281,7 @@
       </p>
       <div class="cta__actions">
         <a class="btn btn--lime btn--lg" href="<?php echo URLROOT; ?>/customer/login">Sign in as a customer</a>
-        <a class="btn btn--outline btn--lg" href="<?php echo URLROOT; ?>/customer/supplierLogin">Sign in as a supplier</a>
+        <a class="btn btn--outline btn--lg" href="<?php echo URLROOT; ?>/supplier/login">Sign in as a supplier</a>
       </div>
       <p class="cta__fine">New here? <a href="<?php echo URLROOT; ?>/customer/register">Create an account</a> — it takes a minute.</p>
     </div>
@@ -318,7 +318,7 @@
       <h4 class="footer__heading">Account</h4>
       <ul class="footer__links">
         <li><a href="<?php echo URLROOT; ?>/customer/login">Customer sign in</a></li>
-        <li><a href="<?php echo URLROOT; ?>/customer/supplierLogin">Supplier sign in</a></li>
+        <li><a href="<?php echo URLROOT; ?>/supplier/login">Supplier sign in</a></li>
         <li><a href="<?php echo URLROOT; ?>/customer/register">Create an account</a></li>
         <li><a href="<?php echo URLROOT; ?>/customer/settings">Settings</a></li>
         <li><a href="<?php echo URLROOT; ?>/customer/privacy">Privacy</a></li>

@@ -13,9 +13,6 @@ class CustomerController extends Controller {
         $this->view('Customer/create-account');
     }
 
-    public function supplierLogin() {
-        $this->view('Customer/supplier-login');
-    }
 
     public function dashboard() {
         $this->view('Customer/dashboard');
