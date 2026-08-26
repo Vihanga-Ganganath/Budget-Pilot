@@ -68,7 +68,7 @@
         </div>
     </div>
 
-    <a href="index.php" class="admin-back-link">← Back to Home</a>
+    <a href="<?php echo URLROOT; ?>" class="admin-back-link">← Back to Home</a>
 
     <script src="<?php echo URLROOT; ?>/public/js/admin.js"></script>
 

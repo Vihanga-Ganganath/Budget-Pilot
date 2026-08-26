@@ -1,8 +1,8 @@
 <?php
 class HomeController extends Controller {
-    
+
     public function index() {
-        // Loads the landing page view from app/Views/home.php
+        // Loads the main landing page — the entry point for all public visitors
         $this->view('home');
     }
 }

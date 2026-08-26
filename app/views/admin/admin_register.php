@@ -83,7 +83,7 @@
         </div>
     </div>
 
-    <a href="index.php" class="admin-back-link">← Back to Home</a>
+    <a href="<?php echo URLROOT; ?>" class="admin-back-link">← Back to Home</a>
 
     <script>
         function checkPasswordStrength(value) {

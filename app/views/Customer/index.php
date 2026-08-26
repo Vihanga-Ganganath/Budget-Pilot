@@ -14,7 +14,7 @@
 <!-- ============ TOP BAR ============ -->
 <header class="topbar" id="topbar">
   <div class="topbar__inner">
-    <a class="brand" href="<?php echo URLROOT; ?>/customer/index">
+    <a class="brand" href="<?php echo URLROOT; ?>">
       <span class="brand__mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="currentColor" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="currentColor"/></svg>
       </span>
@@ -292,7 +292,7 @@
 <footer class="footer">
   <div class="footer__grid">
     <div class="footer__brand">
-      <a class="brand brand--footer" href="<?php echo URLROOT; ?>/customer/index">
+      <a class="brand brand--footer" href="<?php echo URLROOT; ?>">
         <span class="brand__mark" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="currentColor" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="currentColor"/></svg>
         </span>

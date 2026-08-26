@@ -24,8 +24,8 @@
     </a>
 
     <nav class="topnav" aria-label="Sections">
-      <a href="index.html#how">How it works</a>
-      <a href="index.html#features">What you get</a>
+      <a href="<?php echo URLROOT; ?>/#how">How it works</a>
+      <a href="<?php echo URLROOT; ?>/#features">What you get</a>
       <a href="<?php echo URLROOT; ?>/customer/privacy">Privacy</a>
     </nav>
 

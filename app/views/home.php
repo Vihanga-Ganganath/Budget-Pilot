@@ -1,533 +1,384 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Budget Pilot - Intelligent Finance & Brand Platform</title>
-    <meta name="description" content="Budget Pilot automates tracking, analyzes spending patterns, and connects smart savers directly with certified brands and suppliers.">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/index.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Budget Pilot — Know what's left before you spend it</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/style.css" />
+<style>
+  /* ── Supplier portal pill in nav ───────────────────────────────────── */
+  .nav-portal-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 99px;
+    border: 1.5px solid rgba(255,255,255,.25);
+    font-size: .88rem; font-weight: 600; color: inherit;
+    transition: border-color .18s ease, background .18s ease;
+  }
+  .nav-portal-pill:hover { border-color: rgba(255,255,255,.6); background: rgba(255,255,255,.08); }
+  .nav-portal-pill svg { width: 14px; height: 14px; flex: none; }
+
+  /* ── Admin login discreet link in footer ───────────────────────────── */
+  .admin-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: .78rem;
+    color: #9AA2B1;
+    letter-spacing: .3px;
+  }
+  .admin-link:hover { color: #6B7280; text-decoration: underline; }
+</style>
 </head>
-<body class="unified-landing">
+<body>
 
-    <!-- Navigation Header -->
-    <header class="navbar-header">
-        <div class="container navbar-container">
-            <a href="index.php" class="navbar-logo" id="navLogo">
-                <div class="logo-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="24" height="24" rx="6" fill="#10B981"/>
-                        <path d="M7 17V7H12C13.5 7 14.5 7.5 15 8.5C15.5 9.5 15.5 10.5 15 11.5C14.5 12.5 13.5 13 12 13H9V17H7ZM9 11H12C13.2 11 13.5 10.5 13.5 10C13.5 9.5 13.2 9 12 9H9V11Z" fill="white"/>
-                    </svg>
-                </div>
-                <span class="logo-text">Budget Pilot</span>
-            </a>
+<!-- ============ TOP BAR ============ -->
+<header class="topbar" id="topbar">
+  <div class="topbar__inner">
+    <!-- Logo links back to home (root) -->
+    <a class="brand" href="<?php echo URLROOT; ?>">
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="currentColor" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span>
+      <span class="brand__text">
+        <span class="brand__name">Budget Pilot</span>
+        <span class="brand__tag">Smart finance copilot</span>
+      </span>
+    </a>
 
-            <nav class="navbar-menu">
-                <a href="#customer-features" class="nav-link">For Customers</a>
-                <a href="#supplier-features" class="nav-link">For Brands</a>
-                <a href="#about" class="nav-link">About Ecosystem</a>
-            </nav>
+    <nav class="topnav" aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#features">What you get</a>
+      <a href="#security">Security</a>
+      <!-- Supplier portal shortcut in nav -->
+      <a class="nav-portal-pill" href="<?php echo URLROOT; ?>/supplier/login">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 7H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3H8l-2 4h12l-2-4z"/>
+        </svg>
+        Supplier Portal
+      </a>
+    </nav>
 
-            <div class="navbar-actions">
-                <!-- Notifications & Cart Icons -->
-                <button class="icon-btn notification-bell" title="Notifications" id="btnNotifications">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                    </svg>
-                    <span class="badge-dot"></span>
-                </button>
-                
-                <button class="icon-btn shopping-cart" title="Shopping Cart" id="btnCart">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                </button>
+    <div class="topbar__actions">
+      <a class="btn btn--quiet" href="<?php echo URLROOT; ?>/customer/login">Sign in</a>
+      <a class="btn btn--lime" href="<?php echo URLROOT; ?>/customer/register">Create account</a>
+    </div>
+  </div>
+</header>
 
+<main>
 
-            </div>
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero__inner">
+
+      <div class="hero__copy">
+        <p class="eyebrow">Budgets · Groceries · One app</p>
+
+        <h1 class="hero__title">
+          Know what's left<br />
+          <em>before</em> you spend it.
+        </h1>
+
+        <p class="hero__text">
+          Budget Pilot splits your income across the things you actually pay for, tracks
+          every expense against it, and checks the grocery catalog for a cheaper brand of
+          the same thing before you reach the till.
+        </p>
+
+        <div class="hero__actions">
+          <a class="btn btn--lime btn--lg" href="<?php echo URLROOT; ?>/customer/register">Start your budget</a>
+          <a class="btn btn--outline btn--lg" href="<?php echo URLROOT; ?>/customer/login">I already have an account</a>
         </div>
+
+        <dl class="proof">
+          <div class="proof__item">
+            <dt>Categories tracked</dt>
+            <dd>8</dd>
+          </div>
+          <div class="proof__item">
+            <dt>Products compared</dt>
+            <dd>60</dd>
+          </div>
+          <div class="proof__item">
+            <dt>Kept as a cushion</dt>
+            <dd>6%</dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- ---- signature: income arriving, then splitting into categories ---- -->
+      <div class="hero__art">
+        <figure class="splitter" id="splitter">
+          <figcaption class="splitter__head">
+            <span class="splitter__label">Monthly income</span>
+            <span class="splitter__income" id="splitterIncome">$2,000</span>
+          </figcaption>
+
+          <div class="splitter__source" aria-hidden="true">
+            <span class="splitter__drain" id="splitterDrain"></span>
+          </div>
+
+          <ul class="slots" id="slots">
+            <li class="slot" data-key="loan" style="--w:33">
+              <span class="slot__name">Loan</span>
+              <span class="slot__fill"></span>
+              <span class="slot__pct">33%</span>
+            </li>
+            <li class="slot" data-key="grocery" style="--w:15">
+              <span class="slot__name">Grocery</span>
+              <span class="slot__fill"></span>
+              <span class="slot__pct">15%</span>
+            </li>
+            <li class="slot" data-key="rent" style="--w:13">
+              <span class="slot__name">Rent</span>
+              <span class="slot__fill"></span>
+              <span class="slot__pct">13%</span>
+            </li>
+            <li class="slot" data-key="transport" style="--w:10">
+              <span class="slot__name">Transport</span>
+              <span class="slot__fill"></span>
+              <span class="slot__pct">10%</span>
+            </li>
+            <li class="slot" data-key="tuition" style="--w:8">
+              <span class="slot__name">Tuition</span>
+              <span class="slot__fill"></span>
+              <span class="slot__pct">8%</span>
+            </li>
+            <li class="slot" data-key="medicine" style="--w:5">
+              <span class="slot__name">Medicine</span>
+              <span class="slot__fill"></span>
+              <span class="slot__pct">5%</span>
+            </li>
+            <li class="slot" data-key="clothing" style="--w:5">
+              <span class="slot__name">Clothing</span>
+              <span class="slot__fill"></span>
+              <span class="slot__pct">5%</span>
+            </li>
+            <li class="slot" data-key="other" style="--w:5">
+              <span class="slot__name">Other</span>
+              <span class="slot__fill"></span>
+              <span class="slot__pct">5%</span>
+            </li>
+          </ul>
+
+          <p class="splitter__buffer" id="splitterBuffer">
+            <span class="splitter__bufferlabel">Left as a cushion</span>
+            <span class="splitter__buffervalue">6% · $120</span>
+          </p>
+
+          <button class="splitter__replay" type="button" id="splitterReplay">Split it again</button>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="how" id="how">
+    <header class="section-head">
+      <p class="eyebrow eyebrow--dark">Three steps, in order</p>
+      <h2 class="section-head__title">Set it once, then just shop</h2>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container hero-container">
-            <div class="hero-content">
-                <div class="hero-text-block active-block">
-                    <h1 class="hero-title">
-                        Intelligent Personal<br>
-                        <span class="text-gradient">Finance & Brand Platform</span>
-                    </h1>
-                    <p class="hero-subtitle">
-                        Budget Pilot automates tracking and price comparison for smart savers, while empowering verified brands to list inventory and run targeted campaigns.
-                    </p>
-                    <div class="hero-cta-group">
-                        <a href="login.php?role=customer" class="btn btn-navy btn-lg">Get Started as Customer</a>
-                        <a href="login.php?role=supplier" class="btn btn-outline btn-lg">Join as Supplier</a>
-                    </div>
-                </div>
-            </div>
+    <ol class="steps">
+      <li class="step reveal">
+        <span class="step__num">01</span>
+        <h3 class="step__title">Split your income</h3>
+        <p class="step__text">
+          Enter what you earn. Budget Pilot suggests an amount for rent, loans, groceries,
+          transport, tuition, medicine, clothing and everything else — and leaves a small
+          cushion untouched. Change any figure you disagree with.
+        </p>
+      </li>
+      <li class="step reveal">
+        <span class="step__num">02</span>
+        <h3 class="step__title">Log what you spend</h3>
+        <p class="step__text">
+          Add an expense in a few seconds, or check out a grocery cart. Either way the
+          amount comes off that category, so the number you see is the number you have
+          left.
+        </p>
+      </li>
+      <li class="step reveal">
+        <span class="step__num">03</span>
+        <h3 class="step__title">Get told before it hurts</h3>
+        <p class="step__text">
+          At 80% of a category you get a warning. Past the limit you get an alert with the
+          exact overspend. Cheaper brands and rollovers land in the same place.
+        </p>
+      </li>
+    </ol>
+  </section>
 
-            <!-- Hero Illustration Widget (Unified) -->
-            <div class="hero-illustration">
-                <div class="illustration-wrapper active-wrapper">
-                    <svg viewBox="0 0 600 450" fill="none" xmlns="http://www.w3.org/2000/svg" class="isometric-svg">
-                        <!-- Background Grid -->
-                        <g opacity="0.3">
-                            <path d="M50 225 L300 100 L550 225 L300 350 Z" stroke="#E2E8F0" stroke-width="1.5"/>
-                            <path d="M100 225 L300 125 L500 225 L300 325 Z" stroke="#E2E8F0" stroke-dasharray="4 4"/>
-                        </g>
+  <!-- ============ FEATURES ============ -->
+  <section class="features" id="features">
+    <header class="section-head">
+      <p class="eyebrow eyebrow--dark">What you get</p>
+      <h2 class="section-head__title">Everything in one place</h2>
+      <p class="section-head__sub">No spreadsheets, no receipts in a shoebox.</p>
+    </header>
 
-                        <!-- Left Side: Consumer Dashboard -->
-                        <g class="isometric-card main-dashboard" transform="translate(-40, 20)">
-                            <path d="M120 180 L320 80 L520 180 L320 280 Z" fill="white" filter="url(#shadow-large)"/>
-                            <path d="M120 180 L320 80 L520 180 L320 280 Z" stroke="#E2E8F0" stroke-width="1"/>
-                            
-                            <!-- Header bar inside dashboard -->
-                            <path d="M150 175 L320 90 L490 175" stroke="#F1F5F9" stroke-width="8" stroke-linecap="round"/>
-                            <circle cx="165" cy="168" r="4" fill="#10B981" />
-                            <circle cx="180" cy="160" r="4" fill="#3B82F6" />
-                            <circle cx="195" cy="152" r="4" fill="#64748B" />
+    <div class="bento">
+      <article class="fcard fcard--wide reveal">
+        <span class="tile" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/><circle cx="17" cy="14.5" r="1.6"/>
+          </svg>
+        </span>
+        <h3 class="fcard__title">Budgets that hold their shape</h3>
+        <p class="fcard__text">
+          Every category shows planned, spent and remaining. Spend against one and only
+          that one moves.
+        </p>
+        <ul class="minibars" aria-hidden="true">
+          <li><span class="minibars__label">Rent</span><span class="minibars__track"><i style="--w:64%"></i></span><span class="minibars__num">64%</span></li>
+          <li><span class="minibars__label">Loan</span><span class="minibars__track"><i style="--w:41%"></i></span><span class="minibars__num">41%</span></li>
+          <li><span class="minibars__label">Grocery</span><span class="minibars__track minibars__track--warn"><i style="--w:88%"></i></span><span class="minibars__num">88%</span></li>
+          <li><span class="minibars__label">Transport</span><span class="minibars__track"><i style="--w:27%"></i></span><span class="minibars__num">27%</span></li>
+        </ul>
+      </article>
 
-                            <!-- Simulated mini consumer chart (green line) -->
-                            <path d="M180 185 L240 160 L300 170 L360 140 L420 150 L460 120" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
-                            <text x="180" y="210" fill="#64748B" font-size="10" font-family="Outfit" transform="rotate(-26.5 180 210)">Budget limits active</text>
-                        </g>
-
-                        <!-- Right Side Overlay: Supplier Panel -->
-                        <g class="isometric-card float-anim-1" transform="translate(180, -20)">
-                            <!-- Base Card -->
-                            <path d="M0 40 L160 -40 L280 20 L120 100 Z" fill="white" filter="url(#shadow-medium)"/>
-                            <path d="M0 40 L160 -40 L280 20 L120 100 Z" stroke="#E2E8F0" stroke-width="1"/>
-                            
-                            <!-- Brand Title -->
-                            <path d="M30 35 L100 0" stroke="#0F172A" stroke-width="4" stroke-linecap="round"/>
-                            
-                            <!-- Product row 1 -->
-                            <path d="M35 50 L110 15" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M120 10 L140 0" stroke="#10B981" stroke-width="5" stroke-linecap="round"/> <!-- In Stock -->
-
-                            <!-- Product row 2 -->
-                            <path d="M50 72 L125 37" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M135 32 L155 22" stroke="#EF4444" stroke-width="5" stroke-linecap="round"/> <!-- Out of Stock -->
-                            
-                            <text x="35" y="88" fill="#64748B" font-size="9" font-family="Outfit" transform="rotate(-26.5 35 88)">Real-time Supplier Catalog</text>
-                        </g>
-
-                        <!-- Floating Widgets -->
-                        <!-- Donut chart popup widget -->
-                        <g class="isometric-card float-anim-2" transform="translate(-10, 200)">
-                            <path d="M0 30 L100 -20 L180 20 L80 70 Z" fill="white" filter="url(#shadow-medium)"/>
-                            <path d="M0 30 L100 -20 L180 20 L80 70 Z" stroke="#E2E8F0" stroke-width="1"/>
-                            <!-- Mini circle segment -->
-                            <path d="M50 25 A 15 10 0 1 1 70 30" fill="none" stroke="#3B82F6" stroke-width="6"/>
-                            <path d="M70 30 A 15 10 0 0 1 50 25" fill="none" stroke="#10B981" stroke-width="6"/>
-                            <text x="95" y="25" fill="#0B1354" font-size="10" font-family="Outfit" font-weight="bold" transform="rotate(-26.5 95 25)">Grocery -30%</text>
-                        </g>
-
-                        <!-- Decorative Isometric Coins / Boxes -->
-                        <g class="iso-coin float-anim-3" transform="translate(140, 310)">
-                            <ellipse cx="20" cy="10" rx="15" ry="8" fill="#10B981"/>
-                            <ellipse cx="20" cy="7" rx="15" ry="8" fill="#34D399" stroke="#059669" stroke-width="1"/>
-                            <text x="17" y="10" fill="white" font-size="9" font-family="Outfit" font-weight="bold">$</text>
-                        </g>
-
-                        <g class="iso-box float-anim-2" transform="translate(380, 260)">
-                            <!-- Box Face Left -->
-                            <path d="M0 10 L15 17.5 L15 32.5 L0 25 Z" fill="#0B1354" opacity="0.9"/>
-                            <!-- Box Face Right -->
-                            <path d="M15 17.5 L30 10 L30 25 L15 32.5 Z" fill="#080E42"/>
-                            <!-- Box Face Top -->
-                            <path d="M0 10 L15 2.5 L30 10 L15 17.5 Z" fill="#1E2B85"/>
-                        </g>
-
-                        <!-- Gradients and Shadows for SVG -->
-                        <defs>
-                            <filter id="shadow-large" x="70" y="40" width="500" height="300" filterUnits="userSpaceOnUse">
-                                <feDropShadow dx="0" dy="15" stdDeviation="15" flood-color="#020A4E" flood-opacity="0.12" />
-                            </filter>
-                            <filter id="shadow-medium" x="-20" y="-60" width="350" height="250" filterUnits="userSpaceOnUse">
-                                <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#020A4E" flood-opacity="0.08" />
-                            </filter>
-                        </defs>
-                    </svg>
-                </div>
-            </div>
+      <article class="fcard reveal">
+        <span class="tile tile--mint" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/>
+            <path d="M2.5 3h2.2l2.6 12.4a1.6 1.6 0 0 0 1.6 1.3h8.9a1.6 1.6 0 0 0 1.6-1.3L21 7H6"/>
+          </svg>
+        </span>
+        <h3 class="fcard__title">Same product, every brand</h3>
+        <p class="fcard__text">
+          Each item lists the brands stocking it with the price per kg or litre worked out,
+          so the cheapest one is obvious.
+        </p>
+        <div class="compare" aria-hidden="true">
+          <div class="compare__row compare__row--win">
+            <span>PureGrain 5kg</span><span class="compare__unit">$3.70/kg</span>
+          </div>
+          <div class="compare__row">
+            <span>GoldenHarvest 5kg</span><span class="compare__unit">$4.59/kg</span>
+          </div>
         </div>
-    </section>
+      </article>
 
-    <!-- Features Bento Section -->
-    <section class="features-section" id="customer-features">
-        <div class="container">
-            <!-- CUSTOMER SECTION -->
-            <div class="features-header">
-                <h2 class="section-title">Engineered for Smart Savers</h2>
-                <p class="section-subtitle">Powerful tools designed to simplify your personal budgeting and shopping.</p>
-            </div>
-
-            <div class="bento-grid active-grid" id="customerBentoGrid">
-                
-                <!-- Card 1: Smart Budgeting (Wide Card 2/3) -->
-                <div class="bento-card card-wide card-white">
-                    <div class="card-inner-flex">
-                        <div class="card-text">
-                            <div class="icon-wrap bg-blue-light">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0B1354" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                                    <line x1="8" y1="21" x2="16" y2="21"></line>
-                                    <line x1="12" y1="17" x2="12" y2="21"></line>
-                                </svg>
-                            </div>
-                            <h3>Smart Budgeting</h3>
-                            <p>AI-optimized budgets that adjust to your spending habits automatically. Set category limits, track monthly income, and allocate security emergency funds.</p>
-                        </div>
-                        <div class="card-mockup-wrapper">
-                            <!-- Mini Tablet Dashboard Mockup -->
-                            <div class="mockup-tablet">
-                                <div class="tablet-header">
-                                    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-                                    <span class="tablet-title">Budgeting Dashboard</span>
-                                </div>
-                                <div class="tablet-body">
-                                    <div class="budget-ring-widget">
-                                        <!-- SVG Donut Chart -->
-                                        <svg width="100" height="100" viewBox="0 0 36 36" class="donut-chart">
-                                            <circle class="donut-ring" cx="18" cy="18" r="15.915" fill="none" stroke="#F1F5F9" stroke-width="3"></circle>
-                                            
-                                            <!-- Green (60%): Grocery -->
-                                            <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="none" stroke="#10B981" stroke-width="3" stroke-dasharray="60 40" stroke-dashoffset="25"></circle>
-                                            <!-- Orange (25%): Bills -->
-                                            <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="none" stroke="#F59E0B" stroke-width="3" stroke-dasharray="25 75" stroke-dashoffset="65"></circle>
-                                            <!-- Navy (15%): Leisure -->
-                                            <circle class="donut-segment" cx="18" cy="18" r="15.915" fill="none" stroke="#0B1354" stroke-width="3" stroke-dasharray="15 85" stroke-dashoffset="90"></circle>
-                                        </svg>
-                                        <div class="donut-center-text">
-                                            <span class="num">$2,450</span>
-                                            <span class="lbl">Spent</span>
-                                        </div>
-                                    </div>
-                                    <div class="budget-legend-list">
-                                        <div class="legend-item"><span class="legend-dot green"></span> Grocery (60%)</div>
-                                        <div class="legend-item"><span class="legend-dot orange"></span> Utilities (25%)</div>
-                                        <div class="legend-item"><span class="legend-dot navy"></span> Fun / Other (15%)</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2: Grocery Catalog (Narrow Card 1/3) -->
-                <div class="bento-card card-narrow card-white">
-                    <div class="icon-wrap bg-green-light">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="9" cy="21" r="1"></circle>
-                            <circle cx="20" cy="21" r="1"></circle>
-                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                        </svg>
-                    </div>
-                    <h3>Grocery Catalog</h3>
-                    <p>Real-time local price comparisons. Save up to 30% weekly on everyday essentials.</p>
-                    
-                    <!-- Dynamic Price Bar Widget -->
-                    <div class="price-bar-widget">
-                        <div class="widget-header">
-                            <span class="item-name">Milk (Whole)</span>
-                            <span class="item-price">$3.49</span>
-                        </div>
-                        <div class="price-progress-bar">
-                            <div class="price-progress-fill" style="width: 75%;"></div>
-                        </div>
-                        <div class="widget-footer">
-                            <span>Market Average: $4.20</span>
-                            <span class="save-tag">-17%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3: Deep Analytics (Narrow Card 1/3, Dark Navy) -->
-                <div class="bento-card card-narrow card-navy">
-                    <div class="icon-wrap bg-navy-accent">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="18" y1="20" x2="18" y2="10"></line>
-                            <line x1="12" y1="20" x2="12" y2="4"></line>
-                            <line x1="6" y1="20" x2="6" y2="14"></line>
-                        </svg>
-                    </div>
-                    <h3>Deep Analytics</h3>
-                    <p>Institutional-grade analysis of your cash flow and savings rate. Understand overspending trends quickly.</p>
-                    
-                    <!-- SVG Bar Graph Mockup -->
-                    <div class="analytics-bars-widget">
-                        <div class="bar-col">
-                            <div class="bar-fill" style="height: 40px; background-color: #312E81;"></div>
-                            <span class="bar-label">W1</span>
-                        </div>
-                        <div class="bar-col">
-                            <div class="bar-fill" style="height: 65px; background-color: #4338CA;"></div>
-                            <span class="bar-label">W2</span>
-                        </div>
-                        <div class="bar-col">
-                            <div class="bar-fill" style="height: 80px; background-color: #818CF8;"></div>
-                            <span class="bar-label">W3</span>
-                        </div>
-                        <div class="bar-col">
-                            <div class="bar-fill" style="height: 100px; background-color: #10B981;"></div>
-                            <span class="bar-label">W4</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4: Bank-Grade Security (Wide Card 2/3) -->
-                <div class="bento-card card-wide card-white">
-                    <div class="card-inner-flex flex-reverse">
-                        <div class="card-text">
-                            <div class="icon-wrap bg-blue-light">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0B1354" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                </svg>
-                            </div>
-                            <h3>Bank-Grade Security</h3>
-                            <p>Your financial data is encrypted with military-grade AES-256. We never sell your personal information or bank credentials to third parties.</p>
-                        </div>
-                        <div class="card-mockup-wrapper">
-                            <!-- Security Shield / Browser Mockup -->
-                            <div class="mockup-security">
-                                <div class="shield-circle">
-                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#0B1354" stroke-width="1.5">
-                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="#DBEAFE"/>
-                                        <polyline points="9 11 11 13 15 9" stroke="#1D4ED8" stroke-width="2"/>
-                                    </svg>
-                                </div>
-                                <div class="encryption-tag">AES-256 Enabled</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- SUPPLIER SECTION -->
-            <div class="features-header section-divider" id="supplier-features">
-                <h2 class="section-title">Designed for Brands & Suppliers</h2>
-                <p class="section-subtitle">Powerful inventory tools and marketing intelligence to grow your merchant business.</p>
-            </div>
-
-            <div class="bento-grid active-grid" id="supplierBentoGrid">
-                
-                <!-- Card 1: Product & Inventory Manager (Wide Card 2/3) -->
-                <div class="bento-card card-wide card-white">
-                    <div class="card-inner-flex">
-                        <div class="card-text">
-                            <div class="icon-wrap bg-emerald-light">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                                </svg>
-                            </div>
-                            <h3>Product & Inventory Management</h3>
-                            <p>Seamlessly publish catalogs, manage stock level states (In Stock, Out of Stock, New Arrival), upload product specifications, and optimize product visibility.</p>
-                        </div>
-                        <div class="card-mockup-wrapper">
-                            <!-- Mini Supplier Product Catalog Dashboard -->
-                            <div class="mockup-tablet">
-                                <div class="tablet-header">
-                                    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-                                    <span class="tablet-title">Inventory Manager</span>
-                                </div>
-                                <div class="tablet-body flex-col scroll-y">
-                                    <div class="inventory-item">
-                                        <div class="item-info">
-                                            <span class="name">Organic Apples</span>
-                                            <span class="category">Produce</span>
-                                        </div>
-                                        <span class="stock-badge in-stock">In Stock</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <div class="item-info">
-                                            <span class="name">Whole Wheat Bread</span>
-                                            <span class="category">Bakery</span>
-                                        </div>
-                                        <span class="stock-badge low-stock">15 Left</span>
-                                    </div>
-                                    <div class="inventory-item">
-                                        <div class="item-info">
-                                            <span class="name">Fresh Almond Milk</span>
-                                            <span class="category">Dairy</span>
-                                        </div>
-                                        <span class="stock-badge out-stock">Out Stock</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2: Direct Marketing Alerts (Narrow Card 1/3) -->
-                <div class="bento-card card-narrow card-white">
-                    <div class="icon-wrap bg-blue-light">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0B1354" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                            <polyline points="22,6 12,13 2,6"></polyline>
-                        </svg>
-                    </div>
-                    <h3>Direct Marketing Alerts</h3>
-                    <p>Alert shoppers instantly when you launch discount campaigns or lower prices for items on their shopping list.</p>
-                    
-                    <!-- SMS Notification Mockup -->
-                    <div class="notification-widget">
-                        <div class="notif-header">
-                            <span class="notif-brand">MegaSaver Brand Alert</span>
-                            <span class="notif-time">Just Now</span>
-                        </div>
-                        <div class="notif-body">
-                            "Special Deal! Organic Milk is now <strong>15% OFF</strong> for the next 24 hours. Check nearby store inventories!"
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3: Seller Analytics (Narrow Card 1/3, Dark Navy) -->
-                <div class="bento-card card-narrow card-navy">
-                    <div class="icon-wrap bg-navy-accent">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
-                            <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
-                        </svg>
-                    </div>
-                    <h3>Seller Analytics</h3>
-                    <p>Track product popularity, views, total click-throughs, and customer interest maps to guide marketing campaigns.</p>
-                    
-                    <!-- Supplier Chart Widget -->
-                    <div class="supplier-stats-widget">
-                        <div class="stat-row">
-                            <span class="label">Product Clicks</span>
-                            <span class="value text-gradient-green">+148%</span>
-                        </div>
-                        <div class="stat-progress-bar">
-                            <div class="stat-progress-fill" style="width: 82%;"></div>
-                        </div>
-                        <div class="stat-row">
-                            <span class="label">Campaign ROI</span>
-                            <span class="value">4.8x</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4: Promotions & Ad Campaigns (Wide Card 2/3) -->
-                <div class="bento-card card-wide card-white">
-                    <div class="card-inner-flex flex-reverse">
-                        <div class="card-text">
-                            <div class="icon-wrap bg-emerald-light">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                                </svg>
-                            </div>
-                            <h3>Promotions & Ad Campaigns</h3>
-                            <p>Build custom marketing banner advertisements, launch product bundle coupons, and promote new arrivals to increase your brand conversion rates.</p>
-                        </div>
-                        <div class="card-mockup-wrapper">
-                            <!-- Campaign Banner Widget Mockup -->
-                            <div class="mockup-security">
-                                <div class="campaign-banner">
-                                    <div class="banner-title">Weekend Megasaver</div>
-                                    <div class="banner-discount">40% OFF</div>
-                                    <div class="banner-code">CODE: BP40</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
+      <article class="fcard fcard--dark reveal">
+        <span class="tile tile--ghost" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <path d="M6 20V11M12 20V5M18 20v-6"/>
+          </svg>
+        </span>
+        <h3 class="fcard__title fcard__title--light">Where the month went</h3>
+        <p class="fcard__text fcard__text--light">
+          A monthly report with spend against budget, your top categories, the brands you
+          buy most, and a CSV export.
+        </p>
+        <div class="bars" aria-hidden="true">
+          <span class="bars__bar" style="--h:34px;--c:#2C3A7A"></span>
+          <span class="bars__bar" style="--h:48px;--c:#4A57A0"></span>
+          <span class="bars__bar" style="--h:62px;--c:#8E96C8"></span>
+          <span class="bars__bar" style="--h:76px;--c:#9BEE95"></span>
         </div>
-    </section>
+      </article>
 
-    <!-- Ready to Take Off / CTA Section -->
-    <section class="cta-section" id="about">
-        <div class="container">
-            <div class="cta-card">
-                <div class="cta-inner-content active-cta">
-                    <h2 class="cta-title">Ready to take off?</h2>
-                    <p class="cta-subtitle">Join thousands of smart savers and top-tier brands using Budget Pilot to master their retail ecosystem.</p>
-                    <div class="cta-buttons">
-                        <a href="login.php?role=customer" class="btn btn-navy btn-lg">Sign in as a customer</a>
-                        <a href="login.php?role=supplier" class="btn btn-outline-navy btn-lg">Sign in as a supplier</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+      <article class="fcard fcard--wide reveal" id="security">
+        <span class="tile" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3l7 3v6c0 4.6-3 8-7 9-4-1-7-4.4-7-9V6z"/><path d="M9.5 12l1.8 1.8L15 10"/>
+          </svg>
+        </span>
+        <h3 class="fcard__title">Your money stays your business</h3>
+        <p class="fcard__text">
+          Your budget, expenses and shopping history stay in your own browser. Nothing is
+          sold on, and nothing is shared with the brands you compare.
+        </p>
+        <p class="fcard__fine">
+          Budget Pilot is a coursework project — sign-in is stored on your device, so treat
+          it as a demo rather than a bank.
+        </p>
+      </article>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container footer-grid">
-            <div class="footer-brand-column">
-                <a href="index.php" class="footer-logo">
-                    <div class="logo-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="24" height="24" rx="6" fill="#10B981"/>
-                            <path d="M7 17V7H12C13.5 7 14.5 7.5 15 8.5C15.5 9.5 15.5 10.5 15 11.5C14.5 12.5 13.5 13 12 13H9V17H7ZM9 11H12C13.2 11 13.5 10.5 13.5 10C13.5 9.5 13.2 9 12 9H9V11Z" fill="white"/>
-                        </svg>
-                    </div>
-                    <span class="logo-text">Budget Pilot</span>
-                </a>
-                <p class="brand-desc">The world's most advanced financial copilot for the modern professional.</p>
-                <div class="social-links">
-                    <a href="#" class="social-icon" aria-label="Globe">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                    </a>
-                    <a href="#" class="social-icon" aria-label="Share">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-                    </a>
-                </div>
-            </div>
+  <!-- ============ CTA ============ -->
+  <section class="cta" id="signin">
+    <div class="cta__card">
+      <p class="eyebrow">Pick your door</p>
+      <h2 class="cta__title">Ready to take off?</h2>
+      <p class="cta__text">
+        Customers budget and shop. Suppliers list products and keep their prices current.
+      </p>
+      <div class="cta__actions">
+        <a class="btn btn--lime btn--lg" href="<?php echo URLROOT; ?>/customer/login">Sign in as a customer</a>
+        <a class="btn btn--outline btn--lg" href="<?php echo URLROOT; ?>/supplier/login">Sign in as a supplier</a>
+      </div>
+      <p class="cta__fine">New here? <a href="<?php echo URLROOT; ?>/customer/register">Create an account</a> — it takes a minute.</p>
+      <p class="cta__fine" style="margin-top:6px">
+        Are you a supplier? <a href="<?php echo URLROOT; ?>/supplier/register">Apply for supplier access</a>
+      </p>
+    </div>
+  </section>
+</main>
 
-            <div class="footer-links-column">
-                <h4>PRODUCT</h4>
-                <a href="#customer-features">Features</a>
-                <a href="#">Integrations</a>
-                <a href="#">Pricing</a>
-            </div>
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="footer__grid">
+    <div class="footer__brand">
+      <a class="brand brand--footer" href="<?php echo URLROOT; ?>">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="currentColor" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="currentColor"/></svg>
+        </span>
+        <span class="brand__text">
+          <span class="brand__name">Budget Pilot</span>
+          <span class="brand__tag">Smart finance copilot</span>
+        </span>
+      </a>
+      <p class="footer__about">Budgeting and grocery price comparison in one place.</p>
+      <!-- Admin login is intentionally discreet — not a public feature -->
+      <a class="admin-link" href="<?php echo URLROOT; ?>/admin/login">Admin login</a>
+    </div>
 
-            <div class="footer-links-column">
-                <h4>RESOURCES</h4>
-                <a href="#">Help Center</a>
-                <a href="#">Blog</a>
-                <a href="#">Community</a>
-            </div>
+    <nav class="footer__col" aria-label="Product">
+      <h4 class="footer__heading">Product</h4>
+      <ul class="footer__links">
+        <li><a href="<?php echo URLROOT; ?>/customer/dashboard">Dashboard</a></li>
+        <li><a href="<?php echo URLROOT; ?>/customer/budgets">Budgets</a></li>
+        <li><a href="<?php echo URLROOT; ?>/customer/grocery">Grocery catalog</a></li>
+        <li><a href="<?php echo URLROOT; ?>/customer/analytics">Analytics</a></li>
+      </ul>
+    </nav>
 
-            <div class="footer-subscribe-column">
-                <h4>SUBSCRIBE</h4>
-                <p>Get the latest financial tips.</p>
-                <form action="subscribe.php" method="POST" class="subscribe-form">
-                    <input type="email" name="email" placeholder="Email" required aria-label="Email address">
-                    <button type="submit" class="btn-subscribe" aria-label="Submit subscription">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                    </button>
-                </form>
-            </div>
-        </div>
+    <nav class="footer__col" aria-label="Account">
+      <h4 class="footer__heading">Account</h4>
+      <ul class="footer__links">
+        <li><a href="<?php echo URLROOT; ?>/customer/login">Customer sign in</a></li>
+        <li><a href="<?php echo URLROOT; ?>/customer/register">Create an account</a></li>
+        <li><a href="<?php echo URLROOT; ?>/supplier/login">Supplier sign in</a></li>
+        <li><a href="<?php echo URLROOT; ?>/supplier/register">Supplier registration</a></li>
+        <li><a href="<?php echo URLROOT; ?>/customer/privacy">Privacy</a></li>
+      </ul>
+    </nav>
 
-        <div class="container footer-bottom">
-            <p>&copy; <?php echo date("Y"); ?> Budget Pilot Inc. All rights reserved.</p>
-            <div class="footer-legal">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-            </div>
-        </div>
-    </footer>
+    <div class="footer__col">
+      <h4 class="footer__heading">Monthly tips</h4>
+      <p class="footer__about">One short email a month on cutting a grocery bill.</p>
+      <div class="subscribe">
+        <label class="sr-only" for="subEmail">Email</label>
+        <input class="subscribe__input" id="subEmail" type="email" placeholder="name@example.com" />
+        <button class="subscribe__btn" type="button" id="subBtn">Subscribe</button>
+      </div>
+      <p class="subscribe__msg" id="subMsg" role="status"></p>
+    </div>
+  </div>
 
-    
+  <div class="footer__bottom">
+    <p>© <?php echo date('Y'); ?> Budget Pilot. Coursework project.</p>
+    <ul class="footer__legal">
+      <li><a href="<?php echo URLROOT; ?>/customer/privacy">Privacy</a></li>
+      <li><a href="<?php echo URLROOT; ?>/customer/terms">Terms</a></li>
+    </ul>
+  </div>
+</footer>
 
-
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/main.js"></script>
 </body>
 </html>
