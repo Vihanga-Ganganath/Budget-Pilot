@@ -30,17 +30,24 @@
       <h1 class="auth__title">Welcome Back</h1>
       <p class="auth__sub">Manage all your grocery item brands in one place.</p>
 
-      <?php if (!empty($data['error'])): ?>
-        <p class="form__error" role="alert" style="display:block">
-          <?php echo htmlspecialchars($data['error']); ?>
-        </p>
+      <?php if (!empty($data['registered'])): ?>
+        <!-- Success notice after registration -->
+        <div style="background:#E8F6EE;border:1px solid #BDE6CE;color:#1B6B42;border-radius:9px;padding:12px 14px;margin-bottom:18px;font-size:.9rem;font-weight:500;">
+          <strong>Application submitted!</strong> Your supplier account is awaiting admin approval. You will receive access once reviewed.
+        </div>
       <?php endif; ?>
 
-      <?php if (!empty($data['success'])): ?>
-        <p role="alert" style="color:#16752b;font-size:.9rem;margin-bottom:14px;font-weight:600;">
-          <?php echo htmlspecialchars($data['success']); ?>
-        </p>
-        <script>setTimeout(() => location.href = '<?php echo URLROOT; ?>/supplier/overview', 800);</script>
+      <?php if (!empty($data['error'])): ?>
+        <?php
+          // Choose alert style based on error type
+          $isPending = strpos($data['error'], 'awaiting admin') !== false;
+          $bgColor   = $isPending ? '#FEF9E8' : '#FDF6F6';
+          $bdColor   = $isPending ? '#F5D87A' : '#F0BCBC';
+          $txColor   = $isPending ? '#7A5C00' : '#C2373C';
+        ?>
+        <div style="background:<?php echo $bgColor; ?>;border:1px solid <?php echo $bdColor; ?>;color:<?php echo $txColor; ?>;border-radius:9px;padding:12px 14px;margin-bottom:18px;font-size:.9rem;font-weight:500;">
+          <?php echo htmlspecialchars($data['error']); ?>
+        </div>
       <?php endif; ?>
 
       <form id="loginForm" method="POST" action="<?php echo URLROOT; ?>/supplier/login">
@@ -89,7 +96,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
         </button>
 
-        <p class="auth__switch">New to Budget Pilot? <a class="link" href="<?php echo URLROOT; ?>/customer/register">Create Account</a></p>
+        <p class="auth__switch">New supplier? <a class="link" href="<?php echo URLROOT; ?>/supplier/register">Apply for an account</a></p>
       </form>
 
       <div class="auth__foot">
@@ -100,10 +107,9 @@
 </main>
 
 <script>
-  /* Password show/hide toggle — matches the pattern in auth.js */
   document.querySelectorAll('[data-toggle]').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      var input = document.getElementById(btn.getAttribute('data-toggle'));
+      var input  = document.getElementById(btn.getAttribute('data-toggle'));
       if (!input) return;
       var hidden = input.type === 'password';
       input.type = hidden ? 'text' : 'password';
@@ -112,9 +118,8 @@
     });
   });
 
-  /* Forgot password notice */
   var forgotBtn = document.getElementById('forgotBtn');
-  var formError  = document.getElementById('formError');
+  var formError = document.getElementById('formError');
   if (forgotBtn && formError) {
     forgotBtn.addEventListener('click', function () {
       formError.textContent = 'To reset your password, contact your system administrator.';

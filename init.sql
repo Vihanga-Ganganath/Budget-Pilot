@@ -29,7 +29,7 @@ CREATE TABLE users (
     nic VARCHAR(20),          
     date_of_birth DATE, 
     gender ENUM('male', 'female', 'other', 'prefer_not_to_say'),
-    account_status ENUM('active', 'locked', 'suspended') DEFAULT 'active', -- අලුත් Status Column එක
+    account_status ENUM('active', 'locked', 'suspended', 'pending') DEFAULT 'active', -- 'pending' = awaiting admin approval (supplier registrations)
     two_factor_enabled BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -412,3 +412,10 @@ CREATE TABLE inventory_logs (
     
     FOREIGN KEY (variant_id) REFERENCES product_variants(id) ON DELETE CASCADE
 );
+
+-- ============================================================
+-- MIGRATION: Run this once on an existing database
+-- ALTER TABLE users
+--   MODIFY COLUMN account_status
+--     ENUM('active','locked','suspended','pending') DEFAULT 'active';
+-- ============================================================

@@ -67,18 +67,54 @@ class AdminController extends Controller {
     }
 
     public function suppliers() {
-
-        // 🔒 පිටුව ආරක්ෂා කිරීම: කවුරුහරි ලොග් වෙලා නැත්නම් හෝ Admin නෙවෙයි නම්
-        if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
-            // එයාව බලෙන්ම Login පිටුවට Redirect කරනවා
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
             header('Location: ' . URLROOT . '/admin/login');
-            exit(); // මෙතනින් කේතය රන් වෙන එක සම්පූර්ණයෙන්ම නවත්වනවා
+            exit();
         }
 
-        // ලොග් වෙලා ඉන්න Admin කෙනෙක් නම් විතරක් admin_supplier_approvals View එක ලෝඩ් කරනවා
+        $data = [
+            'pending'          => $this->userModel->getPendingSuppliers(),
+            'recent_decisions' => $this->userModel->getRecentSupplierDecisions(),
+            'pending_count'    => $this->userModel->countPendingSuppliers(),
+            'flash'            => $_SESSION['admin_flash'] ?? ''
+        ];
+        unset($_SESSION['admin_flash']);
 
-        $this->view('admin/admin_supplier_approvals');
+        $this->view('admin/admin_supplier_approvals', $data);
     }
+
+    public function approveSupplier() {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
+            header('Location: ' . URLROOT . '/admin/login');
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['supplier_id'])) {
+            $id = (int) $_POST['supplier_id'];
+            $this->userModel->updateSupplierStatus($id, 'active');
+            $_SESSION['admin_flash'] = 'Supplier approved successfully.';
+        }
+
+        header('Location: ' . URLROOT . '/admin/suppliers');
+        exit();
+    }
+
+    public function rejectSupplier() {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
+            header('Location: ' . URLROOT . '/admin/login');
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['supplier_id'])) {
+            $id = (int) $_POST['supplier_id'];
+            $this->userModel->updateSupplierStatus($id, 'suspended');
+            $_SESSION['admin_flash'] = 'Supplier registration rejected.';
+        }
+
+        header('Location: ' . URLROOT . '/admin/suppliers');
+        exit();
+    }
+
 
     public function products() {
 
@@ -153,18 +189,17 @@ class AdminController extends Controller {
             // Role එක විදිහට 'admin' කියලත් යවනවා.
             $loggedInUser = $this->userModel->login($email, $password, 'admin');
 
-            if($loggedInUser) {
+            // Check for successful login (must be a row array, not an error array)
+            if ($loggedInUser && is_array($loggedInUser) && !isset($loggedInUser['error'])) {
 
                 $_SESSION['user_id'] = $loggedInUser['id'];
                 $_SESSION['user_email'] = $loggedInUser['email'];
                 $_SESSION['user_name'] = $loggedInUser['name'];
                 $_SESSION['user_role'] = $loggedInUser['role'];
 
-                // ඩේටාබේස් එකේ කෙනෙක් ඉන්නවා නම් සහ පාස්වර්ඩ් එක හරි නම්
                 $data['success'] = 'Signed in successfully. Redirecting...';
                 
             } else {
-                // වැරදි නම් Error Message එකක් දානවා
                 $data['error'] = 'Invalid email or password! Please try again.';
             }
         }
