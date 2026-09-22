@@ -38,6 +38,42 @@ class User {
         return false;
     }
 
+    // ─── Admin: create admin user ─────────────────────────────────────────────
+
+    /**
+     * Grant admin privileges to an email address.
+     *
+     * Business rules (matching the unique key: email + role):
+     *  - If the email already exists in the table with role='admin'  → 'duplicate'
+     *  - If the email exists with another role (customer/supplier)   → still create a NEW row with role='admin'
+     *  - If the email doesn't exist at all                           → create new row with role='admin'
+     *
+     * Returns true | 'duplicate' | false
+     */
+    public function createAdmin($data) {
+        try {
+            $query = "INSERT INTO users
+                        (name, email, password_hash, role, account_status, created_at)
+                      VALUES
+                        (:name, :email, :password_hash, 'admin', 'active', NOW())";
+
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':name',          $data['name']);
+            $stmt->bindParam(':email',         $data['email']);
+            $stmt->bindParam(':password_hash', $data['password_hash']);
+            $stmt->execute();
+
+            return true;
+
+        } catch (PDOException $e) {
+            // Unique key violation (email + role = admin already exists)
+            if ($e->getCode() == 23000) {
+                return 'duplicate';
+            }
+            return false;
+        }
+    }
+
     // ─── Admin: user list ─────────────────────────────────────────────────────
 
     public function getUsers($limit = 6, $offset = 0) {

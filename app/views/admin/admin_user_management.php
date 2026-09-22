@@ -31,7 +31,19 @@
                 </div>
             </header>
 
-            
+            <?php if (!empty($data['flash'])): ?>
+            <?php
+                $ft = $data['flash_type'] ?? 'success';
+                $fbg  = $ft === 'success' ? '#E8F6EE' : ($ft === 'warning' ? '#FEF9E8' : '#FDF6F6');
+                $fbd  = $ft === 'success' ? '#BDE6CE' : ($ft === 'warning' ? '#F5D87A' : '#F0BCBC');
+                $ftx  = $ft === 'success' ? '#1B6B42' : ($ft === 'warning' ? '#7A5C00' : '#C2373C');
+            ?>
+            <div style="background:<?php echo $fbg;?>;border:1px solid <?php echo $fbd;?>;color:<?php echo $ftx;?>;border-radius:9px;padding:12px 16px;margin-bottom:20px;font-size:.9rem;font-weight:500;">
+                <?php echo $data['flash']; ?>
+                <button onclick="this.parentElement.remove()" style="float:right;background:none;border:0;cursor:pointer;font-size:1rem;color:<?php echo $ftx;?>;line-height:1;">×</button>
+            </div>
+            <?php endif; ?>
+
             <!-- Stat Cards -->
             <section class="stat-grid">
                 <div class="stat-card">
@@ -190,36 +202,150 @@
     </div>
 
     <!-- Add Admin User Modal -->
-    <div class="modal-overlay" id="add-admin-modal">
-        <div class="modal-card">
+    <div class="modal-overlay" id="add-admin-modal" style="display:none;align-items:center;justify-content:center;">
+        <div class="modal-card" style="max-width:460px;width:100%;margin:auto;">
             <div class="modal-header">
                 <h3>Add Admin User</h3>
-                <button class="modal-close-btn" type="button" onclick="document.getElementById('add-admin-modal').style.display='none'">&times;</button>
+                <button class="modal-close-btn" type="button" id="closeAdminModal">&#x2715;</button>
             </div>
-            <form id="add-admin-form">
+
+            <?php if (!empty($data['modal_error'])): ?>
+            <div style="background:#FDF6F6;border:1px solid #F0BCBC;color:#C2373C;border-radius:8px;padding:11px 14px;margin:0 0 16px;font-size:.88rem;font-weight:500;">
+                <?php echo htmlspecialchars($data['modal_error']); ?>
+            </div>
+            <?php endif; ?>
+
+            <p style="font-size:.88rem;color:#6B7280;margin:0 0 18px;">
+                This creates a new admin row in the users table.
+                If the email already exists as a customer or supplier, a separate admin account will be added for it.
+            </p>
+
+            <form method="POST" action="<?php echo URLROOT; ?>/admin/addAdmin" id="add-admin-form">
+
                 <div class="form-field-group">
-                    <label>Full Name</label>
-                    <input type="text" name="full_name" placeholder="Jane Doe" required>
+                    <label>Full Name <span style="color:#C2373C">*</span></label>
+                    <input type="text" name="full_name"
+                           placeholder="Jane Doe"
+                           value="<?php echo htmlspecialchars($_SESSION['admin_form_name'] ?? ''); ?>"
+                           required autocomplete="name" />
                 </div>
+
                 <div class="form-field-group">
-                    <label>Work Email</label>
-                    <input type="email" name="email" placeholder="jane@budgetpilot.com" required>
+                    <label>Email Address <span style="color:#C2373C">*</span></label>
+                    <input type="email" name="email"
+                           placeholder="jane@budgetpilot.com"
+                           value="<?php echo htmlspecialchars($_SESSION['admin_form_email'] ?? ''); ?>"
+                           required autocomplete="email" />
+                    <p style="font-size:.8rem;color:#9CA3AF;margin:4px 0 0;">
+                        If this email already has a customer or supplier account, a <em>new admin row</em> is created alongside it.
+                    </p>
                 </div>
+
                 <div class="form-field-group">
-                    <label>Role</label>
-                    <select class="filter-select" name="role" style="width:100%;">
-                        <option value="admin">Admin</option>
-                        <option value="moderator">Moderator (Restricted)</option>
-                    </select>
+                    <label>Password <span style="color:#C2373C">*</span></label>
+                    <div style="position:relative;">
+                        <input type="password" name="password" id="adminPw"
+                               placeholder="Min. 8 characters"
+                               required autocomplete="new-password"
+                               style="width:100%;padding-right:42px;" />
+                        <button type="button" id="toggleAdminPw"
+                                style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:0;cursor:pointer;color:#9CA3AF;padding:4px;"
+                                aria-label="Show password">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-reject btn-sm" onclick="document.getElementById('add-admin-modal').style.display='none'">Cancel</button>
-                    <button type="submit" class="btn btn-navy btn-sm">Send Invite</button>
+
+                <div class="form-field-group">
+                    <label>Confirm Password <span style="color:#C2373C">*</span></label>
+                    <div style="position:relative;">
+                        <input type="password" name="password_confirm" id="adminPwConfirm"
+                               placeholder="Re-enter password"
+                               required autocomplete="new-password"
+                               style="width:100%;padding-right:42px;" />
+                        <button type="button" id="toggleAdminPwConfirm"
+                                style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:0;cursor:pointer;color:#9CA3AF;padding:4px;"
+                                aria-label="Show confirm password">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <p id="pwMatchMsg" style="font-size:.8rem;margin:4px 0 0;display:none;"></p>
+                </div>
+
+                <div class="modal-actions" style="margin-top:22px;">
+                    <button type="button" class="btn btn-reject btn-sm" id="cancelAdminModal">Cancel</button>
+                    <button type="submit" class="btn btn-navy btn-sm">Create Admin Account</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script src="<?php echo URLROOT; ?>/public/js/admin.js"></script>
+    <script>
+    (function () {
+        var modal      = document.getElementById('add-admin-modal');
+        var openBtn    = document.querySelector('[onclick*="add-admin-modal"]');
+        var closeBtn   = document.getElementById('closeAdminModal');
+        var cancelBtn  = document.getElementById('cancelAdminModal');
+
+        function openModal()  { modal.style.display = 'flex'; }
+        function closeModal() { modal.style.display = 'none'; }
+
+        if (openBtn)   openBtn.onclick  = openModal;
+        if (closeBtn)  closeBtn.onclick = closeModal;
+        if (cancelBtn) cancelBtn.onclick = closeModal;
+
+        // Close on backdrop click
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
+
+        // Auto-open if validation failed on previous submit
+        <?php if (!empty($_GET['open_modal']) || !empty($data['modal_error'])): ?>
+        openModal();
+        <?php endif; ?>
+
+        // Password show/hide toggles
+        function makeToggle(inputId, btnId) {
+            var inp = document.getElementById(inputId);
+            var btn = document.getElementById(btnId);
+            if (!inp || !btn) return;
+            btn.addEventListener('click', function () {
+                inp.type = inp.type === 'password' ? 'text' : 'password';
+                btn.setAttribute('aria-label', inp.type === 'password' ? 'Show password' : 'Hide password');
+            });
+        }
+        makeToggle('adminPw', 'toggleAdminPw');
+        makeToggle('adminPwConfirm', 'toggleAdminPwConfirm');
+
+        // Live password match indicator
+        var pwInput   = document.getElementById('adminPw');
+        var pwConfirm = document.getElementById('adminPwConfirm');
+        var matchMsg  = document.getElementById('pwMatchMsg');
+
+        function checkMatch() {
+            if (!pwConfirm.value) { matchMsg.style.display = 'none'; return; }
+            var ok = pwInput.value === pwConfirm.value;
+            matchMsg.style.display = 'block';
+            matchMsg.textContent   = ok ? '✓ Passwords match' : '✗ Passwords do not match';
+            matchMsg.style.color   = ok ? '#1B6B42' : '#C2373C';
+        }
+        pwInput.addEventListener('input', checkMatch);
+        pwConfirm.addEventListener('input', checkMatch);
+
+        // Client-side guard before submit
+        document.getElementById('add-admin-form').addEventListener('submit', function (e) {
+            if (pwInput.value !== pwConfirm.value) {
+                e.preventDefault();
+                checkMatch();
+                pwConfirm.focus();
+            }
+        });
+    })();
+    </script>
 </body>
 </html>

@@ -63,8 +63,75 @@ class AdminController extends Controller {
         ];
 
         // View එක Load කිරීම
+        $data['flash']      = $_SESSION['admin_flash']       ?? '';
+        $data['flash_type'] = $_SESSION['admin_flash_type']  ?? 'success';
+        $data['modal_error']  = $_SESSION['admin_modal_error'] ?? '';
+        unset($_SESSION['admin_flash'], $_SESSION['admin_flash_type'], $_SESSION['admin_modal_error']);
+
         $this->view('admin/admin_user_management', $data);
     }
+
+    // ─── Add Admin User ───────────────────────────────────────────────────────
+    public function addAdmin() {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
+            header('Location: ' . URLROOT . '/admin/login');
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . URLROOT . '/admin/users');
+            exit();
+        }
+
+        $name     = trim($_POST['full_name']  ?? '');
+        $email    = trim($_POST['email']      ?? '');
+        $password = $_POST['password']        ?? '';
+        $confirm  = $_POST['password_confirm'] ?? '';
+
+        // ── Server-side validation ────────────────────────────────────────────
+        $errors = [];
+
+        if (empty($name)) {
+            $errors[] = 'Full name is required.';
+        }
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'A valid email address is required.';
+        }
+        if (strlen($password) < 8) {
+            $errors[] = 'Password must be at least 8 characters.';
+        }
+        if ($password !== $confirm) {
+            $errors[] = 'Passwords do not match.';
+        }
+
+        if (!empty($errors)) {
+            $_SESSION['admin_modal_error'] = implode(' ', $errors);
+            header('Location: ' . URLROOT . '/admin/users?open_modal=1');
+            exit();
+        }
+
+        // ── Persist ───────────────────────────────────────────────────────────
+        $result = $this->userModel->createAdmin([
+            'name'          => $name,
+            'email'         => $email,
+            'password_hash' => password_hash($password, PASSWORD_DEFAULT),
+        ]);
+
+        if ($result === true) {
+            $_SESSION['admin_flash']      = "Admin account for <strong>{$name}</strong> ({$email}) has been created successfully.";
+            $_SESSION['admin_flash_type'] = 'success';
+        } elseif ($result === 'duplicate') {
+            $_SESSION['admin_flash']      = "An admin account already exists for <strong>{$email}</strong>. No changes were made.";
+            $_SESSION['admin_flash_type'] = 'warning';
+        } else {
+            $_SESSION['admin_flash']      = 'Something went wrong. Please try again.';
+            $_SESSION['admin_flash_type'] = 'error';
+        }
+
+        header('Location: ' . URLROOT . '/admin/users');
+        exit();
+    }
+
 
     public function suppliers() {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
