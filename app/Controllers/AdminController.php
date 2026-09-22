@@ -226,17 +226,119 @@ class AdminController extends Controller {
     }
 
     public function settings() {
-
-        // 🔒 පිටුව ආරක්ෂා කිරීම: කවුරුහරි ලොග් වෙලා නැත්නම් හෝ Admin නෙවෙයි නම්
-        if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
-            // එයාව බලෙන්ම Login පිටුවට Redirect කරනවා
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
             header('Location: ' . URLROOT . '/admin/login');
-            exit(); // මෙතනින් කේතය රන් වෙන එක සම්පූර්ණයෙන්ම නවත්වනවා
+            exit();
         }
 
-        // ලොග් වෙලා ඉන්න Admin කෙනෙක් නම් විතරක් admin_settings View එක ලෝඩ් කරනවා
+        $userId  = (int) $_SESSION['user_id'];
+        $profile = $this->userModel->getAdminProfile($userId);
+        $avatar  = $this->userModel->getAvatarByUserId($userId);
 
-        $this->view('admin/admin_settings');
+        $data = [
+            'profile'    => $profile,
+            'avatar'     => $avatar,
+            'flash'      => $_SESSION['admin_flash']      ?? '',
+            'flash_type' => $_SESSION['admin_flash_type'] ?? 'success',
+        ];
+        unset($_SESSION['admin_flash'], $_SESSION['admin_flash_type']);
+
+        $this->view('admin/admin_settings', $data);
+    }
+
+    // ─── Avatar: Upload ───────────────────────────────────────────────────────
+    public function uploadAvatar() {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
+            header('Location: ' . URLROOT . '/admin/login');
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_FILES['avatar'])) {
+            header('Location: ' . URLROOT . '/admin/settings');
+            exit();
+        }
+
+        $file    = $_FILES['avatar'];
+        $userId  = (int) $_SESSION['user_id'];
+        $allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        $maxSize = 3 * 1024 * 1024; // 3 MB
+
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            $_SESSION['admin_flash']      = 'Upload failed. Please try again.';
+            $_SESSION['admin_flash_type'] = 'error';
+            header('Location: ' . URLROOT . '/admin/settings');
+            exit();
+        }
+
+        $finfo    = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($finfo, $file['tmp_name']);
+        finfo_close($finfo);
+
+        if (!in_array($mimeType, $allowed)) {
+            $_SESSION['admin_flash']      = 'Only JPEG, PNG, GIF and WebP images are allowed.';
+            $_SESSION['admin_flash_type'] = 'error';
+            header('Location: ' . URLROOT . '/admin/settings');
+            exit();
+        }
+        if ($file['size'] > $maxSize) {
+            $_SESSION['admin_flash']      = 'Image must be under 3 MB.';
+            $_SESSION['admin_flash_type'] = 'error';
+            header('Location: ' . URLROOT . '/admin/settings');
+            exit();
+        }
+
+        // Delete old avatar file if one exists
+        $oldAvatar = $this->userModel->getAvatarByUserId($userId);
+        if ($oldAvatar) {
+            $oldPath = dirname(APPROOT) . '/public/assets/avatars/admin/' . $oldAvatar;
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
+        }
+
+        // Build unique filename and save
+        $ext      = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $filename = 'admin_' . $userId . '_' . time() . '.' . $ext;
+        $dest     = dirname(APPROOT) . '/public/assets/avatars/admin/' . $filename;
+
+        if (move_uploaded_file($file['tmp_name'], $dest)) {
+            $this->userModel->updateAdminAvatar($userId, $filename);
+            $_SESSION['admin_flash']      = 'Profile picture updated successfully.';
+            $_SESSION['admin_flash_type'] = 'success';
+        } else {
+            $_SESSION['admin_flash']      = 'Could not save the file. Check folder permissions.';
+            $_SESSION['admin_flash_type'] = 'error';
+        }
+
+        header('Location: ' . URLROOT . '/admin/settings');
+        exit();
+    }
+
+    // ─── Avatar: Delete ───────────────────────────────────────────────────────
+    public function deleteAvatar() {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
+            header('Location: ' . URLROOT . '/admin/login');
+            exit();
+        }
+
+        $userId    = (int) $_SESSION['user_id'];
+        $oldAvatar = $this->userModel->getAvatarByUserId($userId);
+
+        if ($oldAvatar) {
+            $oldPath = dirname(APPROOT) . '/public/assets/avatars/admin/' . $oldAvatar;
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
+            $this->userModel->clearAdminAvatar($userId);
+            $_SESSION['admin_flash']      = 'Profile picture removed.';
+            $_SESSION['admin_flash_type'] = 'success';
+        } else {
+            $_SESSION['admin_flash']      = 'No profile picture to remove.';
+            $_SESSION['admin_flash_type'] = 'warning';
+        }
+
+        header('Location: ' . URLROOT . '/admin/settings');
+        exit();
     }
 
     public function login() {

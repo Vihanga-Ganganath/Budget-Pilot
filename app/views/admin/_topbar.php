@@ -58,10 +58,44 @@
         </div>
 
         <!-- Avatar Image & Dropdown -->
-        <img class="admin-avatar-photo" id="avatar-btn" src="https://i.pravatar.cc/150?img=47" alt="Admin">
+        <?php
+            // Load the real avatar for the logged-in admin
+            $topbarAvatarUrl = null;
+            if (isset($_SESSION['user_id'])) {
+                // Lightweight: read directly from user_profiles without re-loading the full User model
+                try {
+                    require_once '../app/Config/Database.php';
+                    $_topbarDb  = (new Database())->getConnection();
+                    $_topbarStmt = $_topbarDb->prepare(
+                        "SELECT profile_picture_url FROM user_profiles WHERE user_id = :uid LIMIT 1"
+                    );
+                    $_topbarStmt->bindParam(':uid', $_SESSION['user_id'], PDO::PARAM_INT);
+                    $_topbarStmt->execute();
+                    $_topbarRow = $_topbarStmt->fetch(PDO::FETCH_OBJ);
+                    if ($_topbarRow && $_topbarRow->profile_picture_url) {
+                        $topbarAvatarUrl = URLROOT . '/public/assets/avatars/admin/'
+                                         . htmlspecialchars($_topbarRow->profile_picture_url);
+                    }
+                } catch (Exception $e) {
+                    // silently fall through to initials fallback
+                }
+            }
+            $topbarInitial = mb_strtoupper(mb_substr($_SESSION['user_name'] ?? 'A', 0, 1));
+        ?>
+        <?php if ($topbarAvatarUrl): ?>
+            <img class="admin-avatar-photo" id="avatar-btn"
+                 src="<?php echo $topbarAvatarUrl; ?>?v=<?php echo time(); ?>"
+                 alt="Admin"
+                 style="cursor:pointer;object-fit:cover;">
+        <?php else: ?>
+            <div class="admin-avatar-photo" id="avatar-btn"
+                 style="display:grid;place-items:center;background:#E8EAFF;color:#101C56;
+                        font-weight:700;font-size:1rem;cursor:pointer;">
+                <?php echo $topbarInitial; ?>
+            </div>
+        <?php endif; ?>
         <div id="avatar-dropdown" class="dropdown-panel" style="display:none;">
             <div class="dropdown-header"><?php echo isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Admin User'; ?></div>
-            <!-- JS එකේ තිබ්බ විදිහටම Emoji සහ ලින්ක් -->
             <div class="dropdown-item"><a href="<?php echo URLROOT; ?>/admin/settings">👤 View Profile</a></div>
             <div class="dropdown-item"><a href="<?php echo URLROOT; ?>/admin/settings">⚙️ Settings</a></div>
             <div class="dropdown-item"><a href="<?php echo URLROOT; ?>/admin/logout" id="dropdown-logout">🚪 Logout</a></div>

@@ -97,6 +97,60 @@ class User {
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
+    // ─── Admin profile picture ────────────────────────────────────────────────
+
+    /**
+     * Fetch a single admin user row by id.
+     */
+    public function getAdminProfile($id) {
+        $query = "SELECT id, name, email, role, account_status, created_at
+                  FROM users WHERE id = :id AND role = 'admin' LIMIT 1";
+        $stmt  = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    /**
+     * Store the uploaded avatar filename for an admin user.
+     * We reuse user_profiles.profile_picture_url — create the row if it doesn't exist.
+     */
+    public function updateAdminAvatar($userId, $filename) {
+        // Upsert into user_profiles
+        $query = "INSERT INTO user_profiles (user_id, profile_picture_url)
+                  VALUES (:uid, :pic)
+                  ON DUPLICATE KEY UPDATE profile_picture_url = :pic2";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':uid',  $userId,   PDO::PARAM_INT);
+        $stmt->bindParam(':pic',  $filename);
+        $stmt->bindParam(':pic2', $filename);
+        $stmt->execute();
+        return true;
+    }
+
+    /**
+     * Remove the avatar (set to NULL) for an admin user.
+     */
+    public function clearAdminAvatar($userId) {
+        $query = "UPDATE user_profiles SET profile_picture_url = NULL WHERE user_id = :uid";
+        $stmt  = $this->db->prepare($query);
+        $stmt->bindParam(':uid', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return true;
+    }
+
+    /**
+     * Get the stored avatar filename for a user from user_profiles.
+     */
+    public function getAvatarByUserId($userId) {
+        $query = "SELECT profile_picture_url FROM user_profiles WHERE user_id = :uid LIMIT 1";
+        $stmt  = $this->db->prepare($query);
+        $stmt->bindParam(':uid', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_OBJ);
+        return $row ? $row->profile_picture_url : null;
+    }
+
     // ─── Supplier registration ────────────────────────────────────────────────
 
     /**
