@@ -44,6 +44,44 @@
     <h1 class="page-title">Brand Overview</h1>
     <p class="subtitle">Manage your market presence and catalog health.</p>
 
+    <!-- Admin Notices (read-only for suppliers) -->
+    <section class="card supplier-notices" aria-labelledby="supplierNoticesTitle">
+      <div class="toolbar">
+        <div>
+          <h2 class="section-title" id="supplierNoticesTitle">📢 Notices &amp; Announcements</h2>
+          <div class="section-sub">Important updates shared by the Budget Pilot admin team</div>
+        </div>
+        <?php if (!empty($data['notices'])): ?>
+          <span class="pill blue"><?php echo count($data['notices']); ?> ACTIVE</span>
+        <?php endif; ?>
+      </div>
+
+      <?php if (!empty($data['notices'])): ?>
+        <div class="supplier-notice-list">
+          <?php foreach ($data['notices'] as $notice): ?>
+            <article class="supplier-notice-item">
+              <div class="supplier-notice-icon">!</div>
+              <div class="supplier-notice-body">
+                <div class="supplier-notice-head">
+                  <strong><?php echo htmlspecialchars($notice->title); ?></strong>
+                  <span class="pill green"><?php echo $notice->audience === 'all' ? 'EVERYONE' : 'SUPPLIERS'; ?></span>
+                </div>
+                <p><?php echo nl2br(htmlspecialchars($notice->message)); ?></p>
+                <div class="supplier-notice-meta">
+                  Posted <?php echo date('M j, Y', strtotime($notice->created_at)); ?>
+                  <?php if (!empty($notice->expires_at)): ?>
+                    &nbsp;•&nbsp; Available until <?php echo date('M j, Y', strtotime($notice->expires_at)); ?>
+                  <?php endif; ?>
+                </div>
+              </div>
+            </article>
+          <?php endforeach; ?>
+        </div>
+      <?php else: ?>
+        <div class="supplier-notice-empty">No active notices for suppliers right now.</div>
+      <?php endif; ?>
+    </section>
+
     <!-- Registered Brands -->
     <div class="card" style="margin-bottom:22px">
       <div class="toolbar">

@@ -1,14 +1,17 @@
 <?php
 // 1. මුලින්ම User Model ෆයිල් එක ලෝඩ් කරගන්නවා
 require_once '../app/Models/User.php';
+require_once '../app/Models/Notice.php';
 
 class AdminController extends Controller {
 
     private $userModel;
+    private $noticeModel;
 
     // 2. Constructor එකක් හදලා ඒක ඇතුළේ User Model එකෙන් ඔබ්ජෙක්ට් එකක් හදාගන්නවා
     public function __construct() {
         $this->userModel = new User();
+        $this->noticeModel = new Notice();
     }
     // Default method (If someone just types /admin)
     public function index() {
@@ -339,6 +342,77 @@ class AdminController extends Controller {
 
         header('Location: ' . URLROOT . '/admin/settings');
         exit();
+    }
+
+
+    // ─── Admin: Notice Management CRUD ───────────────────────────────────────
+    private function requireAdmin() {
+        if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] ?? '') !== 'admin') {
+            header('Location: ' . URLROOT . '/admin/login');
+            exit();
+        }
+    }
+
+    public function notices() {
+        $this->requireAdmin();
+        $data = [
+            'notices' => $this->noticeModel->getAll(),
+            'stats' => $this->noticeModel->getStats(),
+            'flash' => $_SESSION['admin_flash'] ?? '',
+            'flash_type' => $_SESSION['admin_flash_type'] ?? 'success'
+        ];
+        unset($_SESSION['admin_flash'], $_SESSION['admin_flash_type']);
+        $this->view('admin/admin_notice_management', $data);
+    }
+
+    private function noticePayload() {
+        $audience = $_POST['audience'] ?? 'all';
+        $status = $_POST['status'] ?? 'active';
+        return [
+            'title' => trim($_POST['title'] ?? ''),
+            'message' => trim($_POST['message'] ?? ''),
+            'audience' => in_array($audience, ['customer','supplier','all'], true) ? $audience : 'all',
+            'status' => in_array($status, ['active','inactive'], true) ? $status : 'active',
+            'expires_at' => !empty($_POST['expires_at']) ? $_POST['expires_at'] : null,
+        ];
+    }
+
+    public function createNotice() {
+        $this->requireAdmin();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: '.URLROOT.'/admin/notices'); exit(); }
+        $data = $this->noticePayload();
+        if ($data['title'] === '' || $data['message'] === '') {
+            $_SESSION['admin_flash']='Title and message are required.'; $_SESSION['admin_flash_type']='error';
+        } else {
+            $data['created_by'] = (int)$_SESSION['user_id'];
+            $ok = $this->noticeModel->create($data);
+            $_SESSION['admin_flash'] = $ok ? 'Notice created successfully.' : 'Could not create the notice.';
+            $_SESSION['admin_flash_type'] = $ok ? 'success' : 'error';
+        }
+        header('Location: '.URLROOT.'/admin/notices'); exit();
+    }
+
+    public function updateNotice() {
+        $this->requireAdmin();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: '.URLROOT.'/admin/notices'); exit(); }
+        $id=(int)($_POST['notice_id'] ?? 0); $data=$this->noticePayload();
+        if (!$id || $data['title']==='' || $data['message']==='') {
+            $_SESSION['admin_flash']='Invalid notice data.'; $_SESSION['admin_flash_type']='error';
+        } else {
+            $ok=$this->noticeModel->update($id,$data);
+            $_SESSION['admin_flash']=$ok?'Notice updated successfully.':'Could not update the notice.';
+            $_SESSION['admin_flash_type']=$ok?'success':'error';
+        }
+        header('Location: '.URLROOT.'/admin/notices'); exit();
+    }
+
+    public function deleteNotice() {
+        $this->requireAdmin();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: '.URLROOT.'/admin/notices'); exit(); }
+        $id=(int)($_POST['notice_id'] ?? 0); $ok=$id ? $this->noticeModel->delete($id) : false;
+        $_SESSION['admin_flash']=$ok?'Notice deleted successfully.':'Could not delete the notice.';
+        $_SESSION['admin_flash_type']=$ok?'success':'error';
+        header('Location: '.URLROOT.'/admin/notices'); exit();
     }
 
     public function login() {

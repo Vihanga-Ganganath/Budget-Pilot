@@ -45,6 +45,12 @@
             Product Moderation
         </a>
 
+        <!-- Notice Management -->
+        <a href="<?php echo URLROOT; ?>/admin/notices" class="menu-item <?php echo strpos($currentURL, 'notices') !== false ? 'active' : ''; ?>">
+            <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg>
+            Notice Management
+        </a>
+
         <!-- Security & Audit -->
         <a href="<?php echo URLROOT; ?>/admin/security" class="menu-item <?php echo strpos($currentURL, 'security') !== false ? 'active' : ''; ?>">
             <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>

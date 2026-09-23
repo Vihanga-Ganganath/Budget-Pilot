@@ -1,5 +1,6 @@
 <?php
 require_once '../app/Models/User.php';
+require_once '../app/Models/Notice.php';
 
 class SupplierController extends Controller {
 
@@ -161,7 +162,9 @@ class SupplierController extends Controller {
             header('Location: ' . URLROOT . '/supplier/login');
             exit();
         }
-        $this->view('supplier/overview');
+        $noticeModel = new Notice();
+        $data = ['notices' => $noticeModel->getActiveForAudience('supplier')];
+        $this->view('supplier/overview', $data);
     }
 
     public function catalog() {

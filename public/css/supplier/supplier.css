@@ -42,3 +42,17 @@ table{width:100%;border-collapse:collapse}th{background:#f1f3f6;color:#686d7a;te
 .login-page{min-height:100vh;background:#f7f8fa;display:grid;place-items:center}.login-wrap{width:512px;max-width:94vw}.login-brand{text-align:center;color:var(--navy);font-size:18px;font-weight:800;margin-bottom:58px}.login-card{background:#fff;border:1px solid #c9ceda;border-radius:14px;overflow:hidden}.login-tabs{display:grid;grid-template-columns:1fr 1fr;background:#f5f6f8}.login-tabs button{border:0;background:transparent;padding:14px;color:var(--navy);font-weight:600}.login-tabs button.active{background:#fff;border-radius:10px;margin:4px}.login-body{padding:34px}.login-body h1{font-size:18px;margin:0 0 6px}.login-body p{color:#555a69;margin:0 0 26px}.field{margin:0 0 18px}.field label{display:block;font-size:14px;margin-bottom:8px;font-weight:600}.password-row{display:flex;gap:8px}.login-submit{width:100%;padding:14px;border:0;border-radius:9px;background:var(--navy);color:#fff;font-weight:800;font-size:16px}.center{text-align:center}.small{font-size:13px;color:#606575}.link{color:var(--navy);font-weight:700}.search{width:240px}
 @media(max-width:900px){.sidebar{width:190px}.grid3,.grid2{grid-template-columns:1fr}.topbar{padding:0 14px}main{padding:22px}.search{width:180px}}
 @media(max-width:650px){.sidebar{display:none}.topbar{gap:12px}.page-title{font-size:25px}.grid3{grid-template-columns:1fr}.card{padding:18px}table{min-width:700px}.card.table-card{overflow:auto}.toolbar{align-items:flex-start;flex-direction:column}.login-wrap{width:95vw}}
+
+
+/* Admin notices shown read-only on supplier overview */
+.supplier-notices{margin-bottom:22px;}
+.supplier-notices .section-sub{margin-bottom:0;}
+.supplier-notice-list{display:grid;gap:12px;}
+.supplier-notice-item{display:flex;gap:14px;padding:15px;border:1px solid var(--line);border-radius:11px;background:#fbfcfe;}
+.supplier-notice-icon{width:36px;height:36px;flex:0 0 36px;border-radius:10px;display:grid;place-items:center;background:var(--blue-soft);color:var(--navy);font-weight:900;}
+.supplier-notice-body{flex:1;min-width:0;}
+.supplier-notice-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;color:var(--navy);}
+.supplier-notice-body p{margin:7px 0;color:#555b68;font-size:13px;line-height:1.55;}
+.supplier-notice-meta{font-size:11px;color:#777d89;font-weight:600;}
+.supplier-notice-empty{padding:18px;text-align:center;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:13px;}
+@media(max-width:650px){.supplier-notice-head{flex-direction:column;}.supplier-notice-head .pill{align-self:flex-start;}}

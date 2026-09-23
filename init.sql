@@ -418,4 +418,17 @@ CREATE TABLE inventory_logs (
 -- ALTER TABLE users
 --   MODIFY COLUMN account_status
 --     ENUM('active','locked','suspended','pending') DEFAULT 'active';
--- ============================================================
+-- ============================================================
+-- Admin Notice Management
+CREATE TABLE IF NOT EXISTS notices (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(150) NOT NULL,
+    message TEXT NOT NULL,
+    audience ENUM('customer', 'supplier', 'all') NOT NULL DEFAULT 'all',
+    status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+    expires_at DATETIME NULL,
+    created_by INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_notices_admin FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+);
