@@ -17,7 +17,7 @@
   var profile = profileId ? BP.getProfile(profileId) : null;
 
   if (!profile) {
-    window.location.replace('login.php?signin=required');
+    window.location.replace('login?signin=required');
     return;
   }
 
@@ -29,7 +29,7 @@
 
   el('logoutBtn').addEventListener('click', function () {
     BP.clearSession();
-    window.location.href = 'login.php';
+    window.location.href = 'logout';
   });
 
   var avatar = el('appbarAvatar');
@@ -99,26 +99,30 @@
      Figures
      ================================================================== */
 
-  var budget = BP.getBudget(profileId) || { categories: {} };
-  var people = BP.memberSpend(profileId);
-  var entries = BP.allExpenses(profileId).slice().reverse();   /* newest first */
+  var budget, people, entries, planned, spent;
 
-  var planned = 0;
-  var spent = 0;
-  BP.CATEGORIES.forEach(function (c) {
-    var row = budget.categories[c.key] || {};
-    planned += Number(row.planned) || 0;
-    spent += Number(row.spent) || 0;
-  });
+  function computeFigures() {
+    budget = BP.getBudget(profileId) || { categories: {} };
+    people = BP.memberSpend(profileId);
+    entries = BP.allExpenses(profileId).slice().reverse();   /* newest first */
 
-  el('sumPlanned').textContent = planned > 0 ? money(planned) : 'Not set';
-  el('sumSpent').textContent = money(spent);
-  el('sumLeft').textContent = planned > 0 ? money(planned - spent) : '—';
-  if (planned > 0 && planned - spent < 0) el('sumLeft').classList.add('is-over');
+    planned = 0;
+    spent = 0;
+    BP.CATEGORIES.forEach(function (c) {
+      var row = budget.categories[c.key] || {};
+      planned += Number(row.planned) || 0;
+      spent += Number(row.spent) || 0;
+    });
 
-  el('pageSub').textContent = people.length > 1
-    ? people.length + ' people spend from one budget. Only you can see this page.'
-    : 'Everyone on this account, and what they have spent.';
+    el('sumPlanned').textContent = planned > 0 ? money(planned) : 'Not set';
+    el('sumSpent').textContent = money(spent);
+    el('sumLeft').textContent = planned > 0 ? money(planned - spent) : '—';
+    el('sumLeft').classList.toggle('is-over', planned > 0 && planned - spent < 0);
+
+    el('pageSub').textContent = people.length > 1
+      ? people.length + ' people spend from one budget. Only you can see this page.'
+      : 'Everyone on this account, and what they have spent.';
+  }
 
   /* ==================================================================
      People
@@ -128,9 +132,7 @@
     var list = el('people');
     list.textContent = '';
 
-    if (people.length <= 1) {
-      el('peopleEmpty').hidden = false;
-    }
+    el('peopleEmpty').hidden = people.length > 1;
 
     people.forEach(function (person) {
       var li = document.createElement('li');
@@ -160,9 +162,9 @@
 
       var meta = document.createElement('p');
       meta.className = 'person__meta';
-      meta.textContent = person.count === 0
+      meta.textContent = person.email + ' \u00B7 ' + (person.count === 0
         ? 'No transactions yet'
-        : person.count + (person.count === 1 ? ' transaction' : ' transactions');
+        : person.count + (person.count === 1 ? ' transaction' : ' transactions'));
       text.appendChild(meta);
 
       li.appendChild(text);
@@ -185,6 +187,19 @@
       pct.className = 'person__pct';
       pct.textContent = share + '%';
       li.appendChild(pct);
+
+      /* Edit / Remove — only for family members, never the account holder. */
+      var actions = document.createElement('div');
+      actions.className = 'person__actions';
+      if (person.role !== 'Main' && person.dbId) {
+        actions.appendChild(iconButton('Edit ' + person.name, ICON_EDIT, '', function () {
+          openEdit(person.dbId);
+        }));
+        actions.appendChild(iconButton('Remove ' + person.name, ICON_DELETE, 'iconbtn--danger', function () {
+          openDelete(person.dbId);
+        }));
+      }
+      li.appendChild(actions);
 
       list.appendChild(li);
     });
@@ -223,6 +238,7 @@
     var list = el('feed');
     list.textContent = '';
 
+    if (who !== 'all' && !people.some(function (p) { return p.id === who; })) who = 'all';
     var rows = entries.filter(function (e) { return who === 'all' || e.by === who; });
 
     if (!rows.length) {
@@ -268,7 +284,216 @@
     });
   }
 
-  paintPeople();
-  paintChips();
-  paintFeed();
+  function paintAll() {
+    computeFigures();
+    paintPeople();
+    paintChips();
+    paintFeed();
+  }
+
+  /* ==================================================================
+     Household members CRUD — every change goes to MySQL through
+     CustomerController, then the page redraws from the server's list.
+       Create → apiAddMembers     Update → apiUpdateMember
+       Read   → apiMembers        Delete → apiDeleteMember
+     ================================================================== */
+
+  var ICON_EDIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>';
+  var ICON_DELETE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V4.5h6V7"/><path d="M6.5 7l1 13h9l1-13"/></svg>';
+
+  function iconButton(label, svg, extra, onClick) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'iconbtn ' + (extra || '');
+    b.setAttribute('aria-label', label);
+    b.title = label;
+    b.innerHTML = svg;
+    b.addEventListener('click', onClick);
+    return b;
+  }
+
+  var serverMembers = {};   /* database id → row from apiMembers */
+
+  function toast(message) {
+    var t = el('toast');
+    t.textContent = message;
+    t.hidden = false;
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(function () { t.hidden = true; }, 3200);
+  }
+
+  /* Takes the member list the server sent back and redraws the page. */
+  function applyMembers(members) {
+    serverMembers = {};
+    members.forEach(function (m) { serverMembers[Number(m.id)] = m; });
+    BP.syncHousehold(members);
+    paintAll();
+    el('peopleStatus').textContent = members.length +
+      (members.length === 1 ? ' person' : ' people') + ' on this account.';
+  }
+
+  function handleAuthError(res) {
+    if (res && /session has ended/i.test(res.message || '')) {
+      window.location.replace('login?signin=required');
+      return true;
+    }
+    return false;
+  }
+
+  /* ---------- READ ---------- */
+  function loadMembers() {
+    el('peopleStatus').textContent = 'Loading members…';
+    BP.api('apiMembers').then(function (res) {
+      if (!res.ok) {
+        if (handleAuthError(res)) return;
+        el('peopleStatus').textContent = res.message || 'Could not load members.';
+        return;
+      }
+      applyMembers(res.members || []);
+    });
+  }
+
+  /* ---------- Modal helpers ---------- */
+  function openModal(id) { el(id).hidden = false; }
+  function closeModal(id) { el(id).hidden = true; }
+
+  ['memberModal', 'deleteModal'].forEach(function (id) {
+    Array.prototype.forEach.call(el(id).querySelectorAll('[data-close]'), function (node) {
+      node.addEventListener('click', function () { closeModal(id); });
+    });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closeModal('memberModal'); closeModal('deleteModal'); }
+  });
+
+  var FIELDS = { name: 'mName', email: 'mEmail', gender: 'mGender', password: 'mPassword' };
+
+  function clearErrors() {
+    el('mFormErr').textContent = '';
+    Object.keys(FIELDS).forEach(function (k) {
+      el(FIELDS[k] + 'Err').textContent = '';
+      var box = el(FIELDS[k]).closest('.control') || el(FIELDS[k]);
+      box.classList.remove('is-invalid');
+    });
+  }
+
+  function showErrors(res) {
+    var errors = res.errors || {};
+    var shown = false;
+    Object.keys(FIELDS).forEach(function (k) {
+      if (errors[k]) {
+        el(FIELDS[k] + 'Err').textContent = errors[k];
+        (el(FIELDS[k]).closest('.control') || el(FIELDS[k])).classList.add('is-invalid');
+        shown = true;
+      }
+    });
+    /* apiAddMembers reports problems per member card: errors.members[0]. */
+    if (errors.members) {
+      var msg = errors.members[0] || errors.members[Object.keys(errors.members)[0]];
+      el('mFormErr').textContent = msg;
+      shown = true;
+    }
+    if (!shown) el('mFormErr').textContent = res.message || 'Something went wrong. Please try again.';
+  }
+
+  var editingId = null;   /* null = adding (Create), number = editing (Update) */
+
+  /* ---------- CREATE (open form) ---------- */
+  el('addMemberBtn').addEventListener('click', function () {
+    editingId = null;
+    clearErrors();
+    el('memberForm').reset();
+    el('memberModalTitle').textContent = 'Add family member';
+    el('memberSaveBtn').textContent = 'Add member';
+    el('mGenderField').hidden = true;
+    el('mPasswordLabel').textContent = 'Password';
+    el('mPassword').placeholder = '8+ characters';
+    openModal('memberModal');
+    el('mName').focus();
+  });
+
+  /* ---------- UPDATE (open form, filled from the database row) ---------- */
+  function openEdit(dbId) {
+    var m = serverMembers[Number(dbId)];
+    if (!m) { toast('Reload the page and try again.'); return; }
+
+    editingId = Number(dbId);
+    clearErrors();
+    el('memberForm').reset();
+    el('memberModalTitle').textContent = 'Edit ' + m.name;
+    el('memberSaveBtn').textContent = 'Save changes';
+    el('mName').value = m.name;
+    el('mEmail').value = m.email;
+    el('mGender').value = m.gender || '';
+    el('mGenderField').hidden = false;
+    el('mPasswordLabel').textContent = 'New password (optional)';
+    el('mPassword').placeholder = 'Leave blank to keep the current one';
+    openModal('memberModal');
+    el('mName').focus();
+  }
+
+  /* ---------- Save: Create or Update ---------- */
+  el('memberForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearErrors();
+
+    var name = el('mName').value.trim();
+    var email = el('mEmail').value.trim().toLowerCase();
+    var password = el('mPassword').value;
+    var btn = el('memberSaveBtn');
+    btn.disabled = true;
+
+    var request = editingId === null
+      ? BP.api('apiAddMembers', { members: [{ name: name, email: email, password: password }] })
+      : BP.api('apiUpdateMember', {
+          id: editingId, name: name, email: email,
+          gender: el('mGender').value, password: password
+        });
+
+    request.then(function (res) {
+      btn.disabled = false;
+      if (!res.ok) {
+        if (handleAuthError(res)) return;
+        showErrors(res);
+        return;
+      }
+      closeModal('memberModal');
+      applyMembers(res.members || []);
+      toast(editingId === null ? name + ' was added to your account.' : 'Changes to ' + name + ' were saved.');
+    });
+  });
+
+  /* ---------- DELETE ---------- */
+  var deletingId = null;
+
+  function openDelete(dbId) {
+    var m = serverMembers[Number(dbId)];
+    if (!m) { toast('Reload the page and try again.'); return; }
+    deletingId = Number(dbId);
+    el('deleteErr').textContent = '';
+    el('deleteText').textContent = 'Remove ' + m.name + ' (' + m.email + ') from this household?';
+    openModal('deleteModal');
+  }
+
+  el('deleteConfirmBtn').addEventListener('click', function () {
+    var btn = el('deleteConfirmBtn');
+    var m = serverMembers[deletingId];
+    btn.disabled = true;
+
+    BP.api('apiDeleteMember', { id: deletingId }).then(function (res) {
+      btn.disabled = false;
+      if (!res.ok) {
+        if (handleAuthError(res)) return;
+        el('deleteErr').textContent = res.message || 'Could not remove the member.';
+        return;
+      }
+      closeModal('deleteModal');
+      applyMembers(res.members || []);
+      toast((m ? m.name : 'The member') + ' was removed.');
+    });
+  });
+
+  /* Draw straight away from this browser's copy, then refresh from MySQL. */
+  paintAll();
+  loadMembers();
 })();

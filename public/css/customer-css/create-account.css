@@ -125,7 +125,7 @@ body.signup{
   font-weight:600;font-size:1.1rem;
 }
 .photo__preview[data-empty="false"]{border-style:solid;border-color:var(--navy);}
-.photo__actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;}
+.photo__actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;flex:1;min-width:0;}
 .photo__hint{margin:0;flex-basis:100%;font-size:.82rem;color:#8A92A0;}
 
 .btn--soft{

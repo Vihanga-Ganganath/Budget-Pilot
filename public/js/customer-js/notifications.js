@@ -297,7 +297,7 @@
 
   el('logoutBtn').addEventListener('click', function () {
     BP.clearSession();
-    window.location.href = 'login.php';
+    window.location.href = 'logout';
   });
 
   buildChips();

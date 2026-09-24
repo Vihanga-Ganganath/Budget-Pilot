@@ -602,7 +602,7 @@
 
   el('logoutBtn').addEventListener('click', function () {
     BP.clearSession();
-    window.location.href = 'login.php';
+    window.location.href = 'logout';
   });
 
   document.querySelectorAll('[data-soon]').forEach(function (btn) {

@@ -18,6 +18,26 @@
   var BP = window.BudgetPilot;
   if (!BP || !BP.isMain) return;
 
+  /* Every private page loads this file, so this is where the browser's copy
+     of the household is checked against MySQL. Deleted accounts drop out of
+     every list, and if the database changed, the page redraws once. */
+  if (BP.refreshFromServer) {
+    BP.refreshFromServer().then(function (r) {
+      if (!r.ok && r.signedOut) {
+        BP.clearSession();
+        window.location.replace('login?signin=required');
+      } else if (r.ok && (r.changed || r.sessionFixed)) {
+        /* Redraw once; never loop if the browser can't save its copy. */
+        var flag = 'bp.synced:' + window.location.pathname;
+        try {
+          if (sessionStorage.getItem(flag)) { sessionStorage.removeItem(flag); return; }
+          sessionStorage.setItem(flag, '1');
+        } catch (e) { return; }
+        window.location.reload();
+      }
+    });
+  }
+
   var profileId = BP.getSession();
   if (!profileId) return;
 

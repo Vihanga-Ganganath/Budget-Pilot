@@ -4,26 +4,32 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Household — Budget Pilot</title>
+<link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/settings.css" />
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/household.css" />
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/settings.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/settings.css'); ?>" />
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/household.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/household.css'); ?>" />
 </head>
 <body class="settings">
 
 <div class="shell">
 
-  <aside class="sidebar">
-    <a class="sidebar__brand" href="<?php echo URLROOT; ?>/customer/index">
-      <span class="sidebar__mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="#fff" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="#fff"/></svg>
-      </span>
-      <span class="sidebar__brandtext">
-        <span class="sidebar__name">Budget Pilot</span>
-        <span class="sidebar__tag">Smart Finance Copilot</span>
-      </span>
-    </a>
+  <aside class="sidebar" id="sidebar" aria-label="Main menu">
+    <div class="sidebar__head">
+      <a class="sidebar__brand" href="<?php echo URLROOT; ?>/customer/index">
+        <span class="sidebar__mark" aria-hidden="true">
+          <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
+        </span>
+        <span class="sidebar__brandtext">
+          <span class="sidebar__name">Budget Pilot</span>
+          <span class="sidebar__tag">Smart Finance Copilot</span>
+        </span>
+      </a>
+      <button class="sidebar__close" type="button" data-nav-close aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
 
     <nav class="sidebar__nav" aria-label="Sections">
       <a class="navlink" href="<?php echo URLROOT; ?>/customer/index">
@@ -70,6 +76,13 @@
 
   <div class="main">
     <header class="appbar">
+      <button class="appbar__menu" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <a class="appbar__brand" href="<?php echo URLROOT; ?>/customer/index">
+        <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
+        <span>Budget Pilot</span>
+      </a>
       <div class="appbar__actions">
         <a class="icon-btn" href="<?php echo URLROOT; ?>/customer/notifications" data-bell aria-label="Notifications">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
@@ -99,10 +112,10 @@
             <h1 class="page__title">Household</h1>
             <p class="page__sub" id="pageSub">Everyone on this account, and what they have spent.</p>
           </div>
-          <a class="btn btn--primary" href="create-account.html#members">
+          <button class="btn btn--primary" type="button" id="addMemberBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8.5v7M8.5 12h7"/></svg>
             Add family member
-          </a>
+          </button>
         </div>
 
         <section class="hhsum">
@@ -122,6 +135,7 @@
 
         <section class="card">
           <h2 class="card__title">People on this account</h2>
+          <p class="card__hint" id="peopleStatus" role="status">Loading members…</p>
           <ul class="people" id="people"></ul>
           <p class="empty" id="peopleEmpty" hidden>
             It's just you so far. Add a family member and their spending joins this budget.
@@ -149,11 +163,73 @@
 
 <div class="toast" id="toast" role="status" hidden></div>
 
+<!-- Add / Edit member (one form for both Create and Update) -->
+<div class="modal" id="memberModal" hidden>
+  <div class="modal__backdrop" data-close></div>
+  <form class="modal__box" id="memberForm" role="dialog" aria-modal="true" aria-labelledby="memberModalTitle" novalidate>
+    <h2 class="modal__title" id="memberModalTitle">Add family member</h2>
+    <p class="err" id="mFormErr" role="alert"></p>
+
+    <div class="mfield">
+      <label class="label" for="mName">Full name</label>
+      <input class="control" id="mName" type="text" autocomplete="off" placeholder="Member’s full name" />
+      <p class="err" id="mNameErr" role="alert"></p>
+    </div>
+    <div class="mfield">
+      <label class="label" for="mEmail">Email address</label>
+      <input class="control" id="mEmail" type="email" autocomplete="off" placeholder="name@example.com" />
+      <p class="err" id="mEmailErr" role="alert"></p>
+    </div>
+    <div class="mfield" id="mGenderField">
+      <label class="label" for="mGender">Gender</label>
+      <div class="control control--select">
+        <select id="mGender">
+          <option value="">Not set</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+          <option value="prefer_not_to_say">Prefer not to say</option>
+        </select>
+      </div>
+      <p class="err" id="mGenderErr" role="alert"></p>
+    </div>
+    <div class="mfield">
+      <label class="label" for="mPassword" id="mPasswordLabel">Password</label>
+      <input class="control" id="mPassword" type="password" autocomplete="new-password" placeholder="8+ characters" />
+      <p class="hint" id="mPasswordHint">Upper and lower case, a number and a symbol.</p>
+      <p class="err" id="mPasswordErr" role="alert"></p>
+    </div>
+
+    <div class="modal__actions">
+      <button class="btn btn--ghost" type="button" data-close>Cancel</button>
+      <button class="btn btn--primary" type="submit" id="memberSaveBtn">Add member</button>
+    </div>
+  </form>
+</div>
+
+<!-- Remove member confirmation -->
+<div class="modal" id="deleteModal" hidden>
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <h2 class="modal__title" id="deleteModalTitle">Remove member</h2>
+    <div class="modal__body">
+      <p id="deleteText"></p>
+      <p>They will no longer be able to sign in. This cannot be undone.</p>
+    </div>
+    <p class="err" id="deleteErr" role="alert"></p>
+    <div class="modal__actions">
+      <button class="btn btn--ghost" type="button" data-close>Keep member</button>
+      <button class="btn btn--danger" type="button" id="deleteConfirmBtn">Remove</button>
+    </div>
+  </div>
+</div>
+
 <script>window.URLROOT = "<?php echo URLROOT; ?>";</script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/orders.js"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/notify.js"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/household-ui.js"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/household.js"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/nav.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/nav.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/store.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/orders.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/orders.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/notify.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/notify.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/household-ui.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/household-ui.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/household.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/household.js'); ?>"></script>
 </body>
 </html>

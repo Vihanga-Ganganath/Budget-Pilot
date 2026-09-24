@@ -4,10 +4,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Budget Pilot — know what's left before you spend it</title>
+<link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/style.css" />
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/style.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/style.css'); ?>" />
 </head>
 <body>
 
@@ -16,7 +17,7 @@
   <div class="topbar__inner">
     <a class="brand" href="<?php echo URLROOT; ?>">
       <span class="brand__mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="currentColor" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="currentColor"/></svg>
+        <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
       </span>
       <span class="brand__text">
         <span class="brand__name">Budget Pilot</span>
@@ -24,10 +25,18 @@
       </span>
     </a>
 
-    <nav class="topnav" aria-label="Sections">
+    <button class="menu-toggle" type="button" data-menu-toggle aria-controls="topnav" aria-expanded="false" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path class="menu-toggle__top" d="M4 7h16"/><path class="menu-toggle__mid" d="M4 12h16"/><path class="menu-toggle__bot" d="M4 17h16"/></svg>
+    </button>
+
+    <nav class="topnav" id="topnav" aria-label="Sections">
       <a href="#how">How it works</a>
       <a href="#features">What you get</a>
       <a href="#security">Security</a>
+      <div class="topnav__auth">
+        <a class="btn btn--outline" href="<?php echo URLROOT; ?>/customer/login">Sign in</a>
+        <a class="btn btn--lime" href="<?php echo URLROOT; ?>/customer/register">Create account</a>
+      </div>
     </nav>
 
     <div class="topbar__actions">
@@ -294,7 +303,7 @@
     <div class="footer__brand">
       <a class="brand brand--footer" href="<?php echo URLROOT; ?>">
         <span class="brand__mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="currentColor" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="currentColor"/></svg>
+          <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
         </span>
         <span class="brand__text">
           <span class="brand__name">Budget Pilot</span>
@@ -346,6 +355,6 @@
   </div>
 </footer>
 
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/main.js"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/main.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/main.js'); ?>"></script>
 </body>
 </html>

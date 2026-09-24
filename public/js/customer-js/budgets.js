@@ -236,6 +236,56 @@
       el('unallocatedLabel').textContent = left < 0 ? 'Over income' : 'Unallocated';
       el('unallocatedValue').textContent = money(Math.abs(left));
     }
+
+    paintGoal();   /* saved = income - spent, so it follows the income too */
+  }
+
+  /* Household savings goal = everyone's savings goals added together.
+     BP.savingsGoalStatus checks it against income minus what was spent. */
+  function paintGoal() {
+    var card = el('goalCard');
+    if (!card || !BP.savingsGoalStatus) return;
+
+    var status = BP.savingsGoalStatus(profileId, incomeValue());
+    var badge = el('goalBadge');
+
+    card.classList.toggle('is-achieved', status.achieved);
+    card.classList.toggle('is-short', status.hasGoal && !status.achieved);
+
+    el('goalSaved').textContent = (status.saved < 0 ? '\u2212' : '') + money(Math.abs(status.saved));
+    el('goalFill').style.width = Math.min(status.percent, 100) + '%';
+
+    if (!status.hasGoal) {
+      badge.textContent = 'No goal';
+      el('goalOf').textContent = 'saved this month';
+      el('goalHint').textContent = 'Add a savings goal in Settings. Each person\u2019s goal adds to the household total.';
+    } else if (status.achieved) {
+      badge.textContent = 'Achieved';
+      el('goalOf').textContent = 'of ' + money(status.goal) + ' saved';
+      el('goalHint').textContent = 'Goal reached \u2014 ' + money(status.saved - status.goal) + ' above target.';
+    } else {
+      badge.textContent = 'Not yet';
+      el('goalOf').textContent = 'of ' + money(status.goal) + ' saved';
+      el('goalHint').textContent = money(status.remaining) + ' more to reach the goal (' + status.percent + '%).';
+    }
+
+    /* Who the goal is made of — only the account holder sees each person. */
+    var list = el('goalMembers');
+    list.textContent = '';
+    var show = status.hasGoal && status.members.length > 1 && BP.isMain(profileId);
+    list.hidden = !show;
+    if (!show) return;
+
+    status.members.forEach(function (m) {
+      var li = document.createElement('li');
+      var who = document.createElement('span');
+      who.textContent = m.id === profileId ? m.name + ' (you)' : m.name;
+      var amount = document.createElement('strong');
+      amount.textContent = m.goal > 0 ? money(m.goal) : '\u2014';
+      li.appendChild(who);
+      li.appendChild(amount);
+      list.appendChild(li);
+    });
   }
 
   function paintAll() {
@@ -504,7 +554,7 @@
 
   el('logoutBtn').addEventListener('click', function () {
     BP.clearSession();
-    window.location.href = 'login.php';
+    window.location.href = 'logout';
   });
 
   document.querySelectorAll('[data-soon]').forEach(function (btn) {

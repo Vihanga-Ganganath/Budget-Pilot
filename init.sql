@@ -21,16 +21,17 @@ CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     household_id INT, 
     role ENUM('customer', 'supplier', 'admin') DEFAULT 'customer',
-    household_role ENUM('head', 'member') DEFAULT 'head', 
+    household_role ENUM('head', 'member') NULL DEFAULT NULL,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL, 
     password_hash VARCHAR(255) NOT NULL, 
     phone_number VARCHAR(20), 
     nic VARCHAR(20),          
-    date_of_birth DATE, 
+    age TINYINT UNSIGNED NULL, -- stored as a number (13-120), entered at sign-up / Settings
     gender ENUM('male', 'female', 'other', 'prefer_not_to_say'),
     account_status ENUM('active', 'locked', 'suspended', 'pending') DEFAULT 'active', -- 'pending' = awaiting admin approval (supplier registrations)
-    two_factor_enabled BOOLEAN DEFAULT FALSE,
+    two_factor_enabled BOOLEAN DEFAULT FALSE, -- on = forgot password also asks for the security PIN
+    two_factor_pin_hash VARCHAR(255) NULL,    -- hash of the 6-digit PIN set in Settings (NULL when 2FA is off)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_login_at TIMESTAMP NULL,
@@ -93,13 +94,13 @@ CREATE TABLE products (
 CREATE TABLE user_profiles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNIQUE NOT NULL,
-    profile_picture_url VARCHAR(255),
+    profile_picture_url VARCHAR(255), -- e.g. 'uploads/avatars/u5_1727000000.jpg' (path inside public/)
     address TEXT,
     preferred_language VARCHAR(50) DEFAULT 'English',
     monthly_income DECIMAL(10, 2) DEFAULT 0.00,
     preferred_currency VARCHAR(10) DEFAULT 'LKR',
     budget_preferences TEXT,
-    financial_goals TEXT,
+    financial_goals TEXT, -- the savings goal amount from Settings, e.g. '25000.00'
     
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
@@ -125,6 +126,21 @@ CREATE TABLE login_history (
     login_status ENUM('success', 'failed', 'locked_out') NOT NULL,
     attempted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+-- Forgot-password requests. No email is sent.
+-- stage: 'nic' -> 'pin' (security PIN, only if users.two_factor_enabled) -> 'ready'
+CREATE TABLE password_resets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    stage ENUM('nic', 'pin', 'ready') DEFAULT 'nic',
+    attempts TINYINT UNSIGNED DEFAULT 0,
+    ip_address VARCHAR(45),
+    expires_at DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_reset_user (user_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -418,6 +434,24 @@ CREATE TABLE inventory_logs (
 -- ALTER TABLE users
 --   MODIFY COLUMN account_status
 --     ENUM('active','locked','suspended','pending') DEFAULT 'active';
+-- ============================================================
+
+-- ============================================================
+-- MIGRATION: customer profile fields (run once on an existing database)
+-- ALTER TABLE users
+--   DROP COLUMN date_of_birth,
+--   ADD COLUMN age TINYINT UNSIGNED NULL AFTER nic;
+-- ============================================================
+
+-- ============================================================
+-- MIGRATION: forgot password with NIC + security PIN (run once on an
+-- existing database; Customer::ensureSchema() also does this on its own)
+-- ALTER TABLE users ADD COLUMN two_factor_pin_hash VARCHAR(255) NULL AFTER two_factor_enabled;
+-- DROP TABLE IF EXISTS password_resets;
+-- then run the CREATE TABLE password_resets above.
+-- ============================================================
+
+
 -- ============================================================
 -- Admin Notice Management
 CREATE TABLE IF NOT EXISTS notices (

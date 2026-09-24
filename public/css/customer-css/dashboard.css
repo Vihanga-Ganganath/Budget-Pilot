@@ -223,12 +223,14 @@
 @media (max-width:620px){
   .kpis{grid-template-columns:1fr;}
   .dashhead__actions{width:100%;}
-  .dashbtn{flex:1;justify-content:center;}
+  .dashbtn{flex:1;justify-content:center;white-space:nowrap;padding-left:14px;padding-right:14px;}
   .legend{grid-template-columns:1fr;}
 }
 
 
-
+@media (max-width:360px){
+  .dashbtn{flex-basis:100%;}
+}
 /* ---------- Admin notices ---------- */
 .notice-board{margin-bottom:22px;}
 .notice-board__sub{margin:5px 0 0;color:var(--body);font-size:.86rem;}

@@ -10,8 +10,8 @@ class Controller {
     // Load an HTML View and pass data to it
     public function view($view, $data = []) {
         // Look for the view file (e.g., 'admin/dashboard')
-        if (file_exists('../app/Views/' . $view . '.php')) {
-            require_once '../app/Views/' . $view . '.php';
+        if (file_exists('../app/views/' . $view . '.php')) {
+            require_once '../app/views/' . $view . '.php';
         } else {
             // If the view doesn't exist, stop the script
             die("Error: The view '" . $view . "' does not exist.");

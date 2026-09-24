@@ -51,7 +51,7 @@
     return {
       name: profile.name,
       email: profile.email,
-      income: profile.income || '',
+      income: Number(profile.income) ? profile.income : '',   /* 0 shows as blank */
       savings: profile.savings || '',
       nic: profile.nic || '',
       gender: profile.gender || '',
@@ -779,12 +779,63 @@
     return ok;
   }
 
-  el('saveBtn').addEventListener('click', function () {
+  /* Shows server-side field errors (keys are input ids, e.g. fEmail). */
+  function showFieldErrors(errors) {
+    Object.keys(errors || {}).forEach(function (id) {
+      var input = el(id), out = el(id + 'Err');
+      if (out) out.textContent = errors[id];
+      if (input) (input.closest('.control') || input).classList.add('is-invalid');
+    });
+  }
+
+  /* Save: account details, age, currency, savings goal and photo go to MySQL
+     first; if the server accepts them the rest (fiscal year, toggles, finance)
+     is saved in this browser as before.
+     `done(ok)` is optional. */
+  function save(done) {
+    done = done || function () {};
     if (!validate()) {
       say('Check the highlighted fields and try again.');
+      done(false);
       return;
     }
 
+    var saveBtn = el('saveBtn');
+    saveBtn.disabled = true;
+
+    var body = {
+      name: draft.name.trim(),
+      email: draft.email.trim().toLowerCase(),
+      nic: String(draft.nic).trim(),
+      gender: draft.gender,
+      age: String(draft.age).trim(),               /* users.age */
+      currency: draft.prefs.currency,               /* user_profiles.preferred_currency */
+      savingsGoal: String(draft.savings).trim()     /* user_profiles.financial_goals */
+    };
+
+    /* A new photo is still a data URL; one already on the server is a link.
+       Only a new one is sent (user_profiles.profile_picture_url). */
+    if (draft.avatar && draft.avatar !== profile.avatar && /^data:image\//.test(draft.avatar)) {
+      body.avatar = draft.avatar;
+    }
+
+    BP.api('apiUpdateProfile', body).then(function (res) {
+      saveBtn.disabled = false;
+      if (!res.ok) {
+        showFieldErrors(res.errors);
+        say(res.message || 'Could not save. Please try again.');
+        done(false);
+        return;
+      }
+      /* Keep the server's link rather than the large data URL. */
+      if (res.avatarUrl) draft.avatar = res.avatarUrl;
+      done(saveLocal());
+    });
+  }
+
+  el('saveBtn').addEventListener('click', function () { save(); });
+
+  function saveLocal() {
     var mine = financeTarget === profile.id;
 
     var patch = {
@@ -815,7 +866,7 @@
 
     if (!result.ok) {
       say("Couldn't save — storage is full. Remove a document and try again.");
-      return;
+      return false;
     }
 
     profile = BP.getProfile(profile.id);
@@ -833,6 +884,45 @@
     } else {
       say('Changes saved.');
     }
+    return true;
+  }
+
+  /* ---- Change password (saved to MySQL straight away) ---- */
+
+  el('pwBtn').addEventListener('click', function () {
+    ['pwCurrent', 'pwNew', 'pwConfirm'].forEach(function (id) {
+      el(id + 'Err').textContent = '';
+      el(id).classList.remove('is-invalid');
+    });
+
+    var current = el('pwCurrent').value;
+    var next    = el('pwNew').value;
+    var confirm = el('pwConfirm').value;
+    var errors  = {};
+
+    if (!current) errors.pwCurrent = 'Enter your current password.';
+    if (!BP.checkPassword(next).valid) {
+      errors.pwNew = 'Use 8+ characters with upper and lower case, a number and a symbol.';
+    }
+    if (next !== confirm) errors.pwConfirm = 'The passwords do not match.';
+    if (Object.keys(errors).length) { showFieldErrors(errors); return; }
+
+    var btn = el('pwBtn');
+    btn.disabled = true;
+
+    BP.api('apiChangePassword', { current: current, new: next, confirm: confirm })
+      .then(function (res) {
+        btn.disabled = false;
+        if (!res.ok) {
+          showFieldErrors(res.errors);
+          if (res.message) say(res.message);
+          return;
+        }
+        el('pwCurrent').value = '';
+        el('pwNew').value = '';
+        el('pwConfirm').value = '';
+        say('Password updated. Use the new one next time you sign in.');
+      });
   });
 
   el('discardBtn').addEventListener('click', function () {
@@ -904,25 +994,8 @@
     ]);
   });
 
-  el('deactivateBtn').addEventListener('click', function () {
-    openModal('Deactivate Account', function (body) {
-      var p1 = document.createElement('p');
-      p1.textContent = 'This deletes ' + profile.name + '\u2019s profile, along with saved income sources and uploaded files.';
-      var p2 = document.createElement('p');
-      p2.textContent = profile.role === 'Main' && BP.getProfiles().length > 1
-        ? 'You are the main holder, so the next profile in the household takes over. The profile disappears from the sign-in screen straight away.'
-        : 'The profile disappears from the sign-in screen straight away. This cannot be undone.';
-      body.appendChild(p1);
-      body.appendChild(p2);
-    }, [
-      { label: 'Keep account' },
-      { label: 'Deactivate', style: 'btn--danger', action: function () {
-          BP.removeProfile(profile.id);
-          BP.clearSession();
-          window.location.href = 'login.php?deactivated=1';
-        } }
-    ]);
-  });
+  /* Deactivate Account lives in js/customer-js/deactivate.js so it works
+     even if something else on this page fails. */
 
   /* ---- Leaving the page ---- */
 
@@ -943,8 +1016,7 @@
       { label: 'Stay' },
       { label: 'Save and leave', style: 'btn--primary', action: function () {
           closeModal();
-          el('saveBtn').click();
-          if (!isDirty()) go();
+          save(function (ok) { if (ok) go(); });
         } },
       { label: 'Leave anyway', style: 'btn--danger', action: go }
     ]);
@@ -961,7 +1033,7 @@
   });
 
   el('logoutBtn').addEventListener('click', function () {
-    leaveTo('login.php', true);
+    leaveTo('logout', true);
   });
 
   document.querySelectorAll('[data-soon]').forEach(function (btn) {

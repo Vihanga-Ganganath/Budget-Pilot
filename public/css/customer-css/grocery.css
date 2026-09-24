@@ -240,7 +240,37 @@
   .cathead{flex-direction:column;align-items:stretch;}
 }
 @media (max-width:560px){
-  .products{grid-template-columns:1fr;}
   .drawer__grid{grid-template-columns:1fr;}
-  .filters__field,.morefilters{width:100%;}
+  .drawer{padding:16px;}
+
+  /* filters as a 2x2 block instead of four full-width rows */
+  .filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+  .filters > *{min-width:0;width:100%;}
+  .morefilters{justify-content:center;padding:10px 12px;}
+
+  /* two compact cards per row, so the catalog is browsable on a phone */
+  .products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+  .product{border-radius:12px;}
+  .product__art{padding:6px;}
+  .product__badge{top:8px;left:8px;padding:3px 8px;font-size:.66rem;}
+  .product__body{padding:11px 11px 12px;}
+  .product__name{font-size:.92rem;margin-bottom:6px;}
+  .product__blurb{display:none;}
+  .product__brands{gap:4px;margin-bottom:8px;}
+  .brandchip{padding:3px 8px;font-size:.7rem;}
+  .product__price{font-size:1.18rem;}
+  .product__unit,.product__pack{font-size:.74rem;}
+  .product__saving{font-size:.72rem;margin-bottom:10px;}
+  .product__actions{flex-direction:column;gap:6px;}
+  .product__actions .btn{padding:9px 8px;font-size:.8rem;}
+
+  /* compare / cart tables inside the modal */
+  .ctable{font-size:.82rem;}
+  .ctable th,.ctable td{padding:9px 6px;}
+  .ctable__thumb{width:40px;height:40px;}
+  .cartrow{flex-wrap:wrap;}
+}
+@media (max-width:340px){
+  .products{grid-template-columns:minmax(0,1fr);}
+  .filters{grid-template-columns:minmax(0,1fr);}
 }

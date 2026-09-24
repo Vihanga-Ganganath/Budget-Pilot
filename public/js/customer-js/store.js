@@ -400,6 +400,56 @@ window.BudgetPilot = (function () {
     return seen;
   }
 
+  /* ---------- Savings goal ----------
+
+     Each person sets their own savings goal in Settings (profile `savings`,
+     saved to user_profiles.financial_goals). The household goal is the total
+     of everyone's goals.
+
+     What the household has saved this month is its income minus everything
+     spent against the budget — the same figure the Analytics page reports as
+     "savings achieved". The goal is achieved once that reaches the total.
+
+     `incomeOverride` lets the Budgets page pass the income currently on
+     screen, so the check moves as the figures are typed. */
+  function savingsGoalStatus(id, incomeOverride) {
+    var members = householdMembers().map(function (person) {
+      return {
+        id: person.id,
+        name: person.name,
+        role: person.role,
+        goal: Math.max(Number(person.savings) || 0, 0)
+      };
+    });
+    var goal = members.reduce(function (sum, m) { return sum + m.goal; }, 0);
+
+    var budget = getBudget(id);
+    var income = incomeOverride != null
+      ? Number(incomeOverride) || 0
+      : (budget ? Number(budget.income) || 0 : 0);
+    var spent = 0;
+    if (budget) {
+      CATEGORIES.forEach(function (c) {
+        spent += Number((budget.categories[c.key] || {}).spent) || 0;
+      });
+    }
+
+    var saved = Math.round((income - spent) * 100) / 100;
+    goal = Math.round(goal * 100) / 100;
+
+    return {
+      goal: goal,                                   /* household goal */
+      income: income,
+      spent: Math.round(spent * 100) / 100,
+      saved: saved,                                 /* income - spent this month */
+      hasGoal: goal > 0,
+      achieved: goal > 0 && saved >= goal,
+      percent: goal > 0 ? Math.max(Math.round(saved / goal * 100), 0) : 0,
+      remaining: goal > 0 ? Math.max(Math.round((goal - saved) * 100) / 100, 0) : 0,
+      members: members                              /* each person's share of the goal */
+    };
+  }
+
   /* ---------- Budgets ---------- */
 
   /* Spending categories in display order. Each weight is that category's
@@ -559,6 +609,7 @@ window.BudgetPilot = (function () {
       var row = totals[person.id] || { total: 0, count: 0, last: null };
       return {
         id: person.id,
+        dbId: person.dbId || null,
         name: person.name,
         email: person.email,
         avatar: person.avatar || null,
@@ -811,8 +862,142 @@ window.BudgetPilot = (function () {
     return { met: met, passed: passed, valid: passed === 5, level: level, label: LEVELS[level] };
   }
 
+  /* ---------- Server (PHP) connection ----------
+
+     Accounts and login now live in MySQL. These helpers talk to
+     CustomerController and keep this browser's profile cache in step with
+     the database, so the other pages keep working unchanged. */
+
+  function apiUrl(action) {
+    return (window.URLROOT || '') + '/customer/' + action;
+  }
+
+  /* POSTs JSON and always resolves to the server's JSON reply
+     ({ ok: false, message } if the network or server fails). */
+  function api(action, body) {
+    return fetch(apiUrl(action), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify(body || {})
+    }).then(function (res) {
+      return res.json().catch(function () {
+        return { ok: false, message: 'The server sent an unexpected reply.' };
+      });
+    }).catch(function () {
+      return { ok: false, message: 'Could not reach the server. Check that XAMPP is running.' };
+    });
+  }
+
+  /* Makes this browser's profile list match one household from the server.
+     - existing local profiles are matched by email, so their saved budgets,
+       expenses and settings are kept (their local id does not change)
+     - new people get the local id 'u' + database id
+     - profiles from any other household are dropped from this browser
+     `extras` can carry { email: { avatar, savings, age } } from the sign-up form;
+     values the server sends for the same fields take their place.
+     Returns the local profiles, in server order. */
+  function syncHousehold(members, extras) {
+    extras = extras || {};
+    var data = read();
+    var byEmail = {};
+    var byDbId = {};
+    data.profiles.forEach(function (p) {
+      byEmail[p.email] = p;
+      if (p.dbId) byDbId[p.dbId] = p;
+    });
+
+    var synced = members.map(function (m) {
+      var email = String(m.email).toLowerCase();
+      var extra = extras[email] || {};
+      /* Match on the database id first, so a member whose email was just
+         edited keeps their local id (and the expenses logged under it). */
+      var local = byDbId[Number(m.id)] || byEmail[email];
+
+      if (!local) {
+        local = {
+          id: 'u' + m.id,
+          passwordHash: '',
+          avatar: null,
+          age: '',
+          savings: '',
+          income: m.monthly_income > 0 ? String(Number(m.monthly_income)) : '',
+          baseIncome: m.monthly_income > 0 ? String(Number(m.monthly_income)) : '',
+          prefs: { theme: 'light', alerts: true, currency: 'USD', fiscalStart: 'January' },
+          finance: { sources: [], payslips: [] }
+        };
+      }
+
+      local.dbId   = Number(m.id);
+      local.name   = m.name;
+      local.email  = email;
+      local.role   = m.household_role === 'head' ? 'Main' : 'Member';
+      local.gender = m.gender || local.gender || '';
+      local.nic    = m.nic || local.nic || '';
+      if (extra.avatar)  local.avatar  = extra.avatar;
+      if (extra.age)     local.age     = extra.age;
+      if (extra.savings) local.savings = extra.savings;
+
+      /* MySQL is the record for these, so its values win when it has them:
+         users.age, user_profiles.profile_picture_url (as avatar_url),
+         user_profiles.financial_goals (the savings goal) and
+         user_profiles.preferred_currency. */
+      if (m.age) local.age = String(m.age);
+      if (m.avatar_url) local.avatar = m.avatar_url;
+      if (m.financial_goals !== null && m.financial_goals !== undefined && m.financial_goals !== '') {
+        local.savings = String(Number(m.financial_goals));
+      }
+      if (m.preferred_currency) {
+        local.prefs = local.prefs || { theme: 'light', alerts: true, currency: 'USD', fiscalStart: 'January' };
+        local.prefs.currency = m.preferred_currency;
+      }
+      return local;
+    });
+
+    data.profiles = synced;
+    write(data);
+    return synced;
+  }
+
+  /* Re-reads the household from MySQL and makes this browser match it:
+     - accounts deleted anywhere else disappear from the profile list
+     - the browser's "signed in as" is set to whoever PHP has signed in
+     Resolves to { ok, changed, sessionFixed } or { ok: false, signedOut }. */
+  function refreshFromServer() {
+    function fingerprint() {
+      return getProfiles().map(function (p) {
+        return (p.dbId || 'local') + ':' + p.email + ':' + p.role;
+      }).join('|');
+    }
+    var before = fingerprint();
+    var sessionBefore = getSession();
+
+    return api('apiMembers').then(function (res) {
+      if (!res || !res.ok) {
+        return { ok: false, signedOut: /session has ended/i.test((res && res.message) || '') };
+      }
+      syncHousehold(res.members || []);
+      var me = profileByDbId(res.userId);
+      if (me && sessionBefore !== me.id) setSession(me.id);
+      return {
+        ok: true,
+        changed: fingerprint() !== before,
+        sessionFixed: !!me && sessionBefore !== me.id
+      };
+    });
+  }
+
+  /* Local profile for a database user id. */
+  function profileByDbId(dbId) {
+    return getProfiles().filter(function (p) { return p.dbId === Number(dbId); })[0] || null;
+  }
+
   return {
     available: available,
+    api: api,
+    syncHousehold: syncHousehold,
+    refreshFromServer: refreshFromServer,
+    profileByDbId: profileByDbId,
     assetUrl: assetUrl,
     getProfiles: getProfiles,
     saveProfiles: saveProfiles,
@@ -852,6 +1037,7 @@ window.BudgetPilot = (function () {
     memberSpend: memberSpend,
     memberIncomes: memberIncomes,
     familyIncome: familyIncome,
+    savingsGoalStatus: savingsGoalStatus,
     setMemberIncome: setMemberIncome,
     monthlyFromSource: monthlyFromSource,
     sourcesTotal: sourcesTotal,

@@ -4,26 +4,32 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Budget Setup — Budget Pilot</title>
+<link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/settings.css" />
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/budgets.css" />
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/settings.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/settings.css'); ?>" />
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/budgets.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/budgets.css'); ?>" />
 </head>
 <body class="settings">
 
 <div class="shell">
 
-  <aside class="sidebar">
-    <a class="sidebar__brand" href="<?php echo URLROOT; ?>/customer/index">
-      <span class="sidebar__mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="#fff" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="#fff"/></svg>
-      </span>
-      <span class="sidebar__brandtext">
-        <span class="sidebar__name">Budget Pilot</span>
-        <span class="sidebar__tag">Smart Finance Copilot</span>
-      </span>
-    </a>
+  <aside class="sidebar" id="sidebar" aria-label="Main menu">
+    <div class="sidebar__head">
+      <a class="sidebar__brand" href="<?php echo URLROOT; ?>/customer/index">
+        <span class="sidebar__mark" aria-hidden="true">
+          <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
+        </span>
+        <span class="sidebar__brandtext">
+          <span class="sidebar__name">Budget Pilot</span>
+          <span class="sidebar__tag">Smart Finance Copilot</span>
+        </span>
+      </a>
+      <button class="sidebar__close" type="button" data-nav-close aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
 
     <nav class="sidebar__nav" aria-label="Sections">
       <a class="navlink" href="<?php echo URLROOT; ?>/customer/index" id="homeLink">
@@ -74,6 +80,13 @@
 
   <div class="main">
     <header class="appbar">
+      <button class="appbar__menu" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <a class="appbar__brand" href="<?php echo URLROOT; ?>/customer/index">
+        <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
+        <span>Budget Pilot</span>
+      </a>
       <div class="appbar__actions">
         <a class="icon-btn" href="<?php echo URLROOT; ?>/customer/notifications" data-bell aria-label="Notifications">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
@@ -122,16 +135,33 @@
           <p class="setup__note" id="savedNote"></p>
         </section>
 
-        <section class="card card--navy total">
-          <span class="total__label">Total planned</span>
-          <strong class="total__value" id="totalPlanned">$0</strong>
-          <p class="total__hint" id="totalHint">Set your income, then auto-suggest a plan.</p>
-          <div class="total__bar"><span class="total__fill" id="totalFill"></span></div>
-          <p class="total__chip" id="unallocated" hidden>
-            <span class="total__chiplabel" id="unallocatedLabel">Unallocated</span>
-            <strong class="total__chipvalue" id="unallocatedValue">$0</strong>
-          </p>
-        </section>
+        <div class="setup__side">
+          <section class="card card--navy total">
+            <span class="total__label">Total planned</span>
+            <strong class="total__value" id="totalPlanned">$0</strong>
+            <p class="total__hint" id="totalHint">Set your income, then auto-suggest a plan.</p>
+            <div class="total__bar"><span class="total__fill" id="totalFill"></span></div>
+            <p class="total__chip" id="unallocated" hidden>
+              <span class="total__chiplabel" id="unallocatedLabel">Unallocated</span>
+              <strong class="total__chipvalue" id="unallocatedValue">$0</strong>
+            </p>
+          </section>
+
+          <!-- Household savings goal = total of every member's savings goal -->
+          <section class="card goal" id="goalCard">
+            <div class="goal__head">
+              <span class="goal__label">Household savings goal</span>
+              <span class="goal__badge" id="goalBadge">No goal</span>
+            </div>
+            <p class="goal__figures">
+              <strong class="goal__saved" id="goalSaved">$0</strong>
+              <span class="goal__of" id="goalOf">saved</span>
+            </p>
+            <div class="goal__bar"><span class="goal__fill" id="goalFill"></span></div>
+            <p class="goal__hint" id="goalHint">Add a savings goal in Settings.</p>
+            <ul class="goal__members" id="goalMembers" hidden></ul>
+          </section>
+        </div>
       </div>
 
       <ul class="grid" id="categoryGrid"></ul>
@@ -185,10 +215,11 @@
 </template>
 
 <script>window.URLROOT = "<?php echo URLROOT; ?>";</script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/notify.js"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/household-ui.js"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/budgets.js"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/budget-hooks.js"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/nav.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/nav.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/store.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/notify.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/notify.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/household-ui.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/household-ui.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/budgets.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/budgets.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/budget-hooks.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/budget-hooks.js'); ?>"></script>
 </body>
 </html>

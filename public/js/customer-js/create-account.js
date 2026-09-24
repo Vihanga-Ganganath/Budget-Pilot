@@ -367,16 +367,55 @@
     return { ok: ok, members: members };
   }
 
-  function persist(profiles, destination) {
-    if (!BP.available()) {
-      formError.textContent = "Your browser is blocking local storage, so nothing can be saved.";
-      return;
+  /* Shows the server's field errors next to the right inputs. */
+  function showServerErrors(errors) {
+    if (!errors) return;
+    var fields = { fullName: fullName, email: email, password: password,
+                   nic: nic, gender: gender, age: age, income: income,
+                   savings: savings };
+    Object.keys(fields).forEach(function (key) {
+      if (errors[key] && fields[key]) setError(fields[key], key + 'Error', errors[key]);
+    });
+    if (errors.terms) el('termsError').textContent = errors.terms;
+
+    if (errors.members) {
+      var cards = memberCards();
+      Object.keys(errors.members).forEach(function (i) {
+        var card = cards[i];
+        if (!card) return;
+        card.querySelector('.member__error').textContent = errors.members[i];
+        card.classList.add('is-flagged');
+      });
     }
-    if (!BP.saveProfiles(profiles)) {
-      formError.textContent = "Couldn't save \u2014 your images may be too large. Try smaller photos.";
-      return;
-    }
-    window.location.href = destination;
+  }
+
+  /* Saves to MySQL through CustomerController, then refreshes this
+     browser's profile cache (photos stay in the browser for now). */
+  function persist(profiles, destination, membersOnly) {
+    var body = membersOnly
+      ? { members: profiles }
+      : { owner: profiles[0], members: profiles.slice(1), terms: terms.checked };
+
+    createBtn.disabled = true;
+    formError.textContent = '';
+
+    BP.api(membersOnly ? 'apiAddMembers' : 'apiRegister', body).then(function (res) {
+      createBtn.disabled = false;
+
+      if (!res.ok) {
+        showServerErrors(res.errors);
+        formError.textContent = res.message || 'Something went wrong. Please try again.';
+        return;
+      }
+
+      var extras = {};
+      profiles.forEach(function (p) {
+        extras[String(p.email).trim().toLowerCase()] =
+          { avatar: p.avatar, savings: p.savings, age: p.age };
+      });
+      BP.syncHousehold(res.members, extras);
+      window.location.href = destination;
+    });
   }
 
   /* ---- Members-only submit ---- */
@@ -399,7 +438,7 @@
       return;
     }
 
-    persist(result.members, 'login.php?added=' + result.members.length);
+    persist(result.members, 'login?added=' + result.members.length, true);
   }
 
   /* ---- Full sign-up submit ---- */
@@ -488,7 +527,7 @@
       savings: savings.value
     };
 
-    persist([owner].concat(members), 'login.php?created=1');
+    persist([owner].concat(members), 'login?created=1', false);
   }
 
   createBtn.addEventListener('click', function () {

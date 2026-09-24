@@ -8,10 +8,16 @@
   display:grid;
   grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);
   gap:22px;
-  align-items:stretch;
+  align-items:start;          /* cards keep their own height instead of
+                                 stretching to match the income card */
   margin-bottom:26px;
 }
 .setup .card{display:flex;flex-direction:column;}
+/* grid children default to their content's width; let them shrink to the screen */
+.setup > *{min-width:0;}
+
+/* Right-hand column: total planned + savings goal, stacked and compact. */
+.setup__side{display:flex;flex-direction:column;gap:14px;min-width:0;}
 
 .control--lg input{padding:17px 0;font-size:1.4rem;font-weight:600;}
 .control--lg .control__prefix{font-size:1.25rem;font-weight:600;color:var(--body);}
@@ -22,7 +28,7 @@
 .setup__note{margin:12px 0 0;font-size:.85rem;color:var(--muted);min-height:1em;}
 
 /* Total planned */
-.total{justify-content:center;}
+.total{justify-content:center;padding:18px 20px;}
 .total__label{
   font-size:.74rem;font-weight:600;
   letter-spacing:1.4px;text-transform:uppercase;
@@ -31,13 +37,13 @@
 .total__value{
   display:block;
   font-family:var(--font-display);
-  font-size:2rem;font-weight:700;
+  font-size:1.55rem;font-weight:700;
   color:#fff;line-height:1.15;
-  margin:4px 0 6px;
+  margin:2px 0 4px;
   letter-spacing:-.6px;
 }
-.total__hint{margin:0 0 10px;font-size:.84rem;color:#C3CAE8;}
-.total__bar{height:7px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden;}
+.total__hint{margin:0 0 8px;font-size:.8rem;color:#C3CAE8;}
+.total__bar{height:6px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden;}
 .total__fill{
   display:block;height:100%;width:0;
   border-radius:99px;background:var(--lime);
@@ -51,7 +57,7 @@
 .total__chip{
   display:inline-flex;align-items:baseline;gap:8px;
   align-self:flex-start;
-  margin:12px 0 0;padding:6px 11px;
+  margin:10px 0 0;padding:4px 10px;
   border-radius:999px;
   background:rgba(255,255,255,.13);
 }
@@ -60,7 +66,42 @@
   letter-spacing:.8px;text-transform:uppercase;
   color:#C3CAE8;
 }
-.total__chipvalue{font-size:.92rem;font-weight:600;color:#fff;}
+.total__chipvalue{font-size:.85rem;font-weight:600;color:#fff;}
+
+/* Household savings goal */
+.goal{padding:16px 20px;}
+.goal__head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.goal__label{
+  font-size:.72rem;font-weight:600;
+  letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--muted);
+}
+.goal__badge{
+  font-size:.7rem;font-weight:600;
+  padding:3px 9px;border-radius:999px;
+  background:rgba(138,146,160,.15);color:var(--muted);
+  white-space:nowrap;
+}
+.goal.is-achieved .goal__badge{background:rgba(34,164,93,.14);color:var(--green);}
+.goal.is-short .goal__badge{background:rgba(194,55,60,.1);color:var(--danger);}
+.goal__figures{margin:6px 0 8px;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;}
+.goal__saved{font-family:var(--font-display);font-size:1.25rem;font-weight:700;}
+.goal__of{font-size:.8rem;color:var(--muted);}
+.goal__bar{height:6px;border-radius:99px;background:rgba(138,146,160,.18);overflow:hidden;}
+.goal__fill{
+  display:block;height:100%;width:0;border-radius:99px;
+  background:var(--danger);transition:width .35s ease;
+}
+.goal.is-achieved .goal__fill{background:var(--green);}
+.goal__hint{margin:8px 0 0;font-size:.8rem;color:var(--muted);}
+.goal__members{
+  list-style:none;margin:10px 0 0;padding:10px 0 0;
+  border-top:1px solid var(--line);
+  display:flex;flex-direction:column;gap:5px;
+}
+.goal__members li{display:flex;justify-content:space-between;gap:10px;font-size:.8rem;}
+.goal__members li span{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.goal__members li strong{font-weight:600;}
 .total__chip--over{background:rgba(255,139,139,.2);}
 .total__chip--over .total__chipvalue{color:#FFC9C9;}
 
@@ -163,14 +204,16 @@
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));}
 }
 @media (max-width:1080px){
-  .setup{grid-template-columns:1fr;}
+  .setup{grid-template-columns:minmax(0,1fr);}
+  .setup__side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;}
 }
 @media (max-width:820px){
   .grid{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 @media (max-width:560px){
   .grid{grid-template-columns:1fr;}
-  .total__value{font-size:1.8rem;}
+  .total__value{font-size:1.4rem;}
+  .setup__side{grid-template-columns:1fr;}
   .planbar{flex-direction:column;align-items:stretch;}
   .planbar .btn{width:100%;}
 }

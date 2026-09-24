@@ -1,7 +1,6 @@
-/* Budget Pilot — customer and supplier sign-in pages.
+/* Budget Pilot — customer sign-in page.
    The customer page renders saved profiles and checks the typed email and
-   password against the selected one. The supplier page has no profile row,
-   so those parts are skipped. */
+   password against the selected one. */
 
 (function () {
   'use strict';
@@ -87,9 +86,7 @@
 
   function askRemove(profile) {
     pendingId = profile.id;
-    confirmText.textContent = profile.role === 'Main'
-      ? 'Remove ' + profile.name + '\u2019s profile? They are the main holder, so the next profile takes over. This cannot be undone.'
-      : 'Remove ' + profile.name + '\u2019s profile? This cannot be undone.';
+    confirmText.textContent = 'Remove ' + profile.name + ' from this device? Their account is NOT deleted \u2014 to delete it, sign in and use Settings \u2192 Deactivate Account.';
     confirmBar.hidden = false;
     confirmRemove.focus();
   }
@@ -226,6 +223,9 @@
     } else if (query.indexOf('deactivated=1') !== -1) {
       notice.hidden = false;
       notice.textContent = 'Account deactivated. That profile has been removed.';
+    } else if (query.indexOf('reset=1') !== -1) {
+      notice.hidden = false;
+      notice.textContent = 'Password changed. Sign in with your new password.';
     } else if (query.indexOf('signin=required') !== -1) {
       notice.hidden = false;
       notice.textContent = 'Sign in to open your profile and settings.';
@@ -293,43 +293,42 @@
       return;
     }
 
-    /* Supplier page: no profiles to match against. */
-    if (!profileRow) {
-      if (formError) formError.textContent = '';
-      console.log('Signing in (supplier)', { email: emailInput.value.trim() });
-      return;
-    }
-
-    if (BP.getProfiles().length === 0) {
-      formError.textContent = 'No profiles on this device yet. Create an account first.';
-      return;
-    }
-
-    if (!selectedId) {
-      formError.textContent = 'Select a profile to sign in.';
-      return;
-    }
-
-    var check = BP.verify(selectedId, emailInput.value, passwordInput.value);
-
-    if (!check.ok) {
-      if (check.reason === 'email') {
-        setState(emailInput, emailError, false,
-          'That email doesn\u2019t match the selected profile.');
-        emailInput.focus();
-      } else if (check.reason === 'password') {
-        setState(passwordInput, passwordError, false,
-          'Incorrect password for ' + check.profile.name + '.');
-        passwordInput.focus();
-      } else {
-        formError.textContent = 'Select a profile to sign in.';
-      }
+    /* If a profile is picked, the typed email must belong to it. With no
+       profiles on this device (new browser), email + password is enough. */
+    var picked = selectedId ? BP.getProfile(selectedId) : null;
+    if (picked && picked.email !== emailInput.value.trim().toLowerCase()) {
+      setState(emailInput, emailError, false,
+        'That email doesn\u2019t match the selected profile.');
+      emailInput.focus();
       return;
     }
 
     formError.textContent = '';
-    BP.setSession(check.profile.id);
-    window.location.href = 'dashboard.php';
+    signInBtn.disabled = true;
+
+    BP.api('apiLogin', {
+      email: emailInput.value.trim(),
+      password: passwordInput.value
+    }).then(function (res) {
+      signInBtn.disabled = false;
+
+      if (!res.ok) {
+        if (res.reason === 'credentials') {
+          setState(passwordInput, passwordError, false, res.message);
+          passwordInput.focus();
+        } else {
+          formError.textContent = res.message || 'Sign-in failed. Please try again.';
+        }
+        return;
+      }
+
+      /* Bring this browser's profiles in line with the household in MySQL,
+         then open the dashboard as the signed-in person. */
+      BP.syncHousehold(res.members);
+      var me = BP.profileByDbId(res.userId);
+      BP.setSession(me ? me.id : 'u' + res.userId);
+      window.location.href = 'dashboard';
+    });
   }
 
   if (signInBtn) signInBtn.addEventListener('click', submit);
@@ -341,15 +340,5 @@
     });
   });
 
-  /* There is no password reset to offer: accounts live in this browser and no
-     server holds an address to email. Say so plainly rather than leaving a
-     control that does nothing. */
-  var forgotBtn = document.getElementById('forgotBtn');
-  if (forgotBtn && formError) {
-    forgotBtn.addEventListener('click', function () {
-      formError.textContent = 'Passwords cannot be reset — accounts are stored in this ' +
-        'browser and there is no server to email you from. The account holder can change ' +
-        'a password on the Settings page, or you can create a new account.';
-    });
-  }
+  /* "Forgot password?" is handled by forgot-password.js. */
 })();

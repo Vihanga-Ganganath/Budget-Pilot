@@ -26,6 +26,45 @@
   }
 
   /* ==================================================================
+     Menu on small screens
+     The section links sit in a panel under the bar below 980px.
+     ================================================================== */
+
+  var menuBtn = document.querySelector('[data-menu-toggle]');
+  var menu = document.getElementById('topnav');
+
+  if (topbar && menuBtn && menu) {
+    var setMenu = function (open, returnFocus) {
+      topbar.classList.toggle('menu-open', open);
+      menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      if (!open && returnFocus) menuBtn.focus();
+    };
+    var menuIsOpen = function () { return topbar.classList.contains('menu-open'); };
+
+    menuBtn.addEventListener('click', function () { setMenu(!menuIsOpen(), false); });
+
+    /* following a link (including #how on this page) closes the panel */
+    menu.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('a')) setMenu(false, false);
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && menuIsOpen()) setMenu(false, true);
+    });
+
+    /* a tap anywhere outside the bar closes it */
+    document.addEventListener('click', function (e) {
+      if (menuIsOpen() && !topbar.contains(e.target)) setMenu(false, false);
+    });
+
+    var wide = window.matchMedia('(min-width: 981px)');
+    var onWide = function () { if (wide.matches) setMenu(false, false); };
+    if (wide.addEventListener) wide.addEventListener('change', onWide);
+    else if (wide.addListener) wide.addListener(onWide);
+  }
+
+  /* ==================================================================
      The income splitter
 
      Shows what the Budgets page does with a salary: each category takes its

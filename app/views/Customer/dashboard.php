@@ -4,26 +4,32 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Dashboard — Budget Pilot</title>
+<link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/settings.css" />
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/dashboard.css" />
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/settings.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/settings.css'); ?>" />
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/dashboard.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/dashboard.css'); ?>" />
 </head>
 <body class="settings">
 
 <div class="shell">
 
-  <aside class="sidebar">
-    <a class="sidebar__brand" href="<?php echo URLROOT; ?>/customer/index">
-      <span class="sidebar__mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" rx="3" stroke="#fff" stroke-width="2"/><rect x="6" y="8" width="6" height="8" rx="1.5" fill="#fff"/></svg>
-      </span>
-      <span class="sidebar__brandtext">
-        <span class="sidebar__name">Budget Pilot</span>
-        <span class="sidebar__tag">Smart Finance Copilot</span>
-      </span>
-    </a>
+  <aside class="sidebar" id="sidebar" aria-label="Main menu">
+    <div class="sidebar__head">
+      <a class="sidebar__brand" href="<?php echo URLROOT; ?>/customer/index">
+        <span class="sidebar__mark" aria-hidden="true">
+          <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
+        </span>
+        <span class="sidebar__brandtext">
+          <span class="sidebar__name">Budget Pilot</span>
+          <span class="sidebar__tag">Smart Finance Copilot</span>
+        </span>
+      </a>
+      <button class="sidebar__close" type="button" data-nav-close aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
 
     <nav class="sidebar__nav" aria-label="Sections">
       <a class="navlink" href="<?php echo URLROOT; ?>/customer/index">
@@ -70,6 +76,13 @@
 
   <div class="main">
     <header class="appbar">
+      <button class="appbar__menu" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <a class="appbar__brand" href="<?php echo URLROOT; ?>/customer/index">
+        <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
+        <span>Budget Pilot</span>
+      </a>
       <div class="appbar__actions">
         <a class="icon-btn" href="<?php echo URLROOT; ?>/customer/notifications" data-bell aria-label="Notifications">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
@@ -100,44 +113,42 @@
       </div>
 
       <p class="hhnote" id="householdNote" hidden></p>
-
-      <section class="card notice-board" aria-labelledby="noticeBoardTitle">
-        <div class="card__head">
-          <div>
-            <h2 class="card__title" id="noticeBoardTitle">📢 Notices &amp; Announcements</h2>
-            <p class="notice-board__sub">Important updates shared by the Budget Pilot admin team.</p>
-          </div>
+        <section class="card notice-board" aria-labelledby="noticeBoardTitle">
+          <div class="card__head">
+            <div>
+              <h2 class="card__title" id="noticeBoardTitle">📢 Notices &amp; Announcements</h2>
+              <p class="notice-board__sub">Important updates shared by the Budget Pilot admin team.</p>
+            </div>
           <?php if (!empty($data['notices'])): ?>
             <span class="notice-count"><?php echo count($data['notices']); ?> active</span>
           <?php endif; ?>
-        </div>
-
-        <?php if (!empty($data['notices'])): ?>
-          <div class="notice-list">
-            <?php foreach ($data['notices'] as $notice): ?>
-              <article class="notice-item">
-                <div class="notice-item__icon" aria-hidden="true">!</div>
-                <div class="notice-item__body">
-                  <div class="notice-item__top">
-                    <h3><?php echo htmlspecialchars($notice->title); ?></h3>
-                    <span class="notice-audience"><?php echo $notice->audience === 'all' ? 'Everyone' : 'Customers'; ?></span>
-                  </div>
-                  <p><?php echo nl2br(htmlspecialchars($notice->message)); ?></p>
-                  <div class="notice-item__meta">
-                    Posted <?php echo date('M j, Y', strtotime($notice->created_at)); ?>
-                    <?php if (!empty($notice->expires_at)): ?>
-                      <span>•</span> Available until <?php echo date('M j, Y', strtotime($notice->expires_at)); ?>
-                    <?php endif; ?>
-                  </div>
-                </div>
-              </article>
-            <?php endforeach; ?>
           </div>
-        <?php else: ?>
-          <div class="notice-empty">No active notices for customers right now.</div>
-        <?php endif; ?>
-      </section>
 
+          <?php if (!empty($data['notices'])): ?>
+            <div class="notice-list">
+              <?php foreach ($data['notices'] as $notice): ?>
+                <article class="notice-item">
+                  <div class="notice-item__icon" aria-hidden="true">!</div>
+                  <div class="notice-item__body">
+                    <div class="notice-item__top">
+                      <h3><?php echo htmlspecialchars($notice->title); ?></h3>
+                      <span class="notice-audience"><?php echo $notice->audience === 'all' ? 'Everyone' : 'Customers'; ?></span>
+                    </div>
+                    <p><?php echo nl2br(htmlspecialchars($notice->message)); ?></p>
+                    <div class="notice-item__meta">
+                      Posted <?php echo date('M j, Y', strtotime($notice->created_at)); ?>
+                      <?php if (!empty($notice->expires_at)): ?>
+                        <span>•</span> Available until <?php echo date('M j, Y', strtotime($notice->expires_at)); ?>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+                </article>
+              <?php endforeach; ?>
+            </div>
+          <?php else: ?>
+            <div class="notice-empty">No active notices for customers right now.</div>
+          <?php endif; ?>
+        </section>
       <div class="kpis">
         <section class="kpi">
           <div class="kpi__top">
@@ -246,9 +257,10 @@
 </template>
 
 <script>window.URLROOT = "<?php echo URLROOT; ?>";</script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/notify.js"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/household-ui.js"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/dashboard.js"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/nav.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/nav.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/store.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/notify.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/notify.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/household-ui.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/household-ui.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/js/customer-js/dashboard.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/dashboard.js'); ?>"></script>
 </body>
 </html>
