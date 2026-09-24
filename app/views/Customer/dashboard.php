@@ -101,6 +101,43 @@
 
       <p class="hhnote" id="householdNote" hidden></p>
 
+      <section class="card notice-board" aria-labelledby="noticeBoardTitle">
+        <div class="card__head">
+          <div>
+            <h2 class="card__title" id="noticeBoardTitle">📢 Notices &amp; Announcements</h2>
+            <p class="notice-board__sub">Important updates shared by the Budget Pilot admin team.</p>
+          </div>
+          <?php if (!empty($data['notices'])): ?>
+            <span class="notice-count"><?php echo count($data['notices']); ?> active</span>
+          <?php endif; ?>
+        </div>
+
+        <?php if (!empty($data['notices'])): ?>
+          <div class="notice-list">
+            <?php foreach ($data['notices'] as $notice): ?>
+              <article class="notice-item">
+                <div class="notice-item__icon" aria-hidden="true">!</div>
+                <div class="notice-item__body">
+                  <div class="notice-item__top">
+                    <h3><?php echo htmlspecialchars($notice->title); ?></h3>
+                    <span class="notice-audience"><?php echo $notice->audience === 'all' ? 'Everyone' : 'Customers'; ?></span>
+                  </div>
+                  <p><?php echo nl2br(htmlspecialchars($notice->message)); ?></p>
+                  <div class="notice-item__meta">
+                    Posted <?php echo date('M j, Y', strtotime($notice->created_at)); ?>
+                    <?php if (!empty($notice->expires_at)): ?>
+                      <span>•</span> Available until <?php echo date('M j, Y', strtotime($notice->expires_at)); ?>
+                    <?php endif; ?>
+                  </div>
+                </div>
+              </article>
+            <?php endforeach; ?>
+          </div>
+        <?php else: ?>
+          <div class="notice-empty">No active notices for customers right now.</div>
+        <?php endif; ?>
+      </section>
+
       <div class="kpis">
         <section class="kpi">
           <div class="kpi__top">

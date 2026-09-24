@@ -1,4 +1,6 @@
 <?php
+require_once '../app/Models/Notice.php';
+
 class CustomerController extends Controller {
 
     public function index() {
@@ -15,7 +17,9 @@ class CustomerController extends Controller {
 
 
     public function dashboard() {
-        $this->view('Customer/dashboard');
+        $noticeModel = new Notice();
+        $data = ['notices' => $noticeModel->getActiveForAudience('customer')];
+        $this->view('Customer/dashboard', $data);
     }
 
     public function budgets() {
