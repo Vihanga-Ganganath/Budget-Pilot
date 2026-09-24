@@ -1,18 +1,73 @@
 <?php 
-  // දැනට ඉන්න පිටුවේ URL එක ගන්නවා (Active ලින්ක් එක හොයාගන්න)
   $currentURL = $_SERVER['REQUEST_URI']; 
 ?>
+<style>
+/* Admin sidebar brand — inline to guarantee no caching issues */
+.sidebar__brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 11px !important;
+    padding: 4px 8px 26px !important;
+    text-decoration: none !important;
+    margin-bottom: 0 !important;
+}
+.sidebar__mark {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    max-width: 38px !important;
+    max-height: 38px !important;
+    flex: none !important;
+    border-radius: 9px !important;
+    background: #ffffff !important;
+    border: 1px solid #E6E9F0 !important;
+    overflow: hidden !important;
+    display: grid !important;
+    place-items: center !important;
+}
+.sidebar__mark img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    padding: 3px !important;
+    display: block !important;
+    max-width: 38px !important;
+    max-height: 38px !important;
+}
+.sidebar__brandtext {
+    display: flex !important;
+    flex-direction: column !important;
+    line-height: 1.25 !important;
+}
+.sidebar__name {
+    font-family: 'Outfit', 'Poppins', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1.05rem !important;
+    color: #101C56 !important;
+    letter-spacing: -.01em !important;
+}
+.sidebar__tag {
+    font-size: .6rem !important;
+    letter-spacing: 1.1px !important;
+    text-transform: uppercase !important;
+    color: #8A92A0 !important;
+    font-weight: 600 !important;
+}
+/* Also remove any leftover sidebar-logo margin that could push things around */
+.sidebar-logo { display: none !important; }
+</style>
 
 <aside class="sidebar">
-    <!-- 1. Logo Section -->
-    <a href="<?php echo URLROOT; ?>/admin/dashboard" class="sidebar-logo">
-        <div class="logo-icon">
+    <!-- 1. Logo Section — matches customer sidebar__brand exactly -->
+    <a href="<?php echo URLROOT; ?>/admin/dashboard" class="sidebar__brand">
+        <span class="sidebar__mark" aria-hidden="true">
             <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
-        </div>
-        <div class="logo-text-group">
-            <span class="logo-title">Budget Pilot</span>
-            <span class="logo-tag admin-tag">ADMIN CONSOLE</span>
-        </div>
+        </span>
+        <span class="sidebar__brandtext">
+            <span class="sidebar__name">Budget Pilot</span>
+            <span class="sidebar__tag">Admin Console</span>
+        </span>
     </a>
 
     <!-- 2. Main Navigation Menu -->
@@ -51,7 +106,7 @@
         <!-- Security & Audit -->
         <a href="<?php echo URLROOT; ?>/admin/security" class="menu-item <?php echo strpos($currentURL, 'security') !== false ? 'active' : ''; ?>">
             <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-            Security & Audit
+            Security &amp; Audit
         </a>
 
         <!-- Reports -->
@@ -65,7 +120,7 @@
     <!-- 3. Bottom Section (Settings & Logout) -->
     <div class="sidebar-bottom">
         <a href="<?php echo URLROOT; ?>/admin/settings" class="menu-item <?php echo strpos($currentURL, 'settings') !== false ? 'active' : ''; ?>">
-            <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
             Settings
         </a>
         
