@@ -279,3 +279,17 @@ body {
 .admin-back-link:hover {
     color: var(--text-main);
 }
+
+/* ---------- Budget Pilot logo (same mark as the customer portal) ---------- */
+.admin-brand-icon {
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+.admin-brand-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 4px;
+    display: block;
+}

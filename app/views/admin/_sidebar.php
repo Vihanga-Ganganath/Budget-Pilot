@@ -7,10 +7,7 @@
     <!-- 1. Logo Section -->
     <a href="<?php echo URLROOT; ?>/admin/dashboard" class="sidebar-logo">
         <div class="logo-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="24" height="24" rx="6" fill="#00106B"/>
-                <path d="M19 5H5C3.9 5 3 5.9 3 7V17C3 18.1 3.9 19 5 19H19C20.1 19 21 18.1 21 17V7C21 5.9 20.1 5 19 5ZM19 17H5V11H19V17ZM19 9H5V7H19V9Z" fill="white"/>
-            </svg>
+            <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
         </div>
         <div class="logo-text-group">
             <span class="logo-title">Budget Pilot</span>
