@@ -10,7 +10,10 @@ class Customer {
     private $db;
 
     /** Folder inside public/ where profile photos are saved. */
-    const AVATAR_DIR = 'uploads/avatars';
+    const AVATAR_DIR = 'assets/img/avatars';
+
+    /** Old folder - photo paths saved before the move still point here. */
+    const OLD_AVATAR_DIR = 'uploads/avatars';
 
     /** Currencies the Settings page offers (stored in preferred_currency). */
     const CURRENCIES = ['USD', 'EUR', 'GBP', 'LKR', 'INR', 'AUD'];
@@ -109,9 +112,9 @@ class Customer {
 
     /**
      * Saves a photo sent by the browser as a data URL
-     * ("data:image/jpeg;base64,...") into public/uploads/avatars/.
+     * ("data:image/jpeg;base64,...") into public/assets/img/avatars/.
      * Returns the path stored in user_profiles.profile_picture_url
-     * (e.g. 'uploads/avatars/u5_1727000000_a1b2c3.jpg'), or null if the data
+     * (e.g. 'assets/img/avatars/u5_1727000000_a1b2c3.jpg'), or null if the data
      * is not a real JPG/PNG/WEBP image under 2MB.
      */
     public function saveAvatarFile($userId, $dataUrl) {
@@ -138,11 +141,21 @@ class Customer {
 
     /** Full web address of a stored photo path (null when there is none). */
     public static function avatarUrl($path) {
+        $path = self::avatarPath($path);
         return $path ? URLROOT . '/public/' . $path : null;
+    }
+
+    /** Maps an old 'uploads/avatars/...' path to the new img/avatars folder. */
+    private static function avatarPath($path) {
+        if ($path && strpos($path, self::OLD_AVATAR_DIR . '/') === 0) {
+            return self::AVATAR_DIR . '/' . basename($path);
+        }
+        return $path;
     }
 
     /** Deletes a photo file, but only ever inside the avatars folder. */
     private function deleteAvatarFile($path) {
+        $path = self::avatarPath($path);
         if (!$path || strpos($path, self::AVATAR_DIR . '/') !== 0) return;
         $file = APPROOT . '/../public/' . self::AVATAR_DIR . '/' . basename($path);
         if (is_file($file)) @unlink($file);

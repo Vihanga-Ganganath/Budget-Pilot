@@ -133,7 +133,7 @@ a.navlink--active:hover{background:var(--lime);color:#14532D;}
   font-family:var(--font-display);font-weight:600;font-size:.8rem;color:#fff;
 }
 
-.content{padding:32px 28px 40px;max-width:1220px;width:100%;}
+.content{padding:32px 28px 40px;width:100%;box-sizing:border-box;}
 .page__title{
   font-family:var(--font-display);
   font-size:2rem;font-weight:700;
