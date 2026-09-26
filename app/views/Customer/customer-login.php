@@ -29,7 +29,7 @@
       <h1 class="auth__title">Welcome Back</h1>
       <p class="auth__sub">Manage your personal or family finances in one place.</p>
 
-      <!-- Profile picker — filled in from saved accounts -->
+      <!-- Profile picker — every household in the database, grouped (auth.js) -->
       <div class="profiles">
         <div class="profiles__head">
           <span class="field__label">Select Profile</span>
@@ -37,7 +37,7 @@
         </div>
         <div class="profiles__row" id="profileRow" role="radiogroup" aria-label="Select profile"></div>
         <p class="profiles__empty" id="profilesEmpty" hidden>
-          No profiles saved on this device yet. Sign in below with your email and password and your household will appear here. New here? <a class="link" href="<?php echo URLROOT; ?>/customer/register">Create an account</a>.
+          No accounts yet. New here? <a class="link" href="<?php echo URLROOT; ?>/customer/register">Create an account</a>.
         </p>
         <div class="confirm" id="profileConfirm" hidden>
           <p class="confirm__text" id="confirmText"></p>
@@ -177,6 +177,7 @@
 
 <script>window.URLROOT = "<?php echo URLROOT; ?>";</script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/store.js'); ?>"></script>
+<script>window.BP_HOUSEHOLDS = <?php echo json_encode($data['households'] ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;</script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/auth.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/auth.js'); ?>"></script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/forgot-password.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/forgot-password.js'); ?>"></script>
 </body>

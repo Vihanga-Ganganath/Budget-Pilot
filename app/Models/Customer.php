@@ -208,10 +208,11 @@ class Customer {
         try {
             $this->db->beginTransaction();
 
-            // 1. Household
-            $stmt = $this->db->prepare("INSERT INTO households (name) VALUES (:name)");
-            $stmt->execute([':name' => $owner['name'] . "'s Household"]);
-            $householdId = (int) $this->db->lastInsertId();
+            // 1. Household — takes the lowest free number, so the number of a
+            //    deleted household is used again (1 exists, 2 and 3 deleted → 2).
+            $householdId = $this->nextHouseholdId();
+            $stmt = $this->db->prepare("INSERT INTO households (id, name) VALUES (:id, :name)");
+            $stmt->execute([':id' => $householdId, ':name' => $owner['name'] . "'s Household"]);
 
             // 2. Main account holder
             $ownerId = $this->insertPerson($householdId, 'head', $owner);
@@ -237,6 +238,28 @@ class Customer {
             if ($e->getCode() == 23000) return 'duplicate';   // unique email+role
             return false;
         }
+    }
+
+    /**
+     * Lowest household number not in use: 1 if there is no household 1,
+     * otherwise the first gap after an existing number (or MAX + 1).
+     * Call inside the registerHousehold() transaction — the FOR UPDATE read
+     * locks the households table so two sign-ups can't pick the same number.
+     */
+    private function nextHouseholdId() {
+        $this->db->query("SELECT id FROM households FOR UPDATE")->fetchAll();
+
+        $next = $this->db->query(
+            "SELECT CASE
+                 WHEN NOT EXISTS (SELECT 1 FROM households WHERE id = 1) THEN 1
+                 ELSE (SELECT MIN(h.id) + 1
+                       FROM households h
+                       LEFT JOIN households n ON n.id = h.id + 1
+                       WHERE n.id IS NULL)
+             END"
+        )->fetchColumn();
+
+        return (int) $next;
     }
 
     /**
@@ -370,6 +393,46 @@ class Customer {
         }
         unset($row);
         return $rows;
+    }
+
+    /**
+     * Every household with its people, for the profile picker on the sign-in
+     * page: [['id', 'name', 'members' => [['id','name','email','role','avatar'], ...]], ...]
+     * Household number order, head first inside each household.
+     * Never returns password hashes.
+     */
+    public function getLoginDirectory() {
+        try {
+            $stmt = $this->db->query(
+                "SELECT h.id AS household_id, h.name AS household_name,
+                        u.id, u.name, u.email, u.household_role,
+                        p.profile_picture_url
+                 FROM households h
+                 JOIN users u ON u.household_id = h.id AND u.role = 'customer'
+                 LEFT JOIN user_profiles p ON p.user_id = u.id
+                 ORDER BY h.id ASC, (u.household_role = 'head') DESC, u.id ASC"
+            );
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log('getLoginDirectory: ' . $e->getMessage());
+            return [];
+        }
+
+        $households = [];
+        foreach ($rows as $r) {
+            $hid = (int) $r['household_id'];
+            if (!isset($households[$hid])) {
+                $households[$hid] = ['id' => $hid, 'name' => $r['household_name'], 'members' => []];
+            }
+            $households[$hid]['members'][] = [
+                'id'     => (int) $r['id'],
+                'name'   => $r['name'],
+                'email'  => $r['email'],
+                'role'   => $r['household_role'] === 'head' ? 'Main' : 'Member',
+                'avatar' => self::avatarUrl($r['profile_picture_url']),
+            ];
+        }
+        return array_values($households);
     }
 
     /**

@@ -120,7 +120,10 @@ class CustomerController extends Controller {
     }
 
     public function login() {
-        $this->view('Customer/customer-login');
+        // Every household in the database, for the profile picker.
+        $this->view('Customer/customer-login', [
+            'households' => $this->customerModel->getLoginDirectory()
+        ]);
     }
 
     public function register() {

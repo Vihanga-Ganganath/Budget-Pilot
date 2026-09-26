@@ -22,7 +22,8 @@ chart.innerHTML = months.map((m, i) =>
 ).join('');
 
 // Buttons
-document.getElementById('insights').onclick = () => {
+const insightsBtn = document.getElementById('insights');
+if (insightsBtn) insightsBtn.onclick = () => {
     toast('Opportunity analysis opened.');
     setTimeout(() => alert('Opportunity: expand the eco-friendly catalog and premium sustainable products.'), 200);
 };
@@ -43,4 +44,4 @@ document.getElementById('help').onclick = e => {
 };
 
 document.getElementById('addProduct').onclick = () =>
-    location.href = URLROOT + '/supplier/catalog';
+    location.href = URLROOT + '/supplier/catalog#add';

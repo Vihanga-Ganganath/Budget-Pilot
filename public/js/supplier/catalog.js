@@ -68,7 +68,20 @@ function add() {
     save(); render(); toast('Product added');
 }
 
-document.getElementById('addProduct').onclick = add;
+document.getElementById('addProduct').onclick = function () {
+    const form = document.getElementById('addProductForm');
+
+    form.style.display = 'block';
+
+    form.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+};
+
+document.getElementById('cancelAddProduct').onclick = function () {
+    document.getElementById('addProductForm').style.display = 'none';
+};
 document.getElementById('search').oninput = e => {
     const q = e.target.value.toLowerCase();
     render(products.filter(p => (p.name + p.sku + p.brand + p.category).toLowerCase().includes(q)));

@@ -4,75 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Budget Pilot - Analytics &amp; Market Trends</title>
-  <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/supplier/supplier.css">
+<link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/supplier/supplier.css?v=<?php echo @filemtime(APPROOT . '/../public/css/supplier/supplier.css'); ?>">
 </head>
-<body>
+<body class="sp">
 
-<header class="topbar">
-  <div class="logo">Budget Pilot Supplier</div>
-  <a class="toplink" href="<?php echo URLROOT; ?>/supplier/overview">Back to Home</a>
-  <div class="topicons">
-    <span>♧</span>
-    <span>⚙</span>
-    <span title="<?php echo htmlspecialchars($_SESSION['user_name'] ?? ''); ?>">◉</span>
-  </div>
-</header>
+<div class="shell">
 
-<div class="layout">
+<?php $spActive = 'analytics'; $spActiveLink = false; require APPROOT . '/views/supplier/_sidebar.php'; ?>
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="side-title">Budget Pilot</div>
-    <div class="side-sub">Supplier Portal</div>
-    <nav class="nav">
-      <a href="<?php echo URLROOT; ?>/supplier/overview">▦ &nbsp; Brand Overview</a>
-      <a href="<?php echo URLROOT; ?>/supplier/catalog">▤ &nbsp; Product Catalog</a>
-      <a class="active" href="<?php echo URLROOT; ?>/supplier/analytics">↗ &nbsp; Analytics &amp; Trends</a>
-      <a href="<?php echo URLROOT; ?>/supplier/verification">♢ &nbsp; Verification Status</a>
-    </nav>
-    <div class="bottom">
-      <button class="add" id="addProduct">＋ Add New Product</button>
-      <div class="bottom-links">
-        <a href="#" id="help">ⓘ &nbsp; Help Center</a>
-        <a href="<?php echo URLROOT; ?>/supplier/logout" id="logout">⇥ &nbsp; Logout</a>
-      </div>
-    </div>
-  </aside>
+  <div class="main">
+<?php require APPROOT . '/views/supplier/_appbar.php'; ?>
 
   <!-- Main Content -->
   <main>
     <div class="toolbar">
       <div>
         <h1 class="page-title">Analytics &amp; Market Trends</h1>
-        <p class="subtitle">Visualizing performance data and competitor pricing strategies for FreshHarvest, PureDairy, and GreenLeaf Grocers.</p>
-      </div>
-      <button class="btn primary" id="exportReport">▣ Export Quarterly Report</button>
+      <p class="subtitle">Analytics dashboard preview. Live market and sales analytics integration is planned for the next development phase.</p>      </div>
+      <button class="btn primary" id="exportReport">Export Quarterly Report</button>
     </div>
 
     <!-- Stats -->
     <div class="grid3">
       <div class="card stat">
-        <div class="iconbox green">▣</div>
         <div>
-          <div class="stat-label">Projected Revenue (Sep)</div>
-          <div class="stat-value">$42,910</div>
-          <div class="trend">75% of Target Achieved</div>
+          <div class="stat-label">Revenue Analytics</div>
+          <div class="stat-value">Preview</div>
+          <div class="trend">Live sales integration pending</div>
         </div>
       </div>
       <div class="card stat">
-        <div class="iconbox">♧</div>
         <div>
-          <div class="stat-label">New Supplier Interactions</div>
-          <div class="stat-value">2.4k</div>
-          <div class="trend">↗ +12.4% vs last year</div>
+          <div class="stat-label">Customer Interactions</div>
+          <div class="stat-value">Preview</div>
+          <div class="trend">Interaction tracking planned</div>
         </div>
       </div>
       <div class="card stat">
-        <div class="iconbox blue">▥</div>
         <div>
-          <div class="stat-label">Market Confidence</div>
-          <div class="stat-value">High</div>
-          <div class="trend">✥ Category Leader</div>
+          <div class="stat-label">Market Insights</div>
+          <div class="stat-value">Preview</div>
+          <div class="trend">Market-data integration pending</div>
         </div>
       </div>
     </div>
@@ -125,26 +101,27 @@
             <td>$5.49</td>
             <td>$5.65</td>
             <td><span class="pill green">-2.8%</span></td>
-            <td>🚀 Aggressive Capture</td>
+            <td>Aggressive Capture</td>
           </tr>
           <tr>
             <td><b>Artisan Sourdough Loaf</b></td>
             <td>$6.50</td>
             <td>$5.90</td>
             <td><span class="pill red">+10.1%</span></td>
-            <td>⚖ Review for Retention</td>
+            <td>Review for Retention</td>
           </tr>
           <tr>
             <td><b>Premium Avocado Oil</b></td>
             <td>$14.99</td>
             <td>$14.25</td>
             <td><span class="pill green">+5.2%</span></td>
-            <td>✥ Premium Positioning</td>
+            <td>Premium Positioning</td>
           </tr>
         </tbody>
       </table>
     </div>
   </main>
+  </div>
 </div>
 
 <div id="toast" class="toast"></div>
@@ -153,5 +130,6 @@
   const URLROOT = '<?php echo URLROOT; ?>';
 </script>
 <script src="<?php echo URLROOT; ?>/js/supplier/analytics.js"></script>
+<script src="<?php echo URLROOT; ?>/js/customer-js/nav.js"></script>
 </body>
 </html>

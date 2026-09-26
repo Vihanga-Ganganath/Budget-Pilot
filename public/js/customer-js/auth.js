@@ -26,6 +26,23 @@
   var notice          = document.getElementById('notice');
 
   var selectedId  = null;
+
+  /* Every household in MySQL, printed into the page by customer-login.php:
+     [{ id, name, members: [{ id, name, email, role, avatar }] }]
+     When it is there, the picker lists all of them instead of only the
+     profiles saved in this browser. */
+  var DIRECTORY = Array.isArray(window.BP_HOUSEHOLDS) ? window.BP_HOUSEHOLDS : null;
+
+  function directoryPerson(id) {
+    if (!DIRECTORY) return null;
+    for (var i = 0; i < DIRECTORY.length; i++) {
+      var people = DIRECTORY[i].members || [];
+      for (var j = 0; j < people.length; j++) {
+        if ('db' + people[j].id === id) return people[j];
+      }
+    }
+    return null;
+  }
   var manageMode  = false;
   var pendingId   = null;
 
@@ -104,8 +121,87 @@
     return svg;
   }
 
+  /* One avatar button for a person from the database list. */
+  function directoryButton(person) {
+    var id = 'db' + person.id;
+    var btn = document.createElement('button');
+    btn.className = 'profile';
+    btn.type = 'button';
+    btn.setAttribute('role', 'radio');
+    btn.setAttribute('aria-checked', 'false');
+    btn.setAttribute('data-id', id);
+    btn.setAttribute('title', person.name);
+    btn.setAttribute('aria-label', person.name);
+    btn.appendChild(buildAvatar(person));
+
+    if (person.role === 'Main') {
+      var badge = document.createElement('span');
+      badge.className = 'profile__badge';
+      badge.textContent = 'Main';
+      btn.appendChild(badge);
+    }
+
+    btn.addEventListener('click', function () {
+      selectProfile(id, person.name);
+      if (emailInput) {
+        emailInput.value = person.email;
+        clearState(emailInput, emailError);
+      }
+      if (passwordInput) {
+        passwordInput.value = '';
+        clearState(passwordInput, passwordError);
+        passwordInput.focus();
+      }
+    });
+    return btn;
+  }
+
+  /* All households from the database, one labelled group each. */
+  function renderDirectory() {
+    profileRow.textContent = '';
+    profileRow.classList.add('profiles__row--groups');
+
+    DIRECTORY.forEach(function (hh) {
+      var group = document.createElement('div');
+      group.className = 'hh';
+
+      var label = document.createElement('p');
+      label.className = 'hh__label';
+      label.textContent = 'Household ' + hh.id + ' - ' + hh.name;
+      group.appendChild(label);
+
+      var row = document.createElement('div');
+      row.className = 'profiles__row';
+      (hh.members || []).forEach(function (person) {
+        row.appendChild(directoryButton(person));
+      });
+      group.appendChild(row);
+
+      profileRow.appendChild(group);
+    });
+
+    /* "+" = create a new household */
+    var add = document.createElement('a');
+    add.className = 'profile profile--add';
+    add.href = (window.URLROOT || '') + '/customer/register';
+    add.setAttribute('aria-label', 'Create a new account');
+    add.setAttribute('title', 'Create a new account');
+    add.innerHTML = '<span aria-hidden="true">+</span>';
+    profileRow.appendChild(add);
+
+    var empty = DIRECTORY.length === 0;
+    if (profilesEmpty) profilesEmpty.hidden = !empty;
+    if (createSwitch) createSwitch.hidden = !empty;
+    if (manageBtn) manageBtn.hidden = true;   // nothing to remove from a device list any more
+
+    /* Nobody is picked until the user taps someone. */
+    selectedId = null;
+    if (profileSelected) profileSelected.textContent = '';
+  }
+
   function renderProfiles() {
     if (!profileRow) return;
+    if (DIRECTORY) { renderDirectory(); return; }
 
     var profiles = BP.getProfiles();
     profileRow.textContent = '';
@@ -295,8 +391,10 @@
 
     /* If a profile is picked, the typed email must belong to it. With no
        profiles on this device (new browser), email + password is enough. */
-    var picked = selectedId ? BP.getProfile(selectedId) : null;
-    if (picked && picked.email !== emailInput.value.trim().toLowerCase()) {
+    var picked = selectedId
+      ? (DIRECTORY ? directoryPerson(selectedId) : BP.getProfile(selectedId))
+      : null;
+    if (picked && String(picked.email).toLowerCase() !== emailInput.value.trim().toLowerCase()) {
       setState(emailInput, emailError, false,
         'That email doesn\u2019t match the selected profile.');
       emailInput.focus();

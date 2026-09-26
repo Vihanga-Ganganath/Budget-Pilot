@@ -14,12 +14,12 @@ document.querySelectorAll('.doc').forEach(b => b.onclick = () =>
 // Update All — marks pending as verified
 document.getElementById('updateAll').onclick = () => {
     const p = document.querySelector('.pending');
-    if (p) { p.textContent = '✓ VERIFIED'; p.className = 'pill green'; }
+    if (p) { p.textContent = 'VERIFIED'; p.className = 'pill green'; }
     toast('All verification documents refreshed.');
 };
 
 document.getElementById('addProduct').onclick = () =>
-    location.href = URLROOT + '/supplier/catalog';
+    location.href = URLROOT + '/supplier/catalog#add';
 
 document.getElementById('help').onclick = e => {
     e.preventDefault();

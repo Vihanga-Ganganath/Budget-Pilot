@@ -29,7 +29,7 @@ document.getElementById('exportReport').onclick = () => {
 };
 
 document.getElementById('addProduct').onclick = () =>
-    location.href = URLROOT + '/supplier/catalog';
+    location.href = URLROOT + '/supplier/catalog#add';
 
 document.getElementById('help').onclick = e => {
     e.preventDefault();

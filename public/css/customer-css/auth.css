@@ -116,6 +116,22 @@ a{color:inherit;text-decoration:none;}
 .profiles__manage:hover{text-decoration:underline;}
 .profiles__row{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap;}
 
+/* All households from the database (sign-in page) */
+.profiles__row--groups{
+  display:block;
+  max-height:300px;overflow-y:auto;
+  padding:2px 4px 6px 2px;
+}
+.hh{padding:8px 0 10px;border-bottom:1px solid var(--line);}
+.hh:first-child{padding-top:0;}
+.hh__label{
+  margin:0 0 2px;
+  font-size:.78rem;font-weight:600;
+  color:#5B6472;
+}
+.hh .profiles__row{margin-top:6px;padding-top:4px;}
+.profiles__row--groups > .profile--add{margin-top:12px;display:grid;}
+
 .profiles__empty{
   margin:10px 0 0;
   font-size:.88rem;

@@ -4,40 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Budget Pilot - Brand Overview</title>
-  <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/supplier/supplier.css">
+<link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/supplier/supplier.css?v=<?php echo @filemtime(APPROOT . '/../public/css/supplier/supplier.css'); ?>">
 </head>
-<body>
+<body class="sp">
 
-<header class="topbar">
-  <div class="logo">Budget Pilot Supplier</div>
-  <a class="toplink" href="<?php echo URLROOT; ?>/supplier/overview">Back to Home</a>
-  <div class="topicons">
-    <span>♧</span>
-    <span>⚙</span>
-    <span title="<?php echo htmlspecialchars($_SESSION['user_name'] ?? ''); ?>">◉</span>
-  </div>
-</header>
+<div class="shell">
 
-<div class="layout">
+<?php $spActive = 'overview'; $spActiveLink = false; require APPROOT . '/views/supplier/_sidebar.php'; ?>
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="side-title">Budget Pilot</div>
-    <div class="side-sub">Supplier Portal</div>
-    <nav class="nav">
-      <a class="active" href="<?php echo URLROOT; ?>/supplier/overview">▦ &nbsp; Brand Overview</a>
-      <a href="<?php echo URLROOT; ?>/supplier/catalog">▤ &nbsp; Product Catalog</a>
-      <a href="<?php echo URLROOT; ?>/supplier/analytics">↗ &nbsp; Analytics &amp; Trends</a>
-      <a href="<?php echo URLROOT; ?>/supplier/verification">♢ &nbsp; Verification Status</a>
-    </nav>
-    <div class="bottom">
-      <button class="add" id="addProduct">＋ Add New Product</button>
-      <div class="bottom-links">
-        <a href="#" id="help">ⓘ &nbsp; Help Center</a>
-        <a href="<?php echo URLROOT; ?>/supplier/logout" id="logout">⇥ &nbsp; Logout</a>
-      </div>
-    </div>
-  </aside>
+  <div class="main">
+<?php require APPROOT . '/views/supplier/_appbar.php'; ?>
 
   <!-- Main Content -->
   <main>
@@ -108,7 +88,19 @@
         <div class="iconbox green">▤</div>
         <div>
           <div class="stat-label">Active Listings</div>
-          <div class="stat-value">1,402</div>
+          <div class="stat-value">
+  <?php
+    $activeCount = 0;
+
+    foreach (($data['products'] ?? []) as $product) {
+      if (($product['status'] ?? '') === 'Active') {
+        $activeCount++;
+      }
+    }
+
+    echo $activeCount;
+  ?>
+</div>
           <div class="trend">◉ Stable performance</div>
         </div>
       </div>
@@ -116,8 +108,22 @@
         <div class="iconbox blue">▣</div>
         <div>
           <div class="stat-label">Pending Verifications</div>
-          <div class="stat-value">24</div>
-          <div class="trend" style="color:#e53935">! 5 urgent reviews</div>
+          <div class="stat-value">
+  <?php
+    $pendingCount = 0;
+
+    foreach (($data['products'] ?? []) as $product) {
+      if (($product['admin_verification'] ?? '') === 'Pending') {
+        $pendingCount++;
+      }
+    }
+
+    echo $pendingCount;
+  ?>
+</div>
+          <div class="trend">
+  <?= $pendingCount > 0 ? $pendingCount . ' awaiting review' : 'No pending reviews' ?>
+</div>
         </div>
       </div>
     </div>
@@ -153,20 +159,17 @@
       </div>
     </div>
 
-    <!-- AI Insights -->
-    <div class="grid2" style="margin-top:22px">
-      <div class="card" style="background:var(--navy2);color:#fff">
-        <h2 style="margin-top:0">AI Insights</h2>
-        <p>Your brand reach is 2.4x higher than competitors in the 'Sustainable' niche. Consider expanding your eco-friendly catalog.</p>
-        <button class="btn green" id="insights">Explore Opportunities</button>
-      </div>
-      <button class="card insight-widget" id="addInsight" type="button">
+    
+    <div style="margin-top:22px">
+      <button class="card insight-widget" id="addInsight" type="button"
+        onclick="alert('Custom insight widgets will be available in the next development phase.')">
         <span class="insight-plus">⊕</span>
         <strong>Add Insight Widget</strong>
         <span class="small">Customize your dashboard by adding custom data streams or market alerts.</span>
       </button>
     </div>
   </main>
+  </div>
 </div>
 
 <div id="toast" class="toast"></div>
@@ -176,5 +179,6 @@
   const URLROOT = '<?php echo URLROOT; ?>';
 </script>
 <script src="<?php echo URLROOT; ?>/js/supplier/overview.js"></script>
+<script src="<?php echo URLROOT; ?>/js/customer-js/nav.js"></script>
 </body>
 </html>
