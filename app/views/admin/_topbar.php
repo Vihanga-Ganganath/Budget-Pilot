@@ -1,4 +1,13 @@
 <div class="admin-topbar">
+    <div class="admin-mobile-brand">
+        <button type="button" class="admin-menu-toggle" id="admin-menu-toggle" aria-label="Open navigation" aria-controls="admin-sidebar" aria-expanded="false">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+        </button>
+        <a class="admin-mobile-logo" href="<?php echo URLROOT; ?>/admin/dashboard" aria-label="Budget Pilot Admin dashboard">
+            <span class="topbar-brand-mark"><img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt=""></span>
+            <span>Budget Pilot</span>
+        </a>
+    </div>
     <!-- 1. Search Section -->
     <div class="admin-search-wrapper">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>

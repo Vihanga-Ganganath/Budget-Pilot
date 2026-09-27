@@ -1059,3 +1059,27 @@ document.addEventListener('DOMContentLoaded', () => {
         case 'settings': initSettingsPage(); break;
     }
 });
+
+
+/* ============================================================
+   14. RESPONSIVE ADMIN NAVIGATION
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', function () {
+    const toggle = document.getElementById('admin-menu-toggle');
+    const close = document.getElementById('admin-sidebar-close');
+    const scrim = document.getElementById('admin-nav-scrim');
+    const sidebar = document.getElementById('admin-sidebar');
+
+    function setAdminNav(open) {
+        document.body.classList.toggle('admin-nav-open', open);
+        if (toggle) toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (scrim) scrim.setAttribute('aria-hidden', open ? 'false' : 'true');
+    }
+
+    if (toggle) toggle.addEventListener('click', function () { setAdminNav(!document.body.classList.contains('admin-nav-open')); });
+    if (close) close.addEventListener('click', function () { setAdminNav(false); });
+    if (scrim) scrim.addEventListener('click', function () { setAdminNav(false); });
+    if (sidebar) sidebar.querySelectorAll('a').forEach(function (link) { link.addEventListener('click', function () { if (window.innerWidth <= 960) setAdminNav(false); }); });
+    document.addEventListener('keydown', function (event) { if (event.key === 'Escape') setAdminNav(false); });
+    window.addEventListener('resize', function () { if (window.innerWidth > 960) setAdminNav(false); });
+});

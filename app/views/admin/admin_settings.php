@@ -309,7 +309,7 @@
         <input type="file" name="avatar" id="hiddenAvatarInput">
     </form>
 
-    <script src="<?php echo URLROOT; ?>/public/js/admin.js"></script>
+    <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
     <script>
     (function () {
         var dropZone       = document.getElementById('avatarDropZone');

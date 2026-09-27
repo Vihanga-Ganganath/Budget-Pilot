@@ -58,7 +58,8 @@
 .sidebar-logo { display: none !important; }
 </style>
 
-<aside class="sidebar">
+<aside class="sidebar" id="admin-sidebar" aria-label="Admin navigation">
+    <button type="button" class="admin-sidebar-close" id="admin-sidebar-close" aria-label="Close navigation">&times;</button>
     <!-- 1. Logo Section — matches customer sidebar__brand exactly -->
     <a href="<?php echo URLROOT; ?>/admin/dashboard" class="sidebar__brand">
         <span class="sidebar__mark" aria-hidden="true">
@@ -130,3 +131,4 @@
         </a>
     </div>
 </aside>
+<div class="admin-nav-scrim" id="admin-nav-scrim" aria-hidden="true"></div>

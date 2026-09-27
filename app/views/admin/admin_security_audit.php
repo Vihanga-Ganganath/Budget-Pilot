@@ -98,6 +98,6 @@
         </main>
     </div>
 
-    <script src="<?php echo URLROOT; ?>/public/js/admin.js"></script>
+    <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
 </body>
 </html>

@@ -108,11 +108,11 @@
 
     <a href="<?php echo URLROOT; ?>" class="admin-back-link">← Back to Home</a>
 
-    <script src="<?php echo URLROOT; ?>/public/js/admin.js"></script>
+    <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
 
     <!-- ... ඔයාගේ Login Form එක සහ අනිත් HTML කේත ... -->
 
-    <script src="<?php echo URLROOT; ?>/public/js/admin.js"></script>
+    <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
 
     <!-- PHP වලින් Error එකක් ඇවිත් තියෙනවා නම් Toast එක පෙන්වන්න -->
     <?php if(!empty($data['error'])) : ?>

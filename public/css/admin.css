@@ -1414,3 +1414,70 @@
     padding: 3px;
     display: block;
 }
+
+
+/* ============ Admin responsive navigation & mobile layout ============ */
+.admin-mobile-brand, .admin-menu-toggle, .admin-sidebar-close, .admin-nav-scrim { display: none; }
+.admin-mobile-logo { text-decoration: none; color: var(--text-main); font-family: var(--font-title); font-weight: 700; align-items: center; gap: 9px; }
+.admin-menu-toggle, .admin-sidebar-close { border: 0; background: transparent; color: var(--text-main); cursor: pointer; }
+.admin-menu-toggle { width: 40px; height: 40px; border: 1px solid var(--border-color); border-radius: 10px; place-items: center; background: var(--bg-card); }
+.admin-sidebar-close { position: absolute; top: 14px; right: 12px; width: 38px; height: 38px; border-radius: 10px; font-size: 28px; line-height: 1; place-items: center; }
+.admin-sidebar-close:hover { background: var(--bg-light); }
+.admin-nav-scrim { position: fixed; inset: 0; z-index: 99; background: rgba(12,16,32,.5); opacity: 0; pointer-events: none; transition: opacity .22s ease; }
+
+@media (max-width: 960px) {
+    .dashboard-layout { display: block; }
+    .sidebar {
+        width: min(290px, 86vw);
+        padding: 18px 16px 22px;
+        transform: translateX(-100%);
+        visibility: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        transition: transform .26s cubic-bezier(.4,0,.2,1), visibility 0s linear .26s;
+        z-index: 100;
+    }
+    .sidebar .sidebar__brand { padding-right: 42px !important; }
+    .sidebar .sidebar__brandtext, .sidebar .menu-item span { display: flex; }
+    .sidebar .menu-item { justify-content: flex-start; padding: 12px 16px; }
+    .admin-sidebar-close { display: grid; }
+    body.admin-nav-open .sidebar { transform: none; visibility: visible; transition: transform .26s cubic-bezier(.4,0,.2,1); box-shadow: 0 24px 60px rgba(12,16,32,.28); }
+    body.admin-nav-open .admin-nav-scrim { opacity: 1; pointer-events: auto; }
+    body.admin-nav-open { overflow: hidden; }
+    .admin-nav-scrim { display: block; }
+    .main-content { margin-left: 0; padding: 24px; width: 100%; min-width: 0; }
+    .admin-topbar { position: sticky; top: 0; z-index: 50; margin: -24px -24px 28px; padding: 12px 24px; background: var(--bg-light); border-bottom: 1px solid var(--border-color); gap: 14px; flex-wrap: wrap; }
+    .admin-mobile-brand { display: flex; align-items: center; gap: 10px; }
+    .admin-menu-toggle { display: grid; }
+    .admin-mobile-logo { display: flex; }
+    .admin-search-wrapper { order: 3; width: 100%; }
+    .admin-topbar-right { margin-left: auto; }
+    .content-header { gap: 16px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 28px; }
+    .header-left { min-width: 0; }
+    .header-right { flex-wrap: wrap; }
+    .admin-table-card { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .admin-table { min-width: 720px; }
+    .modal-content { width: min(92vw, 560px); max-height: 88vh; overflow-y: auto; }
+}
+
+@media (max-width: 640px) {
+    .main-content { padding: 16px; }
+    .admin-topbar { margin: -16px -16px 22px; padding: 10px 16px; }
+    .admin-mobile-logo span:last-child { display: none; }
+    .admin-topbar-right { gap: 7px; }
+    .admin-topbar-right .icon-btn-dash { width: 38px; height: 38px; }
+    .admin-avatar-photo { width: 38px; height: 38px; }
+    .page-title { font-size: 1.5rem; }
+    .content-header { margin-bottom: 22px; }
+    .header-right { width: 100%; }
+    .header-right .btn { width: 100%; justify-content: center; }
+    .stat-card { padding: 18px; }
+    .dropdown-panel { max-width: calc(100vw - 24px); right: 0; }
+    .modal-actions { flex-direction: column-reverse; }
+    .modal-actions .btn { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 420px) {
+    .admin-topbar-right #help-btn, .admin-topbar-right #quick-settings-btn { display: none; }
+    .admin-table { min-width: 650px; }
+}
