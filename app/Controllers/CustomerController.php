@@ -333,7 +333,7 @@ class CustomerController extends Controller {
             'nic'    => preg_replace('/\s+/', '', $in['nic'] ?? ''),
             'gender' => $in['gender'] ?? '',
             'age'         => trim((string) ($in['age'] ?? '')),
-            'currency'    => strtoupper(trim((string) ($in['currency'] ?? 'LKR'))),
+            'currency'    => strtoupper(trim((string) ($in['currency'] ?? 'USD'))),
             'savingsGoal' => trim((string) ($in['savingsGoal'] ?? '')),
             'avatar'      => $this->photoData($in['avatar'] ?? null),   // only sent when changed
         ];

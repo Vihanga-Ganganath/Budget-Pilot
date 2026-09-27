@@ -76,13 +76,19 @@ class Customer {
             $profiles = $this->db->query("SHOW COLUMNS FROM user_profiles")->fetchAll(PDO::FETCH_COLUMN);
             $wanted = [
                 'profile_picture_url' => "VARCHAR(255) NULL",
-                'preferred_currency'  => "VARCHAR(10) DEFAULT 'LKR'",
+                'preferred_currency'  => "VARCHAR(10) DEFAULT 'USD'",
                 'financial_goals'     => "TEXT NULL",
             ];
             foreach ($wanted as $column => $type) {
                 if (!in_array($column, $profiles, true)) {
                     $this->db->exec("ALTER TABLE user_profiles ADD COLUMN $column $type");
                 }
+            }
+            // Older databases were built with LKR as the default currency;
+            // new customers now start on USD.
+            $cur = $this->db->query("SHOW COLUMNS FROM user_profiles LIKE 'preferred_currency'")->fetch(PDO::FETCH_ASSOC);
+            if ($cur && $cur['Default'] !== 'USD') {
+                $this->db->exec("ALTER TABLE user_profiles ALTER COLUMN preferred_currency SET DEFAULT 'USD'");
             }
 
             // Forgot password: users.two_factor_enabled + users.two_factor_pin_hash
@@ -309,8 +315,8 @@ class Customer {
         $photo = !empty($p['avatar']) ? $this->saveAvatarFile($userId, $p['avatar']) : null;
 
         $stmt = $this->db->prepare(
-            "INSERT INTO user_profiles (user_id, monthly_income, profile_picture_url, financial_goals)
-             VALUES (:uid, :income, :photo, :goal)"
+            "INSERT INTO user_profiles (user_id, monthly_income, preferred_currency, profile_picture_url, financial_goals)
+             VALUES (:uid, :income, 'USD', :photo, :goal)"
         );
         $stmt->execute([
             ':uid'    => $userId,

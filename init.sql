@@ -98,7 +98,7 @@ CREATE TABLE user_profiles (
     address TEXT,
     preferred_language VARCHAR(50) DEFAULT 'English',
     monthly_income DECIMAL(10, 2) DEFAULT 0.00,
-    preferred_currency VARCHAR(10) DEFAULT 'LKR',
+    preferred_currency VARCHAR(10) DEFAULT 'USD',
     budget_preferences TEXT,
     financial_goals TEXT, -- the savings goal amount from Settings, e.g. '25000.00'
     

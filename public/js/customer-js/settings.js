@@ -1027,11 +1027,6 @@
     leaveTo('index.php', false);
   });
 
-  el('loginLink').addEventListener('click', function (e) {
-    e.preventDefault();
-    leaveTo('login.php', false);
-  });
-
   el('logoutBtn').addEventListener('click', function () {
     leaveTo('logout', true);
   });
