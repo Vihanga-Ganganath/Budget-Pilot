@@ -141,10 +141,16 @@ body.dark-theme .menu-item:hover {
     background-color: #1F2937;
 }
 
+/* Active admin page — match the Supplier Portal selected-item style */
 .menu-item.active {
-    background-color: #F1F5F9;
-    color: var(--primary-navy);
+    background-color: #9BEE95;
+    color: #14532D;
     font-weight: 600;
+}
+
+.menu-item.active:hover {
+    background-color: #9BEE95;
+    color: #14532D;
 }
 
 body.dark-theme .menu-item.active {
@@ -152,10 +158,10 @@ body.dark-theme .menu-item.active {
     color: #60A5FA;
 }
 
-/* Settings item highlight matching settings mockup */
+/* Keep Settings consistent with every other selected admin page */
 .menu-settings.active {
-    background-color: #A7F3D0 !important;
-    color: #064E3B !important;
+    background-color: #9BEE95 !important;
+    color: #14532D !important;
     font-weight: 600;
 }
 
