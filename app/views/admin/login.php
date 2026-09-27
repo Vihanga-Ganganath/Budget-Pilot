@@ -80,7 +80,6 @@
             <div class="admin-form-group">
                 <div class="admin-form-header">
                     <label>Password</label>
-                    <a href="password_reset_sent.html" class="admin-forgot-link">Forgot Password?</a>
                 </div>
                 <div class="admin-input-wrapper">
                     <span class="admin-input-icon">
@@ -101,9 +100,7 @@
             <button type="submit" class="admin-submit-btn">Sign In</button>
         </form>
 
-        <div class="admin-auth-footer">
-            Need an admin account? <a href="admin_register.html">Register</a>
-        </div>
+
     </div>
 
     <a href="<?php echo URLROOT; ?>" class="admin-back-link">← Back to Home</a>
