@@ -130,6 +130,10 @@ class CustomerController extends Controller {
         $this->view('Customer/create-account');
     }
 
+    public function verify() {
+        $this->view('Customer/verify');
+    }
+
     public function privacy() {
         $this->view('Customer/privacy');
     }
@@ -148,6 +152,7 @@ class CustomerController extends Controller {
     $data = ['notices' => $noticeModel->getActiveForAudience('customer')];
     $this->view('Customer/dashboard', $data);
 }
+
     public function budgets()       { $this->requireLogin(); $this->view('Customer/budgets'); }
     public function expense()       { $this->requireLogin(); $this->view('Customer/expense'); }
     public function grocery()       { $this->requireLogin(); $this->view('Customer/grocery'); }
@@ -159,7 +164,7 @@ class CustomerController extends Controller {
     public function product()       { $this->requireLogin(); $this->view('Customer/product'); }
 
     // ═════════════════════════════════════════════════════════════════════
-    //  Auth API (JSON) — called by create-account.js and auth.js
+    //  Auth API (JSON) — called by create-account.js, verify.js and auth.js
     // ═════════════════════════════════════════════════════════════════════
 
     /** POST /customer/apiRegister — create a household (main holder + members). */
@@ -224,19 +229,69 @@ class CustomerController extends Controller {
         }
 
         // ── Save ──
-        $householdId = $this->customerModel->registerHousehold($owner, $members);
+        $res = $this->customerModel->registerHousehold($owner, $members);
 
-        if ($householdId === 'duplicate') {
+        if ($res === 'duplicate') {
             $this->json(['ok' => false, 'errors' => ['email' => 'That email already has an account.'],
                          'message' => 'That email already has an account.'], 409);
         }
-        if (!$householdId) {
+        if ($res === 'email_error') {
+            $this->json(['ok' => false, 'message' => 'We could not send the verification email. Please check your email and try again.'], 500);
+        }
+        if (!$res || !is_array($res)) {
             $this->json(['ok' => false, 'message' => 'Something went wrong. Please try again.'], 500);
         }
 
         $this->json([
+            'ok'                 => true,
+            'needs_verification' => true,
+            'email'              => $res['email'],
+            'redirect'           => URLROOT . '/customer/verify?email=' . urlencode($res['email']),
+            'members'            => $this->customerModel->getHouseholdMembers($res['household_id']),
+        ]);
+    }
+
+    /** POST /customer/apiVerify — check 6-digit verification code. */
+    public function apiVerify() {
+        $this->requirePost();
+        $in    = $this->jsonInput();
+        $email = trim($in['email'] ?? ($_POST['email'] ?? ''));
+        $code  = trim($in['code'] ?? ($_POST['code'] ?? ''));
+
+        if ($email === '') {
+            $this->json(['ok' => false, 'message' => 'Email address is required.'], 422);
+        }
+
+        $result = $this->customerModel->verifyCode($email, $code);
+        if (!$result['success']) {
+            $this->json(['ok' => false, 'message' => $result['message']], 400);
+        }
+
+        $this->json([
+            'ok'       => true,
+            'message'  => $result['message'],
+            'redirect' => $result['redirect'],
+        ]);
+    }
+
+    /** POST /customer/apiResendCode — resend 6-digit verification code. */
+    public function apiResendCode() {
+        $this->requirePost();
+        $in    = $this->jsonInput();
+        $email = trim($in['email'] ?? ($_POST['email'] ?? ''));
+
+        if ($email === '') {
+            $this->json(['ok' => false, 'message' => 'Email address is required.'], 422);
+        }
+
+        $result = $this->customerModel->resendCode($email);
+        if (!$result['success']) {
+            $this->json(['ok' => false, 'message' => $result['message']], 422);
+        }
+
+        $this->json([
             'ok'      => true,
-            'members' => $this->customerModel->getHouseholdMembers($householdId),
+            'message' => $result['message'],
         ]);
     }
 
@@ -296,6 +351,15 @@ class CustomerController extends Controller {
         $user = $this->customerModel->login($email, $password);
 
         if (is_array($user) && isset($user['error'])) {
+            if ($user['error'] === 'unverified') {
+                $this->json([
+                    'ok'       => false,
+                    'reason'   => 'unverified',
+                    'email'    => $user['email'],
+                    'redirect' => URLROOT . '/customer/verify?email=' . urlencode($user['email']),
+                    'message'  => 'Your email address is not verified yet. Please enter the verification code sent to your inbox.'
+                ], 403);
+            }
             $this->json(['ok' => false, 'reason' => $user['error'],
                          'message' => 'This account is ' . $user['error'] . '. Please contact support.'], 403);
         }

@@ -414,6 +414,12 @@
           { avatar: p.avatar, savings: p.savings, age: p.age };
       });
       BP.syncHousehold(res.members, extras);
+
+      if (res.needs_verification && res.email) {
+        sessionStorage.setItem('pendingEmail', res.email);
+        window.location.href = res.redirect || ('verify?email=' + encodeURIComponent(res.email));
+        return;
+      }
       window.location.href = destination;
     });
   }

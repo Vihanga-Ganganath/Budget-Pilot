@@ -1,0 +1,131 @@
+/* ==========================================================================
+   Budget Pilot — email verification styles
+   ========================================================================== */
+
+.verify-card {
+  text-align: center;
+}
+
+.verify-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: rgba(34, 164, 93, 0.1);
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.verify-title {
+  font-size: 1.35rem;
+  margin-bottom: 8px;
+}
+
+.verify-sub {
+  color: var(--muted);
+  font-size: 0.93rem;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.verify-sub strong {
+  color: var(--navy);
+  word-break: break-all;
+}
+
+.input--code {
+  justify-content: center;
+}
+
+.code-input {
+  font-family: monospace, var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.4em;
+  text-align: center;
+  font-weight: 700;
+  color: var(--navy);
+  padding-left: 0.4em; /* offset letter-spacing */
+}
+
+.code-input::placeholder {
+  letter-spacing: 0.3em;
+  opacity: 0.35;
+  font-weight: 400;
+}
+
+.field__hint {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+.msg {
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.msg--error {
+  background: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #FCA5A5;
+}
+
+.msg--success {
+  background: #D1FAE5;
+  color: #065F46;
+  border: 1px solid #6EE7B7;
+}
+
+.verify-btn {
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+.verify-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.verify-resend, .verify-back {
+  margin: 0;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--green);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  text-decoration: underline;
+  transition: opacity 0.18s ease;
+}
+
+.btn-link:hover {
+  opacity: 0.8;
+}
+
+.btn-link:disabled {
+  color: var(--muted);
+  text-decoration: none;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.auth-foot {
+  margin-top: 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.82rem;
+}

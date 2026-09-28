@@ -1,4 +1,6 @@
 <?php
+require_once APPROOT . '/Helpers/Mailer.php';
+
 /*
  * Customer model — customer accounts and households.
  *
@@ -100,6 +102,19 @@ class Customer {
             if (!in_array('two_factor_pin_hash', $users, true)) {
                 $this->db->exec("ALTER TABLE users ADD COLUMN two_factor_pin_hash VARCHAR(255) NULL AFTER two_factor_enabled");
             }
+            // Verification columns & account_status enum update
+            if (!in_array('verification_code_hash', $users, true)) {
+                $this->db->exec("ALTER TABLE users ADD COLUMN verification_code_hash VARCHAR(255) NULL AFTER account_status");
+                $this->db->exec("ALTER TABLE users ADD COLUMN verification_expires DATETIME NULL AFTER verification_code_hash");
+                $this->db->exec("ALTER TABLE users ADD COLUMN verification_attempts TINYINT UNSIGNED DEFAULT 0 AFTER verification_expires");
+                $this->db->exec("ALTER TABLE users ADD COLUMN verification_sent_at DATETIME NULL AFTER verification_attempts");
+                $this->db->exec("ALTER TABLE users ADD COLUMN email_verified_at DATETIME NULL AFTER verification_sent_at");
+            }
+            $statusCol = $this->db->query("SHOW COLUMNS FROM users LIKE 'account_status'")->fetch(PDO::FETCH_ASSOC);
+            if ($statusCol && strpos($statusCol['Type'], 'unverified') === false) {
+                $this->db->exec("ALTER TABLE users MODIFY COLUMN account_status ENUM('active','locked','suspended','pending','unverified') DEFAULT 'unverified'");
+            }
+
             // The old email-code version of password_resets (it had code_hash)
             // only holds short-lived requests, so it is simply rebuilt.
             if ($this->db->query("SHOW TABLES LIKE 'password_resets'")->fetchColumn()) {
@@ -212,6 +227,7 @@ class Customer {
      */
     public function registerHousehold($owner, $members = []) {
         try {
+            $code = make_code();
             $this->db->beginTransaction();
 
             // 1. Household — takes the lowest free number, so the number of a
@@ -220,8 +236,8 @@ class Customer {
             $stmt = $this->db->prepare("INSERT INTO households (id, name) VALUES (:id, :name)");
             $stmt->execute([':id' => $householdId, ':name' => $owner['name'] . "'s Household"]);
 
-            // 2. Main account holder
-            $ownerId = $this->insertPerson($householdId, 'head', $owner);
+            // 2. Main account holder (with verification code)
+            $ownerId = $this->insertPerson($householdId, 'head', $owner, $code);
 
             // 3. Record who manages the household
             $stmt = $this->db->prepare(
@@ -234,13 +250,22 @@ class Customer {
                 $this->insertPerson($householdId, 'member', $m);
             }
 
+            // 5. Send verification email to main holder
+            if (!send_verification_email($owner['email'], $owner['name'], $code)) {
+                $this->db->rollBack();
+                $this->afterRollback();
+                return 'email_error';
+            }
+
             $this->db->commit();
             $this->afterCommit();
-            return $householdId;
+            return ['household_id' => $householdId, 'email' => $owner['email']];
 
         } catch (PDOException $e) {
-            $this->db->rollBack();
-            $this->afterRollback();
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+                $this->afterRollback();
+            }
             if ($e->getCode() == 23000) return 'duplicate';   // unique email+role
             return false;
         }
@@ -290,24 +315,35 @@ class Customer {
     }
 
     /** Inserts one person into `users` + `user_profiles`; returns the user id. */
-    private function insertPerson($householdId, $householdRole, $p) {
+    private function insertPerson($householdId, $householdRole, $p, $code = null) {
+        $status   = $code !== null ? 'unverified' : 'active';
+        $codeHash = $code !== null ? password_hash($code, PASSWORD_DEFAULT) : null;
+
         $stmt = $this->db->prepare(
             "INSERT INTO users
                 (household_id, role, household_role, name, email, password_hash,
-                 nic, gender, age, account_status, created_at)
+                 nic, gender, age, account_status,
+                 verification_code_hash, verification_expires, verification_sent_at, created_at)
              VALUES
                 (:hid, 'customer', :hrole, :name, :email, :hash,
-                 :nic, :gender, :age, 'active', NOW())"
+                 :nic, :gender, :age, :status,
+                 :code_hash,
+                 CASE WHEN :has_code = 1 THEN DATE_ADD(NOW(), INTERVAL " . CODE_MINUTES . " MINUTE) ELSE NULL END,
+                 CASE WHEN :has_code = 1 THEN NOW() ELSE NULL END,
+                 NOW())"
         );
         $stmt->execute([
-            ':hid'    => $householdId,
-            ':hrole'  => $householdRole,
-            ':name'   => trim($p['name']),
-            ':email'  => strtolower(trim($p['email'])),
-            ':hash'   => password_hash($p['password'], PASSWORD_DEFAULT),
-            ':nic'    => !empty($p['nic']) ? strtoupper(trim($p['nic'])) : null,
-            ':gender' => !empty($p['gender']) ? $p['gender'] : null,
-            ':age'    => !empty($p['age']) ? (int) $p['age'] : null,
+            ':hid'      => $householdId,
+            ':hrole'    => $householdRole,
+            ':name'     => trim($p['name']),
+            ':email'    => strtolower(trim($p['email'])),
+            ':hash'     => password_hash($p['password'], PASSWORD_DEFAULT),
+            ':nic'      => !empty($p['nic']) ? strtoupper(trim($p['nic'])) : null,
+            ':gender'   => !empty($p['gender']) ? $p['gender'] : null,
+            ':age'      => !empty($p['age']) ? (int) $p['age'] : null,
+            ':status'   => $status,
+            ':code_hash'=> $codeHash,
+            ':has_code' => $code !== null ? 1 : 0,
         ]);
         $userId = (int) $this->db->lastInsertId();
 
@@ -328,11 +364,113 @@ class Customer {
         return $userId;
     }
 
+    // ─── Verification ────────────────────────────────────────────────────────
+
+    /** Verifies a 6-digit code for an unverified customer account. */
+    public function verifyCode($email, $code) {
+        $email = strtolower(trim($email));
+        $code  = trim($code);
+
+        if (!preg_match('/^\d{6}$/', $code)) {
+            return ['success' => false, 'message' => 'Please enter the 6-digit code.'];
+        }
+
+        $stmt = $this->db->prepare(
+            "SELECT id, name, account_status, verification_code_hash, verification_attempts,
+                    (verification_expires > NOW()) AS not_expired
+             FROM users
+             WHERE email = :email AND role = 'customer'
+             LIMIT 1"
+        );
+        $stmt->execute([':email' => $email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user || $user['account_status'] !== 'unverified') {
+            return ['success' => false, 'message' => 'This account is already verified or does not exist. Try logging in.'];
+        }
+
+        if ((int) $user['verification_attempts'] >= MAX_ATTEMPTS) {
+            return ['success' => false, 'message' => 'Too many wrong attempts. Please request a new code.'];
+        }
+
+        if (!$user['not_expired'] || empty($user['verification_code_hash'])) {
+            return ['success' => false, 'message' => 'This code has expired. Please request a new one.'];
+        }
+
+        if (!password_verify($code, $user['verification_code_hash'])) {
+            $stmtInc = $this->db->prepare("UPDATE users SET verification_attempts = verification_attempts + 1 WHERE id = :id");
+            $stmtInc->execute([':id' => $user['id']]);
+            return ['success' => false, 'message' => 'Incorrect code. Please try again.'];
+        }
+
+        // Success: activate account
+        $stmtUpdate = $this->db->prepare(
+            "UPDATE users
+             SET account_status = 'active',
+                 email_verified_at = NOW(),
+                 verification_code_hash = NULL,
+                 verification_expires = NULL,
+                 verification_attempts = 0
+             WHERE id = :id"
+        );
+        $stmtUpdate->execute([':id' => $user['id']]);
+
+        return [
+            'success'  => true,
+            'message'  => 'Email verified! Redirecting you to login...',
+            'redirect' => URLROOT . '/customer/login?verified=1'
+        ];
+    }
+
+    /** Resends a new 6-digit code with a 60s cooldown limit. */
+    public function resendCode($email) {
+        $email = strtolower(trim($email));
+        $genericMsg = 'If this email is awaiting verification, a new code has been sent.';
+
+        $stmt = $this->db->prepare(
+            "SELECT id, name, account_status,
+                    (verification_sent_at IS NULL OR verification_sent_at < DATE_SUB(NOW(), INTERVAL " . RESEND_SECONDS . " SECOND)) AS can_resend
+             FROM users
+             WHERE email = :email AND role = 'customer'
+             LIMIT 1"
+        );
+        $stmt->execute([':email' => $email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user || $user['account_status'] !== 'unverified') {
+            return ['success' => true, 'message' => $genericMsg];
+        }
+
+        if (!$user['can_resend']) {
+            return ['success' => false, 'message' => 'Please wait a minute before requesting another code.'];
+        }
+
+        $code = make_code();
+        $stmtUpdate = $this->db->prepare(
+            "UPDATE users
+             SET verification_code_hash = :hash,
+                 verification_expires = DATE_ADD(NOW(), INTERVAL " . CODE_MINUTES . " MINUTE),
+                 verification_attempts = 0,
+                 verification_sent_at = NOW()
+             WHERE id = :id"
+        );
+        $stmtUpdate->execute([
+            ':hash' => password_hash($code, PASSWORD_DEFAULT),
+            ':id'   => $user['id'],
+        ]);
+
+        if (!send_verification_email($email, $user['name'], $code)) {
+            return ['success' => false, 'message' => 'We could not send the email. Please try again in a moment.'];
+        }
+
+        return ['success' => true, 'message' => $genericMsg];
+    }
+
     // ─── Read ────────────────────────────────────────────────────────────────
 
     /**
      * Checks email + password for a customer.
-     * Returns the user row, ['error' => 'locked'|'suspended'], or false.
+     * Returns the user row, ['error' => 'locked'|'suspended'|'unverified'], or false.
      */
     public function login($email, $password) {
         $stmt = $this->db->prepare(
@@ -346,6 +484,9 @@ class Customer {
         if (!password_verify($password, $row['password_hash'])) {
             $this->logLogin($row['id'], 'failed');
             return false;
+        }
+        if ($row['account_status'] === 'unverified') {
+            return ['error' => 'unverified', 'email' => $row['email']];
         }
         if ($row['account_status'] === 'locked' || $row['account_status'] === 'suspended') {
             $this->logLogin($row['id'], 'locked_out');

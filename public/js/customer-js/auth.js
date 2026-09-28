@@ -316,6 +316,9 @@
     if (query.indexOf('created=1') !== -1) {
       notice.hidden = false;
       notice.textContent = 'Account created. Select your profile and sign in.';
+    } else if (query.indexOf('verified=1') !== -1) {
+      notice.hidden = false;
+      notice.textContent = 'Email verified successfully! You can now sign in.';
     } else if (query.indexOf('deactivated=1') !== -1) {
       notice.hidden = false;
       notice.textContent = 'Account deactivated. That profile has been removed.';
@@ -411,7 +414,13 @@
       signInBtn.disabled = false;
 
       if (!res.ok) {
-        if (res.reason === 'credentials') {
+        if (res.reason === 'unverified') {
+          if (res.email) sessionStorage.setItem('pendingEmail', res.email);
+          var redirectUrl = res.redirect || ('verify?email=' + encodeURIComponent(res.email || ''));
+          if (formError) {
+            formError.innerHTML = (res.message || 'Your email is not verified.') + ' <a class="link" href="' + redirectUrl + '">Verify Email Now →</a>';
+          }
+        } else if (res.reason === 'credentials') {
           setState(passwordInput, passwordError, false, res.message);
           passwordInput.focus();
         } else {

@@ -29,7 +29,12 @@ CREATE TABLE users (
     nic VARCHAR(20),          
     age TINYINT UNSIGNED NULL, -- stored as a number (13-120), entered at sign-up / Settings
     gender ENUM('male', 'female', 'other', 'prefer_not_to_say'),
-    account_status ENUM('active', 'locked', 'suspended', 'pending') DEFAULT 'active', -- 'pending' = awaiting admin approval (supplier registrations)
+    account_status ENUM('active', 'locked', 'suspended', 'pending', 'unverified') DEFAULT 'unverified',
+    verification_code_hash VARCHAR(255) NULL,
+    verification_expires DATETIME NULL,
+    verification_attempts TINYINT UNSIGNED DEFAULT 0,
+    verification_sent_at DATETIME NULL,
+    email_verified_at DATETIME NULL,
     two_factor_enabled BOOLEAN DEFAULT FALSE, -- on = forgot password also asks for the security PIN
     two_factor_pin_hash VARCHAR(255) NULL,    -- hash of the 6-digit PIN set in Settings (NULL when 2FA is off)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
