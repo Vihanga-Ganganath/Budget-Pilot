@@ -1,32 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security &amp; Audit - Budget Pilot Admin</title>
-    <link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/common.css?v=<?php echo filemtime(APPROOT . '/../public/css/common.css'); ?>">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/admin.css?v=<?php echo filemtime(APPROOT . '/../public/css/admin.css'); ?>">
-</head>
-<body data-page="security">
 
-    <div class="dashboard-layout">
-        <?php require '../app/Views/admin/_sidebar.php'; ?>
-
-        <main class="main-content">
-            <?php require '../app/Views/admin/_topbar.php'; ?>
-
-            <header class="content-header">
+<?php require APPROOT . '/Views/shared/header.php'; ?>
+<header class="content-header">
                 <div class="header-left">
                     <h2 class="page-title">Security &amp; Audit Management</h2>
                     <p class="page-subtitle">Monitor system integrity, unauthorized access attempts, and administrative actions.</p>
                 </div>
                 <div class="header-right">
                     <button class="btn btn-outline-navy btn-lg" id="export-logs-btn" type="button">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        
                         Export Logs
                     </button>
                     <button class="btn btn-navy btn-lg" id="lockdown-btn" type="button">
@@ -88,16 +69,19 @@
                         </tbody>
                     </table>
                     <div class="table-footer">
-                        <span class="table-footer-info" id="audit-footer-info">Showing entries…</span>
+                        <span class="table-footer-info" id="audit-footer-info">Showing entries</span>
                         <div class="pagination">
                             <button class="page-btn active">1</button>
                         </div>
                     </div>
                 </div>
             </section>
-        </main>
-    </div>
+        <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
 
-    <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
-</body>
-</html>
+<?php require APPROOT . '/Views/shared/footer.php'; ?>
+
+
+
+
+
+

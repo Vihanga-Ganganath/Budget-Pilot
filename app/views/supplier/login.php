@@ -1,132 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Supplier Login — Budget Pilot</title>
-<link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/auth.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/auth.css'); ?>" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Login - Budget Pilot</title>
+    <link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/common.css?v=<?php echo @filemtime(APPROOT . '/../public/css/common.css'); ?>">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/assets/css/login.css?v=<?php echo @filemtime(APPROOT . '/../public/assets/css/login.css'); ?>">
 </head>
-<body class="auth">
+<body class="login-page">
 
-<main class="auth__wrap">
+    <a href="<?php echo URLROOT; ?>/" class="login-brand" aria-label="Budget Pilot home">
+        <div class="login-brand__mark">
+            <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
+        </div>
+        <span class="login-brand__title">Budget Pilot</span>
+    </a>
 
-  <a class="brand brand--center" href="<?php echo URLROOT; ?>/customer/index" aria-label="Budget Pilot home">
-    <span class="brand__mark" aria-hidden="true">
-      <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
-    </span>
-    <span class="brand__name">Budget Pilot</span>
-  </a>
+    <div class="login-card">
+        <div class="login-card__header">
+            <h1 class="login-card__title">Supplier Portal</h1>
+            <p class="login-card__sub">Manage all your grocery item brands in one place.</p>
+        </div>
 
-  <section class="auth-card">
-    <div class="tabs" role="tablist" aria-label="Account type">
-      <a class="tab" href="<?php echo URLROOT; ?>/customer/login" role="tab" aria-selected="false">Customer Account</a>
-      <a class="tab is-active" href="<?php echo URLROOT; ?>/supplier/login" role="tab" aria-selected="true">Supplier Portal</a>
+        <?php if (!empty($data['registered'])): ?>
+            <div class="login-alert login-alert--success">
+                <strong>Application submitted!</strong> Your supplier account is awaiting admin approval. You will receive access once reviewed.
+            </div>
+        <?php endif; ?>
+
+        <?php if (!empty($data['error'])): ?>
+            <?php
+                // Choose alert style based on error type
+                $isPending = strpos(strtolower($data['error']), 'awaiting admin') !== false;
+                $alertClass = $isPending ? 'login-alert--warning' : 'login-alert--error';
+            ?>
+            <div class="login-alert <?php echo $alertClass; ?>">
+                <?php echo $data['error']; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!empty($data['email_err']) || !empty($data['password_err'])): ?>
+            <div class="login-alert login-alert--error">
+                <?php echo !empty($data['email_err']) ? $data['email_err'] : $data['password_err']; ?>
+            </div>
+        <?php endif; ?>
+
+        <form action="<?php echo URLROOT; ?>/supplier/login" method="post">
+            <div class="form-group">
+                <div class="form-header">
+                    <label for="email">Email Address</label>
+                </div>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <input type="email" id="email" name="email" value="<?php echo isset($data['email']) ? htmlspecialchars($data['email']) : ''; ?>" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-header">
+                    <label for="password">Password</label>
+                    <a href="#">Forgot password?</a>
+                </div>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <input type="password" id="password" name="password" required>
+                    <button type="button" class="input-action js-toggle-password" data-target="password" aria-label="Toggle password visibility">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="remember-row">
+                <input type="checkbox" id="remember" name="remember" <?php echo (isset($_COOKIE['supplier_remember']) || isset($data['remember'])) ? 'checked' : ''; ?>>
+                <label for="remember">Remember me</label>
+            </div>
+
+            <button type="submit" class="login-submit-btn">Sign In</button>
+        </form>
+
+        <div class="login-footer">
+            Want to become a supplier? <a href="<?php echo URLROOT; ?>/supplier/register">Apply for an account</a>
+        </div>
     </div>
 
-    <div class="auth-card__body">
-      <h1 class="auth__title">Welcome Back</h1>
-      <p class="auth__sub">Manage all your grocery item brands in one place.</p>
+    <a href="<?php echo URLROOT; ?>/" class="login-back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Back to Home
+    </a>
 
-      <?php if (!empty($data['registered'])): ?>
-        <!-- Success notice after registration -->
-        <div style="background:#E8F6EE;border:1px solid #BDE6CE;color:#1B6B42;border-radius:9px;padding:12px 14px;margin-bottom:18px;font-size:.9rem;font-weight:500;">
-          <strong>Application submitted!</strong> Your supplier account is awaiting admin approval. You will receive access once reviewed.
-        </div>
-      <?php endif; ?>
-
-      <?php if (!empty($data['error'])): ?>
-        <?php
-          // Choose alert style based on error type
-          $isPending = strpos($data['error'], 'awaiting admin') !== false;
-          $bgColor   = $isPending ? '#FEF9E8' : '#FDF6F6';
-          $bdColor   = $isPending ? '#F5D87A' : '#F0BCBC';
-          $txColor   = $isPending ? '#7A5C00' : '#C2373C';
-        ?>
-        <div style="background:<?php echo $bgColor; ?>;border:1px solid <?php echo $bdColor; ?>;color:<?php echo $txColor; ?>;border-radius:9px;padding:12px 14px;margin-bottom:18px;font-size:.9rem;font-weight:500;">
-          <?php echo htmlspecialchars($data['error']); ?>
-        </div>
-      <?php endif; ?>
-
-      <form id="loginForm" method="POST" action="<?php echo URLROOT; ?>/supplier/login">
-
-        <div class="field">
-          <label class="field__label" for="email">Email</label>
-          <div class="input">
-            <span class="input__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 6.5l9 6.5 9-6.5"/>
-              </svg>
-            </span>
-            <input id="email" name="email" type="email" placeholder="name@example.com"
-                   autocomplete="email" aria-describedby="emailError"
-                   value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" required />
-          </div>
-          <p class="field__error" id="emailError" role="alert"></p>
-        </div>
-
-        <div class="field">
-          <div class="field__row">
-            <label class="field__label" for="password">Password</label>
-            <button class="link link--plain" type="button" id="forgotBtn">Forgot password?</button>
-          </div>
-          <div class="input">
-            <span class="input__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="4" y="10.5" width="16" height="10" rx="2.5"/><path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7"/>
-              </svg>
-            </span>
-            <input id="password" name="password" type="password" placeholder="••••••••"
-                   autocomplete="current-password" required />
-            <button class="input__toggle" type="button" data-toggle="password" aria-label="Show password">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>
-              </svg>
-            </button>
-          </div>
-          <p class="field__error" id="passwordError" role="alert"></p>
-        </div>
-
-        <p class="form__error" id="formError" role="alert"></p>
-
-        <button class="btn btn--primary btn--block" type="submit">
-          Sign In
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
-        </button>
-
-        <p class="auth__switch">New supplier? <a class="link" href="<?php echo URLROOT; ?>/supplier/register">Apply for an account</a></p>
-      </form>
-
-      <div class="auth__foot">
-        <a class="auth__back" href="<?php echo URLROOT; ?>/customer/index">← Back to Home</a>
-      </div>
-    </div>
-  </section>
-</main>
-
-<script>
-  document.querySelectorAll('[data-toggle]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var input  = document.getElementById(btn.getAttribute('data-toggle'));
-      if (!input) return;
-      var hidden = input.type === 'password';
-      input.type = hidden ? 'text' : 'password';
-      btn.setAttribute('aria-label', hidden ? 'Hide password' : 'Show password');
-      input.focus();
-    });
-  });
-
-  var forgotBtn = document.getElementById('forgotBtn');
-  var formError = document.getElementById('formError');
-  if (forgotBtn && formError) {
-    forgotBtn.addEventListener('click', function () {
-      formError.textContent = 'To reset your password, contact your system administrator.';
-      formError.style.display = 'block';
-    });
-  }
-</script>
+    <script src="<?php echo URLROOT; ?>/public/assets/js/login.js?v=<?php echo @filemtime(APPROOT . '/../public/assets/js/login.js'); ?>"></script>
 </body>
 </html>
+

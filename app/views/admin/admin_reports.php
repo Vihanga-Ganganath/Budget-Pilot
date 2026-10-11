@@ -1,25 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reports &amp; Analytics - Budget Pilot Admin</title>
-    <link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/common.css?v=<?php echo filemtime(APPROOT . '/../public/css/common.css'); ?>">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/admin.css?v=<?php echo filemtime(APPROOT . '/../public/css/admin.css'); ?>">
-</head>
-<body data-page="reports">
 
-    <div class="dashboard-layout">
-        <?php require '../app/Views/admin/_sidebar.php'; ?>
-
-        <main class="main-content">
-            <?php require '../app/Views/admin/_topbar.php'; ?>
-
-            <header class="content-header">
+<?php require APPROOT . '/Views/shared/header.php'; ?>
+<header class="content-header">
                 <div class="header-left">
                     <h2 class="page-title">Reports &amp; Analytics</h2>
                     <p class="page-subtitle">Overview of financial performance and platform activity.</p>
@@ -31,7 +12,7 @@
                         <option value="90">Last 90 Days</option>
                     </select>
                     <button class="btn btn-navy btn-lg" id="export-pdf-btn" type="button">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        
                         Export PDF
                     </button>
                 </div>
@@ -42,22 +23,22 @@
                 <div class="stat-card">
                     <div class="stat-card-label">Total Transactions</div>
                     <div class="stat-card-value" id="stat-total-transactions">124,592</div>
-                    <div class="stat-card-sub"><span class="stat-trend up" id="trend-transactions">↑ 12.5%</span> vs last month</div>
+                    <div class="stat-card-sub"><span class="stat-trend up" id="trend-transactions"> 12.5%</span> vs last month</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card-label">Total Budget Tracked</div>
                     <div class="stat-card-value" id="stat-total-budget">$4.2M</div>
-                    <div class="stat-card-sub"><span class="stat-trend up" id="trend-budget">↑ 8.2%</span> vs last month</div>
+                    <div class="stat-card-sub"><span class="stat-trend up" id="trend-budget"> 8.2%</span> vs last month</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card-label">Avg Transaction Value</div>
                     <div class="stat-card-value" id="stat-avg-transaction">$34.50</div>
-                    <div class="stat-card-sub"><span class="stat-trend down" id="trend-avg">↓ 1.4%</span> vs last month</div>
+                    <div class="stat-card-sub"><span class="stat-trend down" id="trend-avg"> 1.4%</span> vs last month</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card-label">Active Suppliers</div>
                     <div class="stat-card-value" id="stat-active-suppliers-report">842</div>
-                    <div class="stat-card-sub"><span class="stat-trend up" id="trend-suppliers">↑ 5.1%</span> vs last month</div>
+                    <div class="stat-card-sub"><span class="stat-trend up" id="trend-suppliers"> 5.1%</span> vs last month</div>
                 </div>
             </section>
 
@@ -66,7 +47,7 @@
                 <div class="dashboard-card">
                     <div class="card-heading-row">
                         <h3>Category Performance</h3>
-                        <button class="activity-menu-btn" type="button">⋮</button>
+                        <button class="activity-menu-btn" type="button"></button>
                     </div>
                     <div id="category-performance-container">
                         <!-- rendered by js/admin.js -->
@@ -81,7 +62,7 @@
                     </div>
                     <div class="top-supplier-row">
                         <div class="top-supplier-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+                            
                         </div>
                         <div style="flex:1;">
                             <div class="top-supplier-name">MegaMart Co.</div>
@@ -89,12 +70,12 @@
                         </div>
                         <div>
                             <div class="top-supplier-value">45.2k</div>
-                            <div class="top-supplier-trend up">↑ 12%</div>
+                            <div class="top-supplier-trend up"> 12%</div>
                         </div>
                     </div>
                     <div class="top-supplier-row">
                         <div class="top-supplier-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                            
                         </div>
                         <div style="flex:1;">
                             <div class="top-supplier-name">Swift Transit</div>
@@ -102,12 +83,12 @@
                         </div>
                         <div>
                             <div class="top-supplier-value">38.9k</div>
-                            <div class="top-supplier-trend up">↑ 8%</div>
+                            <div class="top-supplier-trend up"> 8%</div>
                         </div>
                     </div>
                     <div class="top-supplier-row">
                         <div class="top-supplier-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                            
                         </div>
                         <div style="flex:1;">
                             <div class="top-supplier-name">City Utilities</div>
@@ -115,7 +96,7 @@
                         </div>
                         <div>
                             <div class="top-supplier-value">29.1k</div>
-                            <div class="top-supplier-trend down">↓ 3%</div>
+                            <div class="top-supplier-trend down"> 3%</div>
                         </div>
                     </div>
                     <div class="top-supplier-row">
@@ -128,15 +109,18 @@
                         </div>
                         <div>
                             <div class="top-supplier-value">22.4k</div>
-                            <div class="top-supplier-trend up">↑ 5%</div>
+                            <div class="top-supplier-trend up"> 5%</div>
                         </div>
                     </div>
                     <button class="btn btn-outline-navy btn-sm" id="view-full-suppliers-btn" type="button" style="width:100%; margin-top:16px;">View Full List</button>
                 </div>
             </section>
-        </main>
-    </div>
+        <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
 
-    <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
-</body>
-</html>
+<?php require APPROOT . '/Views/shared/footer.php'; ?>
+
+
+
+
+
+

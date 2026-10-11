@@ -2,33 +2,13 @@
 $product = $data['product'];
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<?php
+$product = $data['product'];
+?>
 
-    <title>Edit Product - Budget Pilot</title>
-<link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
+<?php $spActive = 'catalog'; $spActiveLink = true; ?>
+<?php require APPROOT . '/Views/shared/header.php'; ?>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet"
-          href="<?php echo URLROOT; ?>/css/supplier/supplier.css?v=<?php echo @filemtime(APPROOT . '/../public/css/supplier/supplier.css'); ?>">
-</head>
-
-<body class="sp">
-
-<div class="shell">
-
-<?php $spActive = 'catalog'; $spActiveLink = true; require APPROOT . '/views/supplier/_sidebar.php'; ?>
-
-  <div class="main">
-<?php require APPROOT . '/views/supplier/_appbar.php'; ?>
-
-  <!-- Main Content -->
-  <main>
 
         <div class="card" style="max-width:900px; margin:40px auto;">
 
@@ -288,10 +268,11 @@ $product = $data['product'];
 
         </div>
 
-    </main>
-  </div>
-</div>
+    
+<?php require APPROOT . '/Views/shared/footer.php'; ?>
 
-<script src="<?php echo URLROOT; ?>/js/customer-js/nav.js"></script>
-</body>
-</html>
+
+
+
+
+

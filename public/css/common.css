@@ -1,32 +1,40 @@
 /* Shared Layout & Color Variables for Budget Pilot Dashboard */
 :root {
-    --primary-navy: #00106B;
-    --primary-navy-dark: #000B47;
-    --accent-green: #10B981;
-    --accent-green-dark: #059669;
-    --accent-green-light: #D1FAE5;
+    /* Brand Colors */
+    --color-primary: #1E3A8A;
+    --color-primary-dark: #1E40AF;
     
-    --bg-light: #F8FAFC;
-    --bg-card: #FFFFFF;
-    --bg-card-dark: #020A4E;
+    /* Semantic Colors */
+    --color-success: #16A34A;
+    --color-success-bg: #DCFCE7;
+    --color-danger: #C2373C;
+    --color-danger-bg: #FEF2F2;
+    --color-warning: #CA8A04;
+    --color-warning-bg: #FEF9C3;
+    --color-info: #0284C7;
+    --color-info-bg: #E0F2FE;
+
+    /* Neutrals & Surfaces */
+    --color-bg: #F9FAFB;
+    --color-surface: #FFFFFF;
+    --color-surface-alt: #F3F4F6;
+    --color-border: #E6E9F0;
+    --input-bg: #F8FAFC;
     
-    --text-main: #0F172A;
-    --text-light: #64748B;
-    --border-color: #E2E8F0;
-    --input-bg: #F1F5F9;
+    /* Text Colors */
+    --color-text: #1B2333;
+    --color-text-muted: #6B7280;
     
-    --font-sans: 'Inter', -apple-system, sans-serif;
-    --font-title: 'Outfit', sans-serif;
+    /* Global Utilities */
+    --shadow-main: 0 1px 2px rgba(0,0,0,0.05);
+    --radius-main: 14px;
+    
+    /* Typography */
+    --font-sans: 'Inter', 'Segoe UI', Arial, sans-serif;
+    --font-title: 'Outfit', 'Poppins', sans-serif;
 }
 
-body.dark-theme {
-    --bg-light: #0B0F19;
-    --bg-card: #111827;
-    --text-main: #F3F4F6;
-    --text-light: #9CA3AF;
-    --border-color: #374151;
-    --input-bg: #1F2937;
-}
+
 
 * {
     margin: 0;
@@ -36,8 +44,8 @@ body.dark-theme {
 
 body {
     font-family: var(--font-sans);
-    background-color: var(--bg-light);
-    color: var(--text-main);
+    background-color: var(--color-bg);
+    color: var(--color-text);
     line-height: 1.5;
     overflow-x: hidden;
 }
@@ -45,16 +53,11 @@ body {
 /* Typography */
 h1, h2, h3, h4 {
     font-family: var(--font-title);
-    color: var(--primary-navy);
+    color: var(--color-primary);
     font-weight: 700;
 }
 
-body.dark-theme h1, 
-body.dark-theme h2, 
-body.dark-theme h3, 
-body.dark-theme h4 {
-    color: #60A5FA;
-}
+
 
 /* General Layout structure */
 .dashboard-layout {
@@ -65,8 +68,8 @@ body.dark-theme h4 {
 /* Sidebar Styling */
 .sidebar {
     width: 250px;
-    background-color: var(--bg-card);
-    border-right: 1px solid var(--border-color);
+    background-color: var(--color-surface);
+    border-right: 1px solid var(--color-border);
     display: flex;
     flex-direction: column;
     padding: 24px;
@@ -94,14 +97,14 @@ body.dark-theme h4 {
     font-family: var(--font-title);
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--primary-navy);
+    color: var(--color-primary);
 }
 
 .logo-tag {
     font-size: 0.55rem;
     font-weight: 700;
     letter-spacing: 1.5px;
-    color: var(--text-light);
+    color: var(--color-text-muted);
 }
 
 .sidebar-menu {
@@ -115,7 +118,7 @@ body.dark-theme h4 {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--color-border);
     padding-top: 16px;
 }
 
@@ -125,7 +128,7 @@ body.dark-theme h4 {
     gap: 12px;
     padding: 12px 16px;
     border-radius: 8px;
-    color: var(--text-light);
+    color: var(--color-text-muted);
     font-size: 0.95rem;
     font-weight: 500;
     text-decoration: none;
@@ -134,12 +137,10 @@ body.dark-theme h4 {
 
 .menu-item:hover {
     background-color: #F1F5F9;
-    color: var(--text-main);
+    color: var(--color-text);
 }
 
-body.dark-theme .menu-item:hover {
-    background-color: #1F2937;
-}
+
 
 /* Active admin page — match the Supplier Portal selected-item style */
 .menu-item.active {
@@ -153,10 +154,7 @@ body.dark-theme .menu-item:hover {
     color: #14532D;
 }
 
-body.dark-theme .menu-item.active {
-    background-color: #1F2937;
-    color: #60A5FA;
-}
+
 
 /* Keep Settings consistent with every other selected admin page */
 .menu-settings.active {
@@ -178,7 +176,7 @@ body.dark-theme .menu-item.active {
     flex: 1;
     margin-left: 250px;
     padding: 40px;
-    background-color: var(--bg-light);
+    background-color: var(--color-bg);
     min-height: 100vh;
 }
 
@@ -197,7 +195,7 @@ body.dark-theme .menu-item.active {
 }
 
 .page-subtitle {
-    color: var(--text-light);
+    color: var(--color-text-muted);
     font-size: 0.95rem;
 }
 
@@ -208,9 +206,9 @@ body.dark-theme .menu-item.active {
 }
 
 .icon-btn-dash {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    color: var(--text-light);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -223,8 +221,8 @@ body.dark-theme .menu-item.active {
 }
 
 .icon-btn-dash:hover {
-    color: var(--text-main);
-    border-color: var(--text-light);
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
 }
 
 .alert-dot-badge {
@@ -233,7 +231,7 @@ body.dark-theme .menu-item.active {
     right: 10px;
     width: 6px;
     height: 6px;
-    background-color: var(--accent-green);
+    background-color: var(--color-success);
     border-radius: 50%;
 }
 
@@ -241,22 +239,22 @@ body.dark-theme .menu-item.active {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: var(--accent-green-light);
-    color: var(--accent-green-dark);
+    background-color: var(--color-success);
+    color: var(--color-success);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     cursor: pointer;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--color-border);
 }
 
 /* Card Styling */
 .dashboard-card {
-    background-color: var(--bg-card);
+    background-color: var(--color-surface);
     border-radius: 16px;
     padding: 32px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--color-border);
 }
 
 /* Buttons System */
@@ -284,33 +282,33 @@ body.dark-theme .menu-item.active {
 }
 
 .btn-navy {
-    background-color: var(--primary-navy);
+    background-color: var(--color-success);
     color: white;
-    border: 1px solid var(--primary-navy);
+    border: 1px solid var(--color-success);
 }
 
 .btn-navy:hover {
-    background-color: var(--primary-navy-dark);
-    border-color: var(--primary-navy-dark);
+    background-color: var(--color-success);
+    border-color: var(--color-success);
     transform: translateY(-1px);
 }
 
 .btn-outline {
     background-color: transparent;
-    color: var(--primary-navy);
-    border: 1.5px solid var(--primary-navy);
+    color: var(--color-primary);
+    border: 1.5px solid var(--color-primary);
 }
 
 .btn-outline:hover {
-    background-color: var(--primary-navy);
+    background-color: var(--color-primary);
     color: white;
     transform: translateY(-1px);
 }
 
 .btn-outline-navy {
     background-color: white;
-    color: var(--primary-navy);
-    border: 1.5px solid var(--primary-navy);
+    color: var(--color-primary);
+    border: 1.5px solid var(--color-primary);
 }
 
 .btn-outline-navy:hover {
@@ -330,7 +328,7 @@ body.dark-theme .menu-item.active {
     justify-content: space-between;
     padding: 12px 24px;
     border-radius: 6px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     width: 90%;
     max-width: 480px;
     background-color: #ECFDF5;
@@ -382,3 +380,20 @@ body.dark-theme .menu-item.active {
         padding: 24px;
     }
 }
+
+
+
+/* Global Hidden Attribute Override */
+[hidden] { display: none !important; }
+
+
+
+
+
+
+
+
+
+
+
+

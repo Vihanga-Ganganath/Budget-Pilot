@@ -3,18 +3,20 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Create Account — Budget Pilot</title>
+<title>Create Account  Budget Pilot</title>
 <link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/auth.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/auth.css'); ?>" />
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/create-account.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/create-account.css'); ?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/assets/css/sidebar.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/assets/css/topbar.css?v=<?php echo time(); ?>">
 </head>
 <body class="signup">
 
 <header class="page-head">
-  <a class="page-head__back" href="<?php echo URLROOT; ?>/customer/index">← Back to Home</a>
+  <a class="page-head__back" href="<?php echo URLROOT; ?>/customer/index"> Back to Home</a>
 
   <a class="brand" href="<?php echo URLROOT; ?>/customer/index" aria-label="Budget Pilot home">
     <span class="brand__mark" aria-hidden="true">
@@ -66,7 +68,7 @@
     <div class="field">
       <label class="label" for="password">Password</label>
       <div class="input">
-        <input id="password" type="password" placeholder="••••••••" autocomplete="new-password" />
+        <input id="password" type="password" placeholder="" autocomplete="new-password" />
         <button class="input__toggle" type="button" data-toggle="password" aria-label="Show password">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
             <path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>
@@ -229,7 +231,7 @@
     <div class="field">
       <label class="label member__password-label">Password</label>
       <div class="input">
-        <input class="member__password" type="password" placeholder="••••••••" />
+        <input class="member__password" type="password" placeholder="" />
         <button class="input__toggle member__reveal" type="button" aria-label="Show password">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
             <path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>
@@ -246,5 +248,14 @@
 <script>window.URLROOT = "<?php echo URLROOT; ?>";</script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/store.js'); ?>"></script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/create-account.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/create-account.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/assets/js/sidebar.js"></script>
+<script src="<?php echo URLROOT; ?>/public/assets/js/topbar.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
+
+
+
+
+
+
+

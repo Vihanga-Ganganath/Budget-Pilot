@@ -1,26 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Budget Pilot - Verification Status</title>
-<link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/supplier/supplier.css?v=<?php echo @filemtime(APPROOT . '/../public/css/supplier/supplier.css'); ?>">
-</head>
-<body class="sp">
+<?php $spActive = 'verification'; $spActiveLink = false; ?>
+<?php require APPROOT . '/Views/shared/header.php'; ?>
 
-<div class="shell">
-
-<?php $spActive = 'verification'; $spActiveLink = false; require APPROOT . '/views/supplier/_sidebar.php'; ?>
-
-  <div class="main">
-<?php require APPROOT . '/views/supplier/_appbar.php'; ?>
-
-  <!-- Main Content -->
-  <main>
     <h1 class="page-title">Verification Status</h1>
     <p class="subtitle">Manage your grocery brand credentials and legal compliance.</p>
 
@@ -121,16 +101,17 @@
         </tbody>
       </table>
     </div>
-  </main>
-  </div>
-</div>
-
-<div id="toast" class="toast"></div>
+  <div id="toast" class="toast"></div>
 <div id="modalRoot"></div>
 <script>
   const URLROOT = '<?php echo URLROOT; ?>';
 </script>
 <script src="<?php echo URLROOT; ?>/js/supplier/verification.js"></script>
-<script src="<?php echo URLROOT; ?>/js/customer-js/nav.js"></script>
-</body>
-</html>
+
+<?php require APPROOT . '/Views/shared/footer.php'; ?>
+
+
+
+
+
+

@@ -1,0 +1,124 @@
+/* ============ Security alert banner ============ */
+.critical-alert-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 24px;
+}
+
+.critical-alert-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.critical-alert-icon {
+    width: 22px;
+    height: 22px;
+    color: #DC2626;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.critical-alert-title {
+    font-weight: 700;
+    color: #991B1B;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.critical-alert-desc {
+    font-size: 0.85rem;
+    color: #B91C1C;
+}
+
+.btn-danger-solid {
+    background-color: #DC2626;
+    color: white;
+    border: 1px solid #DC2626;
+    white-space: nowrap;
+}
+
+.btn-danger-solid:hover {
+    background-color: #B91C1C;
+    border-color: #B91C1C;
+}
+
+/* ============ Suspicious login cards ============ */
+.suspicious-login-card {
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+}
+
+.suspicious-login-card:last-child {
+    margin-bottom: 0;
+}
+
+.suspicious-login-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.suspicious-login-email {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--color-text);
+}
+
+.suspicious-login-ip {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    margin-bottom: 10px;
+}
+
+.risk-bar-track {
+    height: 5px;
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+.risk-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+}
+
+.risk-bar-fill.high { background-color: #DC2626; width: 85%; }
+.risk-bar-fill.medium { background-color: #F59E0B; width: 55%; }
+
+.btn-block-ip {
+    width: 100%;
+    padding: 9px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    color: #DC2626;
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 0.82rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btn-block-ip:hover {
+    background-color: #FEF2F2;
+    border-color: #FECACA;
+}
+
+
+
+
+
+

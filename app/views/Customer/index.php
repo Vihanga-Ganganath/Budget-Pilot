@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Budget Pilot — know what's left before you spend it</title>
+<title>Budget Pilot  know what's left before you spend it</title>
 <link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/style.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/style.css'); ?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/assets/css/sidebar.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/assets/css/topbar.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
@@ -53,7 +55,7 @@
     <div class="hero__inner">
 
       <div class="hero__copy">
-        <p class="eyebrow">Budgets · Groceries · One app</p>
+        <p class="eyebrow">Budgets  Groceries  One app</p>
 
         <h1 class="hero__title">
           Know what's left<br />
@@ -144,7 +146,7 @@
 
           <p class="splitter__buffer" id="splitterBuffer">
             <span class="splitter__bufferlabel">Left as a cushion</span>
-            <span class="splitter__buffervalue">6% · $120</span>
+            <span class="splitter__buffervalue">6%  $120</span>
           </p>
 
           <button class="splitter__replay" type="button" id="splitterReplay">Split it again</button>
@@ -166,7 +168,7 @@
         <h3 class="step__title">Split your income</h3>
         <p class="step__text">
           Enter what you earn. Budget Pilot suggests an amount for rent, loans, groceries,
-          transport, tuition, medicine, clothing and everything else — and leaves a small
+          transport, tuition, medicine, clothing and everything else  and leaves a small
           cushion untouched. Change any figure you disagree with.
         </p>
       </li>
@@ -201,9 +203,7 @@
     <div class="bento">
       <article class="fcard fcard--wide reveal">
         <span class="tile" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/><circle cx="17" cy="14.5" r="1.6"/>
-          </svg>
+          
         </span>
         <h3 class="fcard__title">Budgets that hold their shape</h3>
         <p class="fcard__text">
@@ -221,10 +221,7 @@
 
       <article class="fcard reveal">
         <span class="tile tile--mint" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/>
-            <path d="M2.5 3h2.2l2.6 12.4a1.6 1.6 0 0 0 1.6 1.3h8.9a1.6 1.6 0 0 0 1.6-1.3L21 7H6"/>
-          </svg>
+          
         </span>
         <h3 class="fcard__title">Same product, every brand</h3>
         <p class="fcard__text">
@@ -244,9 +241,7 @@
 
       <article class="fcard fcard--dark reveal">
         <span class="tile tile--ghost" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M6 20V11M12 20V5M18 20v-6"/>
-          </svg>
+          
         </span>
         <h3 class="fcard__title fcard__title--light">Where the month went</h3>
         <p class="fcard__text fcard__text--light">
@@ -263,9 +258,7 @@
 
       <article class="fcard fcard--wide reveal" id="security">
         <span class="tile" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 3l7 3v6c0 4.6-3 8-7 9-4-1-7-4.4-7-9V6z"/><path d="M9.5 12l1.8 1.8L15 10"/>
-          </svg>
+          
         </span>
         <h3 class="fcard__title">Your money stays your business</h3>
         <p class="fcard__text">
@@ -273,7 +266,7 @@
           sold on, and nothing is shared with the brands you compare.
         </p>
         <p class="fcard__fine">
-          Budget Pilot is a coursework project — sign-in is stored on your device, so treat
+          Budget Pilot is a coursework project  sign-in is stored on your device, so treat
           it as a demo rather than a bank.
         </p>
       </article>
@@ -292,7 +285,7 @@
         <a class="btn btn--lime btn--lg" href="<?php echo URLROOT; ?>/customer/login">Sign in as a customer</a>
         <a class="btn btn--outline btn--lg" href="<?php echo URLROOT; ?>/supplier/login">Sign in as a supplier</a>
       </div>
-      <p class="cta__fine">New here? <a href="<?php echo URLROOT; ?>/customer/register">Create an account</a> — it takes a minute.</p>
+      <p class="cta__fine">New here? <a href="<?php echo URLROOT; ?>/customer/register">Create an account</a>  it takes a minute.</p>
     </div>
   </section>
 </main>
@@ -347,7 +340,7 @@
   </div>
 
   <div class="footer__bottom">
-    <p>© 2026 Budget Pilot. Coursework project.</p>
+    <p> 2026 Budget Pilot. Coursework project.</p>
     <ul class="footer__legal">
       <li><a href="<?php echo URLROOT; ?>/customer/privacy">Privacy</a></li>
       <li><a href="<?php echo URLROOT; ?>/customer/terms">Terms</a></li>
@@ -356,5 +349,15 @@
 </footer>
 
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/main.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/main.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/assets/js/sidebar.js"></script>
+<script src="<?php echo URLROOT; ?>/public/assets/js/topbar.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+

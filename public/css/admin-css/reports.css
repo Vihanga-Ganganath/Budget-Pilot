@@ -1,0 +1,44 @@
+/* ============ Category performance bars (Reports page) ============ */
+.category-bar-row {
+    margin-bottom: 18px;
+}
+
+.category-bar-row:last-child {
+    margin-bottom: 0;
+}
+
+.category-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+
+.category-bar-label .cat-name {
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.category-bar-label .cat-value {
+    color: var(--color-text);
+    font-weight: 700;
+}
+
+.category-bar-track {
+    height: 8px;
+    border-radius: 6px;
+    background-color: var(--input-bg);
+    overflow: hidden;
+}
+
+.category-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    background-color: var(--color-primary);
+}
+
+
+
+
+
+

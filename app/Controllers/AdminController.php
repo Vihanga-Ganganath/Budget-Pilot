@@ -211,7 +211,7 @@ class AdminController extends Controller {
 
         // ලොග් වෙලා ඉන්න Admin කෙනෙක් නම් විතරක් admin_security_audit View එක ලෝඩ් කරනවා
 
-        $this->view('admin/admin_security_audit');
+        $this->view('admin/security');
     }
 
     public function reports() {
@@ -441,7 +441,8 @@ class AdminController extends Controller {
                 $_SESSION['user_role'] = $loggedInUser['role'];
 
                 $data['success'] = 'Signed in successfully. Redirecting...';
-                
+                header('Location: ' . URLROOT . '/admin/dashboard');
+                exit();
             } else {
                 $data['error'] = 'Invalid email or password! Please try again.';
             }
@@ -466,5 +467,8 @@ class AdminController extends Controller {
         header('Location: ' . URLROOT . '/admin/login');
         exit();
     }
+
+
 }
+
 ?>

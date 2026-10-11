@@ -1,0 +1,266 @@
+/* Unified Login Styles for Budget Pilot (Admin, Customer, Supplier) */
+
+body.login-page {
+    background-color: var(--color-bg, #F5F7FA);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    margin: 0;
+}
+
+/* Brand header */
+.login-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    text-decoration: none;
+    margin-bottom: 32px;
+}
+
+.login-brand__mark {
+    width: 48px;
+    height: 48px;
+    background-color: var(--color-surface, #FFFFFF);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border, #E6E9F0);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.login-brand__mark img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.login-brand__title {
+    font-family: var(--font-title, 'Outfit', sans-serif);
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: var(--color-success, #16A34A);
+}
+
+/* Card */
+.login-card {
+    background-color: var(--color-surface, #FFFFFF);
+    width: 100%;
+    max-width: 420px;
+    border-radius: 16px;
+    padding: 36px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    border: 1px solid var(--color-border, #E6E9F0);
+}
+
+.login-card__title {
+    font-family: var(--font-title, 'Outfit', sans-serif);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-success, #16A34A);
+    margin-bottom: 4px;
+}
+
+.login-card__sub {
+    font-size: 0.9rem;
+    color: var(--color-text-muted, #6B7280);
+    margin-bottom: 24px;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.form-header label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-muted, #6B7280);
+}
+
+.form-header a {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-success, #16A34A);
+    text-decoration: none;
+}
+
+.form-header a:hover {
+    text-decoration: underline;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: var(--color-text-muted, #6B7280);
+    pointer-events: none;
+}
+
+.input-action {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--color-text-muted, #6B7280);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-action:hover {
+    color: var(--color-success, #16A34A);
+}
+
+.input-action svg {
+    width: 18px;
+    height: 18px;
+}
+
+.login-card input[type="email"],
+.login-card input[type="password"],
+.login-card input[type="text"] {
+    width: 100%;
+    padding: 12px 42px 12px 42px; /* Space for both left/right icons */
+    border: 1px solid var(--color-border, #E6E9F0);
+    border-radius: 8px;
+    background-color: var(--input-bg, #F8FAFC);
+    font-size: 0.95rem;
+    color: var(--color-text, #1B2333);
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.login-card input:focus {
+    border-color: var(--color-success, #16A34A);
+    background-color: var(--color-surface, #FFFFFF);
+}
+
+/* Remember me row */
+.remember-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.remember-row input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-success, #16A34A);
+    cursor: pointer;
+}
+
+.remember-row label {
+    font-size: 0.85rem;
+    color: var(--color-text-muted, #6B7280);
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Submit button - Standardized Navy */
+.login-submit-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--color-success, #16A34A);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.login-submit-btn:hover {
+    background-color: var(--color-success-dark, #15803D);
+    transform: translateY(-1px);
+}
+
+/* Footer links */
+.login-footer {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 0.85rem;
+    color: var(--color-text-muted, #6B7280);
+}
+
+.login-footer a {
+    color: var(--color-success, #16A34A);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+.login-back-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 24px;
+    color: var(--color-text-muted, #6B7280);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.login-back-link:hover {
+    color: var(--color-text, #1B2333);
+}
+
+/* Alert Boxes */
+.login-alert {
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+.login-alert--error {
+    background-color: var(--color-danger-bg, #FEF2F2);
+    border: 1px solid #FEE2E2;
+    color: var(--color-danger, #C2373C);
+}
+.login-alert--success {
+    background-color: var(--color-success-bg, #E7F7ED);
+    border: 1px solid #BDE6CE;
+    color: var(--color-success, #22A45D);
+}
+.login-alert--warning {
+    background-color: var(--color-warning-bg, #FEF9C3);
+    border: 1px solid #F5D87A;
+    color: var(--color-warning, #CA8A04);
+}
+
+
+
+

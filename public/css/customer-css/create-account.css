@@ -25,7 +25,7 @@ body.signup{
   font-weight:500;
   color:#3F4654;
 }
-.page-head__back:hover{color:var(--navy);}
+.page-head__back:hover{color:var(--color-primary);}
 .page-head .brand{justify-self:center;}
 .page-head__alt{
   justify-self:end;
@@ -44,25 +44,25 @@ body.signup{
   width:100%;
   max-width:446px;
   background:#fff;
-  border:1px solid var(--line);
+  border:1px solid var(--color-border);
   border-radius:14px;
   padding:44px 38px 40px;
-  box-shadow:0 18px 48px -34px rgba(16,28,86,.55);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .signup__title{
-  font-family:var(--font-display);
+  font-family:var(--font-title);
   font-size:2rem;
   font-weight:700;
-  color:var(--navy);
+  color:var(--color-primary);
   letter-spacing:-.4px;
   margin:0 0 8px;
 }
 .signup__section{
-  font-family:var(--font-display);
+  font-family:var(--font-title);
   font-size:1.28rem;
   font-weight:600;
-  color:var(--navy);
+  color:var(--color-primary);
   margin:0 0 6px;
 }
 .signup__sub{
@@ -89,7 +89,7 @@ body.signup{
 }
 .rule-line{
   border:0;
-  border-top:1px solid var(--line);
+  border-top:1px solid var(--color-border);
   margin:32px 0 30px;
 }
 
@@ -121,15 +121,15 @@ body.signup{
   background-position:center;
   display:grid;place-items:center;
   color:#9AA2B1;
-  font-family:var(--font-display);
+  font-family:var(--font-title);
   font-weight:600;font-size:1.1rem;
 }
-.photo__preview[data-empty="false"]{border-style:solid;border-color:var(--navy);}
+.photo__preview[data-empty="false"]{border-style:solid;border-color:var(--color-primary);}
 .photo__actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;flex:1;min-width:0;}
 .photo__hint{margin:0;flex-basis:100%;font-size:.82rem;color:#8A92A0;}
 
 .btn--soft{
-  background:#EDEFF4;color:var(--navy);
+  background:#EDEFF4;color:var(--color-primary);
   padding:10px 16px;font-size:.9rem;border-radius:8px;
 }
 .btn--soft:hover{background:#E2E6EF;}
@@ -148,19 +148,19 @@ body.signup{
   border:1.5px dashed #C3C9D6;
   border-radius:10px;
   background:#fff;
-  color:var(--navy);
-  font-family:var(--font-body);
+  color:var(--color-primary);
+  font-family:var(--font-sans);
   font-size:.95rem;font-weight:600;
   cursor:pointer;
   transition:border-color .16s ease,background .16s ease;
 }
 .add-member svg{width:17px;height:17px;}
-.add-member:hover{border-color:var(--navy);background:#F7F8FC;}
+.add-member:hover{border-color:var(--color-primary);background:#F7F8FC;}
 
 /* ---------- Member cards ---------- */
 .members{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:14px;}
 .member{
-  border:1px solid var(--line);
+  border:1px solid var(--color-border);
   border-radius:11px;
   padding:18px;
   background:#FAFBFD;
@@ -207,7 +207,7 @@ body.signup{
 }
 .check input{
   width:17px;height:17px;flex:none;margin:2px 0 0;
-  accent-color:var(--navy);cursor:pointer;
+  accent-color:var(--color-primary);cursor:pointer;
 }
 
 .signup__fine{
@@ -233,3 +233,7 @@ body.signup{
   .signup__title{font-size:1.7rem;}
   .grid-2{grid-template-columns:1fr;}
 }
+
+
+
+

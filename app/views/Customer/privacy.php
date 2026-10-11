@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Privacy — Budget Pilot</title>
+<title>Privacy  Budget Pilot</title>
 <link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/style.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/style.css'); ?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/assets/css/sidebar.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/assets/css/topbar.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
@@ -82,7 +84,7 @@
       </ul>
       <p>
         Passwords are not kept as plain text. They are put through a simple one-way hash
-        first. Be aware that this hash is obfuscation, not real cryptographic protection —
+        first. Be aware that this hash is obfuscation, not real cryptographic protection 
         see section 6.
       </p>
     </section>
@@ -124,15 +126,15 @@
           other members have bought or logged.
         </li>
         <li>
-          <strong>Everyone sees the shared budget totals</strong> — what is planned for each
-          category and how much of it is left — because everyone is spending from the same
+          <strong>Everyone sees the shared budget totals</strong>  what is planned for each
+          category and how much of it is left  because everyone is spending from the same
           money. So while a member's individual purchases stay private from other members,
           the effect of those purchases on the household totals is visible to all of them.
         </li>
       </ul>
       <p>
         If you would rather your spending were not visible to the account holder, do not
-        join their account — create your own instead.
+        join their account  create your own instead.
       </p>
     </section>
 
@@ -162,7 +164,7 @@
       </p>
       <p>
         Use figures you are comfortable having on your own machine at that level of
-        protection. Do not enter real bank credentials, card numbers or account numbers —
+        protection. Do not enter real bank credentials, card numbers or account numbers 
         Budget Pilot never asks for them and has no field for them.
       </p>
     </section>
@@ -172,7 +174,7 @@
       <p>
         You are in control of all of it. On the Settings page you can edit your details or
         remove a profile from the account. To erase everything at once, clear site data for
-        Budget Pilot in your browser settings — that removes every profile, budget, expense
+        Budget Pilot in your browser settings  that removes every profile, budget, expense
         and order permanently, with no copy left anywhere.
       </p>
     </section>
@@ -190,7 +192,7 @@
       <h2>9. Changes and contact</h2>
       <p>
         If this page changes, the date at the top changes with it. For questions about the
-        project or this policy, contact the account holder who deployed it — as coursework,
+        project or this policy, contact the account holder who deployed it  as coursework,
         Budget Pilot has no support desk of its own.
       </p>
     </section>
@@ -203,7 +205,7 @@
 
 <footer class="footer">
   <div class="footer__bottom footer__bottom--solo">
-    <p>© 2026 Budget Pilot. Coursework project.</p>
+    <p> 2026 Budget Pilot. Coursework project.</p>
     <ul class="footer__legal">
       <li><a href="<?php echo URLROOT; ?>/customer/index">Home</a></li>
       <li><a href="<?php echo URLROOT; ?>/customer/privacy">Privacy</a></li>
@@ -213,5 +215,15 @@
 </footer>
 
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/main.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/main.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/assets/js/sidebar.js"></script>
+<script src="<?php echo URLROOT; ?>/public/assets/js/topbar.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+

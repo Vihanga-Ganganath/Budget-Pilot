@@ -1,105 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings &amp; Configuration - Budget Pilot Admin</title>
-    <link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/common.css?v=<?php echo filemtime(APPROOT . '/../public/css/common.css'); ?>">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/admin.css?v=<?php echo filemtime(APPROOT . '/../public/css/admin.css'); ?>">
-    <style>
-        /* ── Avatar upload UI ───────────────────────────────────────── */
-        .avatar-zone {
-            display: flex;
-            align-items: center;
-            gap: 22px;
-            margin-bottom: 24px;
-        }
-        .avatar-wrap {
-            position: relative;
-            width: 88px;
-            height: 88px;
-            flex: none;
-        }
-        .avatar-wrap img,
-        .avatar-wrap .avatar-initials {
-            width: 88px;
-            height: 88px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #E8EAFF;
-        }
-        .avatar-wrap .avatar-initials {
-            display: grid;
-            place-items: center;
-            background: #E8EAFF;
-            color: #101C56;
-            font-size: 2rem;
-            font-weight: 700;
-            border: 3px solid #E8EAFF;
-        }
-        /* Hidden real file input */
-        #avatarFileInput { display: none; }
 
-        /* Drop zone for drag-and-drop */
-        .avatar-drop-zone {
-            border: 2px dashed #CBD5E1;
-            border-radius: 10px;
-            padding: 14px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color .18s, background .18s;
-            font-size: .88rem;
-            color: #6B7280;
-        }
-        .avatar-drop-zone:hover,
-        .avatar-drop-zone.drag-over { border-color: #101C56; background: #F0F2FF; }
-        .avatar-drop-zone strong { display: block; font-size: .95rem; color: #111827; margin-bottom: 3px; }
-
-        .avatar-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
-
-        /* Preview overlay */
-        #avatarPreviewOverlay {
-            display: none;
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,.55);
-            z-index: 9000;
-            align-items: center;
-            justify-content: center;
-        }
-        #avatarPreviewOverlay.show { display: flex; }
-        .preview-card {
-            background: #fff;
-            border-radius: 14px;
-            padding: 28px;
-            max-width: 380px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,.2);
-        }
-        .preview-card img {
-            width: 140px; height: 140px;
-            border-radius: 50%; object-fit: cover;
-            border: 4px solid #E8EAFF;
-            margin-bottom: 18px;
-        }
-        .preview-card h4 { font-size: 1.05rem; margin-bottom: 6px; }
-        .preview-card p  { font-size: .85rem; color: #6B7280; margin-bottom: 22px; }
-        .preview-actions { display: flex; gap: 12px; justify-content: center; }
-    </style>
-</head>
-<body data-page="settings">
-
-    <div class="dashboard-layout">
-        <?php require '../app/Views/admin/_sidebar.php'; ?>
-
-        <main class="main-content">
-            <?php require '../app/Views/admin/_topbar.php'; ?>
-
-            <header class="content-header">
+<?php require APPROOT . '/Views/shared/header.php'; ?>
+<header class="content-header">
                 <div class="header-left">
                     <h2 class="page-title">Settings &amp; Configuration</h2>
                     <p class="page-subtitle">Manage your account settings, security preferences, and administrative configurations.</p>
@@ -115,7 +16,7 @@
             ?>
             <div style="background:<?php echo $fbg;?>;border:1px solid <?php echo $fbd;?>;color:<?php echo $ftx;?>;border-radius:9px;padding:12px 16px;margin-bottom:20px;font-size:.9rem;font-weight:500;">
                 <?php echo htmlspecialchars($data['flash']); ?>
-                <button onclick="this.parentElement.remove()" style="float:right;background:none;border:0;cursor:pointer;font-size:1.1rem;color:<?php echo $ftx;?>;line-height:1;">×</button>
+                <button onclick="this.parentElement.remove()" style="float:right;background:none;border:0;cursor:pointer;font-size:1.1rem;color:<?php echo $ftx;?>;line-height:1;"></button>
             </div>
             <?php endif; ?>
 
@@ -137,7 +38,7 @@
                         <h3 style="margin-bottom:4px;">Profile Information</h3>
                         <p class="page-subtitle" style="margin-bottom:20px;font-size:.85rem;">Update your basic profile details and profile picture.</p>
 
-                        <!-- ── Avatar zone ─────────────────────────────────── -->
+                        <!--  Avatar zone  -->
                         <div class="avatar-zone">
                             <!-- Current avatar or initials fallback -->
                             <div class="avatar-wrap" id="currentAvatarWrap">
@@ -151,14 +52,10 @@
 
                             <!-- Drop zone + buttons -->
                             <div style="flex:1;">
-                                <div class="avatar-drop-zone" id="avatarDropZone">
-                                    <strong>Drag &amp; drop a photo here</strong>
-                                    or <a href="#" id="avatarBrowseLink" style="color:#101C56;font-weight:600;">browse files</a>
-                                    <br><span style="font-size:.78rem;">JPEG, PNG, GIF, WebP — max 3 MB</span>
-                                </div>
+                                
                                 <div class="avatar-actions">
                                     <button type="button" class="btn btn-outline-navy btn-sm" id="changePhotoBtn">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                        
                                         Upload Photo
                                     </button>
                                     <?php if ($avatarUrl): ?>
@@ -176,10 +73,9 @@
                         </div>
 
                         <!-- Hidden real file input -->
-                        <input type="file" id="avatarFileInput" name="avatar"
-                               accept="image/jpeg,image/png,image/gif,image/webp">
+                        <input style="display:none;" type="file" id="avatarFileInput" name="avatar" accept="image/jpeg,image/png,image/gif,image/webp">
 
-                        <!-- Profile fields (display only — real edit TBD) -->
+                        <!-- Profile fields (display only  real edit TBD) -->
                         <div class="form-row-2">
                             <div class="form-field-group">
                                 <label>Full Name</label>
@@ -206,7 +102,7 @@
 
                         <div class="form-field-group">
                             <label>Current Password</label>
-                            <input type="password" id="current-password-input" placeholder="••••••••">
+                            <input type="password" id="current-password-input" placeholder="">
                         </div>
                         <div class="form-row-2">
                             <div class="form-field-group">
@@ -221,7 +117,7 @@
 
                         <div class="twofa-box">
                             <div class="twofa-box-title">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                
                                 Two-Factor Authentication
                             </div>
                             <div class="twofa-box-desc">Add an extra layer of security to your account by requiring a verification code upon login.</div>
@@ -262,41 +158,32 @@
                                 <span class="switch-slider"></span>
                             </label>
                         </div>
-                        <div class="toggle-row">
-                            <div class="toggle-row-text">
-                                <div class="toggle-title">Dark Mode</div>
-                                <div class="toggle-sub">Applies across the whole admin console.</div>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" id="dark-mode-toggle">
-                                <span class="switch-slider"></span>
-                            </label>
-                        </div>
+                        
                     </div>
 
                     <div class="dashboard-card">
                         <h3 style="margin-bottom:16px;color:#DC2626;">Data &amp; Privacy</h3>
-                        <button class="danger-zone-btn export" id="export-data-btn" type="button">⬇ Export Personal Data</button>
+                        <button class="danger-zone-btn export" id="export-data-btn" type="button"> Export Personal Data</button>
                         <p class="danger-zone-note">Once deleted, account data cannot be recovered.</p>
-                        <button class="danger-zone-btn delete" id="delete-account-btn" type="button">🗑 Delete Account</button>
+                        <button class="danger-zone-btn delete" id="delete-account-btn" type="button"> Delete Account</button>
                     </div>
                 </div>
             </div>
 
-            <div class="admin-footer-note">© <?php echo date('Y'); ?> Budget Pilot. All Systems Operational.</div>
+            <div class="admin-footer-note"> <?php echo date('Y'); ?> Budget Pilot. All Systems Operational.</div>
         </main>
     </div>
 
-    <!-- ── Avatar Preview / Confirm overlay ─────────────────────────── -->
+    <!--  Avatar Preview / Confirm overlay  -->
     <div id="avatarPreviewOverlay">
         <div class="preview-card">
             <img src="" id="previewImg" alt="Preview">
             <h4>Looks good?</h4>
             <p>Upload this as your new profile picture.</p>
             <div class="preview-actions">
-                <button type="button" class="btn btn-reject btn-sm" id="previewCancel">Cancel</button>
+                <button type="button" class="btn btn-cancel btn-sm" id="previewCancel">Cancel</button>
                 <button type="button" class="btn btn-navy btn-sm" id="previewConfirm">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px;"><polyline points="20 6 9 17 4 12"/></svg>
+                    
                     Save Picture
                 </button>
             </div>
@@ -312,8 +199,6 @@
     <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
     <script>
     (function () {
-        var dropZone       = document.getElementById('avatarDropZone');
-        var browseLink     = document.getElementById('avatarBrowseLink');
         var changeBtn      = document.getElementById('changePhotoBtn');
         var fileInput      = document.getElementById('avatarFileInput');
         var hiddenInput    = document.getElementById('hiddenAvatarInput');
@@ -325,35 +210,17 @@
 
         var selectedFile = null;
 
-        /* ── Trigger file picker ───────────────────────────────────── */
+        /*  Trigger file picker  */
         function openPicker() { fileInput.click(); }
         if (changeBtn)   changeBtn.addEventListener('click',   openPicker);
-        if (browseLink)  browseLink.addEventListener('click',  function(e){ e.preventDefault(); openPicker(); });
-        if (dropZone)    dropZone.addEventListener('click',    openPicker);
-
-        /* ── Drag-and-drop ─────────────────────────────────────────── */
-        dropZone.addEventListener('dragover', function (e) {
-            e.preventDefault();
-            dropZone.classList.add('drag-over');
-        });
-        dropZone.addEventListener('dragleave', function () {
-            dropZone.classList.remove('drag-over');
-        });
-        dropZone.addEventListener('drop', function (e) {
-            e.preventDefault();
-            dropZone.classList.remove('drag-over');
-            var files = e.dataTransfer.files;
-            if (files && files[0]) handleFile(files[0]);
-        });
-
-        /* ── File input change ─────────────────────────────────────── */
+        /*  File input change  */
         fileInput.addEventListener('change', function () {
             if (fileInput.files && fileInput.files[0]) {
                 handleFile(fileInput.files[0]);
             }
         });
 
-        /* ── Validate & preview ────────────────────────────────────── */
+        /*  Validate & preview  */
         function handleFile(file) {
             var allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
             if (!allowed.includes(file.type)) {
@@ -373,7 +240,7 @@
             reader.readAsDataURL(file);
         }
 
-        /* ── Confirm upload ────────────────────────────────────────── */
+        /*  Confirm upload  */
         previewConfirm.addEventListener('click', function () {
             if (!selectedFile) return;
             // Transfer file to hidden input via DataTransfer
@@ -384,7 +251,7 @@
             uploadForm.submit();
         });
 
-        /* ── Cancel preview ────────────────────────────────────────── */
+        /*  Cancel preview  */
         previewCancel.addEventListener('click', function () {
             overlay.classList.remove('show');
             selectedFile = null;
@@ -397,5 +264,15 @@
         });
     })();
     </script>
-</body>
-</html>
+
+<?php require APPROOT . '/Views/shared/footer.php'; ?>
+
+
+
+
+
+
+
+
+
+

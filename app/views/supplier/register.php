@@ -3,19 +3,21 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Supplier Registration — Budget Pilot</title>
+<title>Supplier Registration  Budget Pilot</title>
 <link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/auth.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/auth.css'); ?>" />
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/create-account.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/create-account.css'); ?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/assets/css/sidebar.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/assets/css/topbar.css?v=<?php echo time(); ?>">
 </head>
 <body class="signup">
 
-<!-- ── Page header ──────────────────────────────────────────────────────── -->
+<!--  Page header  -->
 <header class="page-head">
-  <a class="page-head__back" href="<?php echo URLROOT; ?>/supplier/login">← Back to Login</a>
+  <a class="page-head__back" href="<?php echo URLROOT; ?>/supplier/login"> Back to Login</a>
 
   <a class="brand" href="<?php echo URLROOT; ?>/customer/index" aria-label="Budget Pilot home">
     <span class="brand__mark" aria-hidden="true">
@@ -27,7 +29,7 @@
   <p class="page-head__alt"><a class="link" href="<?php echo URLROOT; ?>/supplier/login">Already have an account?</a></p>
 </header>
 
-<!-- ── Main form card ────────────────────────────────────────────────────── -->
+<!--  Main form card  -->
 <main class="signup__wrap">
   <section class="signup-card">
 
@@ -42,7 +44,7 @@
 
     <form method="POST" action="<?php echo URLROOT; ?>/supplier/register" novalidate>
 
-      <!-- ═══ Contact Person ═══════════════════════════════════════════════ -->
+      <!--  Contact Person  -->
       <h2 class="signup__section">Contact Person</h2>
       <p class="signup__sub" style="margin-bottom:20px">The person responsible for managing this supplier account.</p>
 
@@ -80,11 +82,9 @@
         <label class="label" for="password">Password</label>
         <div class="input <?php echo !empty($data['errors']['password']) ? 'is-invalid' : ''; ?>">
           <input id="password" name="password" type="password"
-                 placeholder="••••••••" autocomplete="new-password" />
+                 placeholder="" autocomplete="new-password" />
           <button class="input__toggle" type="button" data-toggle="password" aria-label="Show password">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>
-            </svg>
+            
           </button>
         </div>
 
@@ -126,7 +126,7 @@
         <label class="label" for="password_confirm">Confirm Password</label>
         <div class="input" id="confirmWrap">
           <input id="password_confirm" name="password_confirm" type="password"
-                 placeholder="••••••••" autocomplete="new-password" />
+                 placeholder="" autocomplete="new-password" />
           <button class="input__toggle" type="button" data-toggle="password_confirm" aria-label="Show password">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
               <path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>
@@ -138,7 +138,7 @@
 
       <hr class="rule-line" />
 
-      <!-- ═══ Company / Brand Details ═══════════════════════════════════════ -->
+      <!--  Company / Brand Details  -->
       <h2 class="signup__section">Company &amp; Brand Details</h2>
       <p class="signup__sub" style="margin-bottom:20px">Tell us about the brand you will be listing products for.</p>
 
@@ -170,7 +170,7 @@
             <option value="Other"           <?php echo (($data['category'] ?? '') === 'Other')           ? 'selected' : ''; ?>>Other</option>
           </select>
           <span class="input__chevron" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            
           </span>
         </div>
         <?php if (!empty($data['errors']['category'])): ?>
@@ -189,7 +189,7 @@
 
       <hr class="rule-line" />
 
-      <!-- ═══ Terms ════════════════════════════════════════════════════════ -->
+      <!--  Terms  -->
       <label class="check">
         <input type="checkbox" id="terms" name="terms" <?php echo !empty($_POST['terms']) ? 'checked' : ''; ?> />
         <span>I agree to the <a class="link" href="<?php echo URLROOT; ?>/customer/terms" target="_blank" rel="noopener">Terms of Service</a> and <a class="link" href="<?php echo URLROOT; ?>/customer/privacy" target="_blank" rel="noopener">Privacy Policy</a></span>
@@ -211,7 +211,7 @@
 </main>
 
 <script>
-/* ── Password show/hide ─────────────────────────────────────────────────── */
+/*  Password show/hide  */
 document.querySelectorAll('[data-toggle]').forEach(function (btn) {
   btn.addEventListener('click', function () {
     var input  = document.getElementById(btn.getAttribute('data-toggle'));
@@ -223,7 +223,7 @@ document.querySelectorAll('[data-toggle]').forEach(function (btn) {
   });
 });
 
-/* ── Password strength meter ────────────────────────────────────────────── */
+/*  Password strength meter  */
 var pwInput     = document.getElementById('password');
 var strengthBox = document.getElementById('strength');
 var strengthVal = document.getElementById('strengthValue');
@@ -251,7 +251,7 @@ pwInput.addEventListener('input', function () {
   if (!strengthBox.hidden) updateStrength(pwInput.value);
 });
 
-/* ── Confirm password match ─────────────────────────────────────────────── */
+/*  Confirm password match  */
 var confirmInput = document.getElementById('password_confirm');
 var confirmError = document.getElementById('confirmError');
 var confirmWrap  = document.getElementById('confirmWrap');
@@ -264,5 +264,15 @@ confirmInput.addEventListener('blur', function () {
   confirmError.textContent = match ? '' : 'Passwords do not match.';
 });
 </script>
+<script src="<?php echo URLROOT; ?>/public/assets/js/sidebar.js"></script>
+<script src="<?php echo URLROOT; ?>/public/assets/js/topbar.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+

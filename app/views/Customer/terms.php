@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Terms — Budget Pilot</title>
+<title>Terms  Budget Pilot</title>
 <link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/style.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/style.css'); ?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/assets/css/sidebar.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/assets/css/topbar.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
@@ -95,7 +97,7 @@
         </li>
         <li>
           Sign-in is checked in your browser rather than on a server. Treat it as a
-          convenience that separates profiles, not as a security control — see the
+          convenience that separates profiles, not as a security control  see the
           <a href="<?php echo URLROOT; ?>/customer/privacy">Privacy page</a> for what that means in practice.
         </li>
         <li>
@@ -144,7 +146,7 @@
         or that a future version will keep working with data saved by this one. Because
         everything is stored in your browser, clearing site data, switching browser or
         switching device loses your account permanently. No backup is kept and nothing can be
-        restored. If the figures matter to you, keep your own copy — the Analytics page can
+        restored. If the figures matter to you, keep your own copy  the Analytics page can
         export a CSV.
       </p>
     </section>
@@ -176,7 +178,7 @@
 
 <footer class="footer">
   <div class="footer__bottom footer__bottom--solo">
-    <p>© 2026 Budget Pilot. Coursework project.</p>
+    <p> 2026 Budget Pilot. Coursework project.</p>
     <ul class="footer__legal">
       <li><a href="<?php echo URLROOT; ?>/customer/index">Home</a></li>
       <li><a href="<?php echo URLROOT; ?>/customer/privacy">Privacy</a></li>
@@ -186,5 +188,15 @@
 </footer>
 
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/main.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/main.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/assets/js/sidebar.js"></script>
+<script src="<?php echo URLROOT; ?>/public/assets/js/topbar.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+

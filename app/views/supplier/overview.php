@@ -1,26 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Budget Pilot - Brand Overview</title>
-<link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/supplier/supplier.css?v=<?php echo @filemtime(APPROOT . '/../public/css/supplier/supplier.css'); ?>">
-</head>
-<body class="sp">
+<?php $spActive = 'overview'; $spActiveLink = false; ?>
+<?php require APPROOT . '/Views/shared/header.php'; ?>
 
-<div class="shell">
-
-<?php $spActive = 'overview'; $spActiveLink = false; require APPROOT . '/views/supplier/_sidebar.php'; ?>
-
-  <div class="main">
-<?php require APPROOT . '/views/supplier/_appbar.php'; ?>
-
-  <!-- Main Content -->
-  <main>
     <h1 class="page-title">Brand Overview</h1>
     <p class="subtitle">Manage your market presence and catalog health.</p>
 
@@ -28,7 +8,7 @@
     <section class="card supplier-notices" aria-labelledby="supplierNoticesTitle">
       <div class="toolbar">
         <div>
-          <h2 class="section-title" id="supplierNoticesTitle">📢 Notices &amp; Announcements</h2>
+          <h2 class="section-title" id="supplierNoticesTitle"> Notices &amp; Announcements</h2>
           <div class="section-sub">Important updates shared by the Budget Pilot admin team</div>
         </div>
         <?php if (!empty($data['notices'])): ?>
@@ -50,7 +30,7 @@
                 <div class="supplier-notice-meta">
                   Posted <?php echo date('M j, Y', strtotime($notice->created_at)); ?>
                   <?php if (!empty($notice->expires_at)): ?>
-                    &nbsp;•&nbsp; Available until <?php echo date('M j, Y', strtotime($notice->expires_at)); ?>
+                    &nbsp;&nbsp; Available until <?php echo date('M j, Y', strtotime($notice->expires_at)); ?>
                   <?php endif; ?>
                 </div>
               </div>
@@ -69,7 +49,7 @@
           <h2 class="section-title">Registered Brands</h2>
           <div class="section-sub">22 brands available in the product system</div>
         </div>
-        <span class="pill green">● ACTIVE</span>
+        <span class="pill green"> ACTIVE</span>
       </div>
       <div id="brandList" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:18px"></div>
     </div>
@@ -77,15 +57,13 @@
     <!-- Stats -->
     <div class="grid3">
       <div class="card stat">
-        <div class="iconbox">◉</div>
         <div>
           <div class="stat-label">Total Brand Reach</div>
           <div class="stat-value">128.4K</div>
-          <div class="trend">↗ +12% this month</div>
+          <div class="trend"> +12% this month</div>
         </div>
       </div>
       <div class="card stat">
-        <div class="iconbox green">▤</div>
         <div>
           <div class="stat-label">Active Listings</div>
           <div class="stat-value">
@@ -101,11 +79,10 @@
     echo $activeCount;
   ?>
 </div>
-          <div class="trend">◉ Stable performance</div>
+          <div class="trend"> Stable performance</div>
         </div>
       </div>
       <div class="card stat">
-        <div class="iconbox blue">▣</div>
         <div>
           <div class="stat-label">Pending Verifications</div>
           <div class="stat-value">
@@ -146,13 +123,13 @@
       <div class="card">
         <h2 class="section-title">Recent Activities</h2>
         <div style="margin-top:22px">
-          <b style="color:#17752b">● &nbsp; Organic Produce Updated</b>
+          <b style="color:#17752b"> &nbsp; Organic Produce Updated</b>
           <p class="small">12 new SKUs added to 'Seasonal Fruits'</p>
           <hr>
-          <b style="color:var(--navy)">● &nbsp; Freshness Certification</b>
+          <b style="color:var(--navy)"> &nbsp; Freshness Certification</b>
           <p class="small">'Dairy Essentials' line received USDA Organic Badge</p>
           <hr>
-          <b style="color:#0b3154">● &nbsp; Inventory Restock</b>
+          <b style="color:#0b3154"> &nbsp; Inventory Restock</b>
           <p class="small">Inventory restocked for 'Premium Whole Milk'</p>
           <button class="btn" id="activities" style="width:100%;margin-top:10px">View All Activities</button>
         </div>
@@ -163,22 +140,24 @@
     <div style="margin-top:22px">
       <button class="card insight-widget" id="addInsight" type="button"
         onclick="alert('Custom insight widgets will be available in the next development phase.')">
-        <span class="insight-plus">⊕</span>
+        <span class="insight-plus"></span>
         <strong>Add Insight Widget</strong>
         <span class="small">Customize your dashboard by adding custom data streams or market alerts.</span>
       </button>
     </div>
-  </main>
-  </div>
-</div>
-
-<div id="toast" class="toast"></div>
+  <div id="toast" class="toast"></div>
 <div id="modalRoot"></div>
 <script>
   // Pass URLROOT to JS
   const URLROOT = '<?php echo URLROOT; ?>';
 </script>
 <script src="<?php echo URLROOT; ?>/js/supplier/overview.js"></script>
-<script src="<?php echo URLROOT; ?>/js/customer-js/nav.js"></script>
-</body>
-</html>
+
+<?php require APPROOT . '/Views/shared/footer.php'; ?>
+
+
+
+
+
+
+

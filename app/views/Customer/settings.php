@@ -1,104 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Profile &amp; Settings — Budget Pilot</title>
-<link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/settings.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/settings.css'); ?>" />
-</head>
-<body class="settings">
 
-<div class="shell">
+<?php require APPROOT . '/Views/shared/header.php'; ?>
 
-  <!-- ============ SIDEBAR ============ -->
-  <aside class="sidebar" id="sidebar" aria-label="Main menu">
-    <div class="sidebar__head">
-      <a class="sidebar__brand" href="<?php echo URLROOT; ?>/customer/index">
-        <span class="sidebar__mark" aria-hidden="true">
-          <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
-        </span>
-        <span class="sidebar__brandtext">
-          <span class="sidebar__name">Budget Pilot</span>
-          <span class="sidebar__tag">Smart Finance Copilot</span>
-        </span>
-      </a>
-      <button class="sidebar__close" type="button" data-nav-close aria-label="Close menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
+      <div class="content">
+    <div class="dashboard-header">
+        <div>
+            <h1 class="page__title">Profile &amp; Settings</h1>
+            <p class="page__sub">Manage your personal information and application preferences.</p>
+        </div>
     </div>
-
-    <nav class="sidebar__nav" aria-label="Sections">
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/index" id="homeLink">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/></svg>
-        Home
-      </a>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/dashboard">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg>
-        Dashboard
-      </a>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/budgets">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 10h19"/></svg>
-        Budgets
-      </a>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/grocery">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h18l-1.5 11H4.5z"/><path d="M3 9l1.5-4h15L21 9"/></svg>
-        Grocery Catalog
-      </a>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/cart">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/><path d="M2.5 3h2.2l2.6 12.4a1.6 1.6 0 0 0 1.6 1.3h8.9a1.6 1.6 0 0 0 1.6-1.3L21 7H6"/></svg>
-        Shopping Cart
-      </a>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/analytics">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l5-6 4 3 5-7 4 4"/></svg>
-        Analytics
-      </a>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/household" data-main-only>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16.5 5.2a3.2 3.2 0 0 1 0 6"/><path d="M18 14.8c2 .7 3.2 2.4 3.5 5.2"/></svg>
-        Household
-      </a>
-    </nav>
-
-    <div class="sidebar__foot">
-      <span class="navlink navlink--active" aria-current="page">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-3-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.3 6l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 2.9-1.2V2a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 3 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9H22a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-        Settings
-      </span>
-      <button class="navlink" type="button" id="logoutBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
-        Logout
-      </button>
-    </div>
-  </aside>
-
-  <!-- ============ MAIN ============ -->
-  <div class="main">
-
-    <header class="appbar">
-      <button class="appbar__menu" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Open menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-      </button>
-      <a class="appbar__brand" href="<?php echo URLROOT; ?>/customer/index">
-        <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
-        <span>Budget Pilot</span>
-      </a>
-      <div class="appbar__actions">
-        <a class="icon-btn" href="<?php echo URLROOT; ?>/customer/notifications" data-bell aria-label="Notifications">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-        </a>
-        <a class="icon-btn" href="<?php echo URLROOT; ?>/customer/cart" aria-label="Shopping cart">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.6"/><circle cx="19" cy="21" r="1.6"/><path d="M2.5 3h2.2l2.6 12.4a1.6 1.6 0 0 0 1.6 1.3h8.9a1.6 1.6 0 0 0 1.6-1.3L21 7H6"/></svg>
-        </a>
-        <span class="appbar__avatar" id="appbarAvatar" aria-hidden="true"></span>
-      </div>
-    </header>
-
-    <div class="content">
-      <h1 class="page__title">Profile &amp; Settings</h1>
-      <p class="page__sub">Manage your personal information and application preferences.</p>
 
       <div class="layout">
         <!-- ---------- Left column ---------- -->
@@ -106,17 +15,16 @@
 
           <!-- Identity -->
           <section class="card identity">
-            <div class="identity__photo">
+            <div class="identity__photo" style="display:flex; align-items:center; gap:20px;">
               <span class="identity__avatar" id="profileAvatar" aria-hidden="true"></span>
-              <label class="identity__camera" for="avatarFile" title="Change photo">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h3.5L8 6h8l1.5 2H21v11H3z"/><circle cx="12" cy="13" r="3.4"/></svg>
-                <span class="sr-only">Change profile photo</span>
-              </label>
-              <input class="sr-only" id="avatarFile" type="file" accept="image/*" />
+              <div class="identity__upload">
+                <label class="btn" style="background:#fff; color:var(--color-primary); border:1px solid var(--color-primary); cursor:pointer;" for="avatarFile">Change Photo</label>
+                <input style="display:none;" id="avatarFile" type="file" accept="image/*" />
+              </div>
             </div>
             <div class="identity__text">
-              <h2 class="identity__name" id="displayName">—</h2>
-              <p class="identity__role" id="displayRole">—</p>
+              <h2 class="identity__name" id="displayName"></h2>
+              <p class="identity__role" id="displayRole"></p>
             </div>
             <button class="btn btn--outline" type="button" id="editBtn">Edit Profile</button>
           </section>
@@ -208,11 +116,11 @@
             </div>
           </section>
 
-          <!-- Two-factor authentication (users.two_factor_enabled + security PIN) — two-factor.js -->
+          <!-- Two-factor authentication (users.two_factor_enabled + security PIN)  two-factor.js -->
           <section class="card" id="tfaCard">
             <div class="tfa__head">
               <h2 class="card__title">Two-Factor Authentication</h2>
-              <span class="tfa__badge" id="tfaBadge">Checking…</span>
+              <span class="tfa__badge" id="tfaBadge">Checking</span>
             </div>
             <p class="card__sub">Resetting a forgotten password always asks for your NIC. When two-factor is on, it also asks for a 6-digit security PIN that only you know.</p>
             <p class="hint" id="tfaNoNic" hidden>Add your NIC under Account Details and save before turning this on.</p>
@@ -250,10 +158,10 @@
                 <div class="control control--select">
                   <select id="fCurrency">
                     <option value="USD">USD - US Dollar ($)</option>
-                    <option value="EUR">EUR - Euro (€)</option>
-                    <option value="GBP">GBP - British Pound (£)</option>
+                    <option value="EUR">EUR - Euro ()</option>
+                    <option value="GBP">GBP - British Pound ()</option>
                     <option value="LKR">LKR - Sri Lankan Rupee (Rs)</option>
-                    <option value="INR">INR - Indian Rupee (₹)</option>
+                    <option value="INR">INR - Indian Rupee ()</option>
                     <option value="AUD">AUD - Australian Dollar ($)</option>
                   </select>
                 </div>
@@ -305,7 +213,7 @@
               <div class="addsource__grid">
                 <div class="field">
                   <label class="label" for="srcName">Source</label>
-                  <input class="control" id="srcName" type="text" placeholder="Salary — Acme Ltd" data-member-lock />
+                  <input class="control" id="srcName" type="text" placeholder="Salary  Acme Ltd" data-member-lock />
                 </div>
                 <div class="field">
                   <label class="label" for="srcAmount">Amount</label>
@@ -354,16 +262,7 @@
           <section class="card">
             <h2 class="card__title">App Settings</h2>
 
-            <div class="setting">
-              <span class="setting__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-              </span>
-              <span class="setting__text">
-                <span class="setting__name">Dark Mode</span>
-                <span class="setting__desc">Switch theme</span>
-              </span>
-              <button class="toggle" type="button" id="darkToggle" role="switch" aria-checked="false" aria-label="Dark mode"><span class="toggle__knob"></span></button>
-            </div>
+            
 
             <div class="setting">
               <span class="setting__icon" aria-hidden="true">
@@ -379,7 +278,7 @@
 
           <section class="card card--navy">
             <h2 class="card__title card__title--light">Security Checkup</h2>
-            <p class="checkup__text" id="checkupText">Checking your account…</p>
+            <p class="checkup__text" id="checkupText">Checking your account</p>
             <div class="checkup__bar"><span class="checkup__fill" id="checkupFill"></span></div>
             <button class="btn btn--white" type="button" id="checkupBtn">View Details</button>
           </section>
@@ -387,15 +286,11 @@
           <section class="card">
             <h2 class="card__title">Data Management</h2>
             <button class="rowbtn" type="button" id="exportBtn">
-              <svg class="rowbtn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>
+              
               <span>Export Financial Data</span>
               <svg class="rowbtn__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
             </button>
-            <button class="rowbtn" type="button" id="cacheBtn">
-              <svg class="rowbtn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="3"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
-              <span>Clear Cache</span>
-              <svg class="rowbtn__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
-            </button>
+            
             <button class="rowbtn rowbtn--danger" type="button" id="deactivateBtn">
               <svg class="rowbtn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5L21.5 20h-19z"/><path d="M12 10v4M12 17.2v.1"/></svg>
               <span>Deactivate Account</span>
@@ -417,11 +312,7 @@
         <button class="btn btn--ghost" type="button" id="discardBtn" disabled>Discard Changes</button>
         <button class="btn btn--primary" type="button" id="saveBtn" disabled>Save All Changes</button>
       </footer>
-    </div>
-  </div>
-</div>
-
-<!-- Toast -->
+    <!-- Toast -->
 <div class="toast" id="toast" role="status" hidden></div>
 
 <!-- Modal -->
@@ -430,17 +321,29 @@
   <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <h2 class="modal__title" id="modalTitle"></h2>
     <div class="modal__body" id="modalBody"></div>
-    <div class="modal__actions" id="modalActions"></div>
+    <div class="modal__actions" id="modalActions">
+      </div>
+    </div>
   </div>
-</div>
 
-<script>window.URLROOT = "<?php echo URLROOT; ?>";</script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/nav.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/nav.js'); ?>"></script>
+  <script>window.URLROOT = "<?php echo URLROOT; ?>";</script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/store.js'); ?>"></script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/notify.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/notify.js'); ?>"></script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/household-ui.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/household-ui.js'); ?>"></script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/deactivate.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/deactivate.js'); ?>"></script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/settings.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/settings.js'); ?>"></script>
 <script src="<?php echo URLROOT; ?>/public/js/customer-js/two-factor.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/two-factor.js'); ?>" defer></script>
-</body>
-</html>
+
+</div>
+
+<?php require APPROOT . '/Views/shared/footer.php'; ?>
+
+
+
+
+
+
+
+
+
+

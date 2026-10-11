@@ -1,34 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Overview - Budget Pilot Admin</title>
-    <link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/common.css?v=<?php echo filemtime(APPROOT . '/../public/css/common.css'); ?>">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/admin.css?v=<?php echo filemtime(APPROOT . '/../public/css/admin.css'); ?>">
-</head>
-<body data-page="dashboard">
 
-    <div class="dashboard-layout">
-        <!-- Sidebar Navigation (rendered by js/admin.js so every page is identical) -->
-        <?php require '../app/Views/admin/_sidebar.php'; ?>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <?php require '../app/Views/admin/_topbar.php'; ?>
-
-            <header class="content-header">
+<?php require APPROOT . '/Views/shared/header.php'; ?>
+<header class="content-header">
                 <div class="header-left">
-                    <h2 class="page-title">Welcome back, Admin</h2>
+                    <h2 class="page-title">Welcome back, <strong><?php echo htmlspecialchars($userName); ?></strong> </h2>
                     <p class="page-subtitle">Platform-wide overview and pending actions across Budget Pilot.</p>
                 </div>
                 <div class="header-right">
                     <button class="btn btn-navy btn-lg" id="export-report-btn">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        
                         Export System Report
                     </button>
                 </div>
@@ -39,30 +18,30 @@
                 <div class="stat-card">
                     <div class="stat-card-label">
                         Total Users
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                        
                     </div>
-                    <div class="stat-card-value">2,846 <span class="stat-trend up">+8.2%</span></div>
+                    <div class="stat-card-value">2,846 <span class="stat-trend">+8.2%</span></div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card-label">
                         Active Suppliers
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path></svg>
+                        
                     </div>
-                    <div class="stat-card-value">132 <span class="stat-trend up">+3.1%</span></div>
+                    <div class="stat-card-value">132 <span class="stat-trend">+3.1%</span></div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card-label">
                         Pending Approvals
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        
                     </div>
-                    <div class="stat-card-value">23 <span class="stat-trend warn">Review</span></div>
+                    <div class="stat-card-value">23 <span class="stat-trend">Review</span></div>
                 </div>
-                <div class="stat-card accent-red">
+                <div class="stat-card ">
                     <div class="stat-card-label">
                         Security Alerts
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        
                     </div>
-                    <div class="stat-card-value">3 <span class="stat-trend down">Critical</span></div>
+                    <div class="stat-card-value">3 <span class="stat-trend">Critical</span></div>
                 </div>
             </section>
 
@@ -77,21 +56,13 @@
                         </div>
                     </div>
                     <div class="line-chart-wrap">
-                        <svg viewBox="0 0 600 220" preserveAspectRatio="none">
-                            <g id="chart-line-1y" style="display:block;">
-                                <polyline points="0,190 50,175 100,160 150,168 200,120 250,110 300,95 350,80 400,55 450,45 500,30 550,20 600,15"
-                                    fill="none" stroke="#00106B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                                <polyline points="0,205 50,200 100,198 150,195 200,180 250,175 300,165 350,155 400,145 450,130 500,120 550,112 600,105"
-                                    fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                            </g>
-                            <g id="chart-line-1m" style="display:none;">
-                                <polyline points="0,140 50,145 100,120 150,130 200,110 250,118 300,95 350,100 400,80 450,70 500,60 550,50 600,40"
-                                    fill="none" stroke="#00106B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                                <polyline points="0,175 50,178 100,165 150,170 200,155 250,160 300,145 350,150 400,130 450,125 500,115 550,108 600,98"
-                                    fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                            </g>
-                        </svg>
-                    </div>
+    <svg viewBox="0 0 600 220" preserveAspectRatio="none">
+        <g id="chart-line-1y" style="display:block;">
+            <polyline points="0,190 50,175 100,160 150,168 200,120 250,110 300,95 350,80 400,55 450,45 500,30 550,20 600,15" fill="none" stroke="var(--color-primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="0,205 50,200 100,198 150,195 200,180 250,175 300,165 350,155 400,145 450,130 500,120 550,112 600,105" fill="none" stroke="var(--color-success)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+    </svg>
+</div>
                     <div class="chart-legend">
                         <div class="legend-item"><span class="legend-dot" style="background:#00106B;"></span>Users</div>
                         <div class="legend-item"><span class="legend-dot" style="background:#10B981;"></span>Suppliers</div>
@@ -133,50 +104,48 @@
                 </div>
                 <div class="activity-list">
                     <div class="activity-row">
-                        <div class="activity-icon success">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        </div>
+                        
                         <div class="activity-text">
-                            <div class="activity-title">Approved supplier — GreenLeaf Grocers</div>
+                            <div class="activity-title">Approved supplier  GreenLeaf Grocers</div>
                             <div class="activity-sub">10 min ago by You</div>
                         </div>
-                        <button class="activity-menu-btn" type="button">⋮</button>
+                        <button class="activity-menu-btn" type="button"></button>
                     </div>
                     <div class="activity-row">
-                        <div class="activity-icon danger">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                        </div>
+                        
                         <div class="activity-text">
-                            <div class="activity-title">Suspended account — user_2291</div>
+                            <div class="activity-title">Suspended account  user_2291</div>
                             <div class="activity-sub">1 hr ago by System Admin</div>
                         </div>
-                        <button class="activity-menu-btn" type="button">⋮</button>
+                        <button class="activity-menu-btn" type="button"></button>
                     </div>
                     <div class="activity-row">
-                        <div class="activity-icon warn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                        </div>
+                        
                         <div class="activity-text">
-                            <div class="activity-title">Rejected product — Choco Deluxe 250g</div>
+                            <div class="activity-title">Rejected product  Choco Deluxe 250g</div>
                             <div class="activity-sub">2 hr ago by Moderation Bot</div>
                         </div>
-                        <button class="activity-menu-btn" type="button">⋮</button>
+                        <button class="activity-menu-btn" type="button"></button>
                     </div>
                     <div class="activity-row">
-                        <div class="activity-icon info">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        </div>
+                        
                         <div class="activity-text">
-                            <div class="activity-title">Unlocked account — sarah.perera@mail.com</div>
+                            <div class="activity-title">Unlocked account  sarah.perera@mail.com</div>
                             <div class="activity-sub">5 hr ago by You</div>
                         </div>
-                        <button class="activity-menu-btn" type="button">⋮</button>
+                        <button class="activity-menu-btn" type="button"></button>
                     </div>
                 </div>
             </section>
-        </main>
-    </div>
+        <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
 
-    <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
-</body>
-</html>
+<?php require APPROOT . '/Views/shared/footer.php'; ?>
+
+
+
+
+
+
+
+
+

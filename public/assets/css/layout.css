@@ -1,0 +1,69 @@
+/* Layout container system */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-bg, #F8F9FB);
+}
+
+.shell {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    position: relative;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: var(--color-bg, #F8F9FB);
+}
+
+.main-content, .content {
+    flex: 1;
+    padding: 24px 32px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.dashhead, .content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.page__title, .page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+    color: var(--color-text, #111827);
+    font-family: var(--font-title, "Outfit", "Poppins", sans-serif);
+}
+
+.page__sub, .page-subtitle, .card__sub {
+    font-size: 0.95rem;
+    color: var(--color-text-muted, #6B7280);
+    margin: 0;
+}
+
+@media (max-width: 960px) {
+    .main-content, .content { padding: 20px 24px; }
+}
+@media (max-width: 640px) {
+    .main-content, .content { padding: 16px; }
+    .page__title, .page-title { font-size: 1.5rem; }
+}
+
+
+
+

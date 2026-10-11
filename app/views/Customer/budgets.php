@@ -1,221 +1,178 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Budget Setup — Budget Pilot</title>
-<link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/settings.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/settings.css'); ?>" />
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/budgets.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/budgets.css'); ?>" />
-</head>
-<body class="settings">
-
-<div class="shell">
-
-  <aside class="sidebar" id="sidebar" aria-label="Main menu">
-    <div class="sidebar__head">
-      <a class="sidebar__brand" href="<?php echo URLROOT; ?>/customer/index">
-        <span class="sidebar__mark" aria-hidden="true">
-          <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
-        </span>
-        <span class="sidebar__brandtext">
-          <span class="sidebar__name">Budget Pilot</span>
-          <span class="sidebar__tag">Smart Finance Copilot</span>
-        </span>
-      </a>
-      <button class="sidebar__close" type="button" data-nav-close aria-label="Close menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
+<?php require APPROOT . '/Views/shared/header.php'; ?>
+<main class="main-content">
+<header class="content-header">
+    <div class="header-left">
+        <h2 class="page-title" style="color: var(--color-primary);">Budget Setup</h2>
+        <p class="page-subtitle" style="color: var(--color-text);">Configure your monthly spending limits and let Budget Pilot optimize your finances.</p>
     </div>
+</header>
 
-    <nav class="sidebar__nav" aria-label="Sections">
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/index" id="homeLink">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/></svg>
-        Home
-      </a>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/dashboard">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg>
-        Dashboard
-      </a>
-      <span class="navlink navlink--active" aria-current="page">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 10h19"/></svg>
-        Budgets
-      </span>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/grocery">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h18l-1.5 11H4.5z"/><path d="M3 9l1.5-4h15L21 9"/></svg>
-        Grocery Catalog
-      </a>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/cart">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/><path d="M2.5 3h2.2l2.6 12.4a1.6 1.6 0 0 0 1.6 1.3h8.9a1.6 1.6 0 0 0 1.6-1.3L21 7H6"/></svg>
-        Shopping Cart
-      </a>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/analytics">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l5-6 4 3 5-7 4 4"/></svg>
-        Analytics
-      </a>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/household" data-main-only>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16.5 5.2a3.2 3.2 0 0 1 0 6"/><path d="M18 14.8c2 .7 3.2 2.4 3.5 5.2"/></svg>
-        Household
-      </a>
-    </nav>
-
-    <div class="sidebar__foot">
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/settings">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-3-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.3 6l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 2.9-1.2V2a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 3 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9H22a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-        Settings
-      </a>
-      <button class="navlink" type="button" id="logoutBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
-        Logout
-      </button>
-    </div>
-  </aside>
-
-  <div class="main">
-    <header class="appbar">
-      <button class="appbar__menu" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Open menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-      </button>
-      <a class="appbar__brand" href="<?php echo URLROOT; ?>/customer/index">
-        <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
-        <span>Budget Pilot</span>
-      </a>
-      <div class="appbar__actions">
-        <a class="icon-btn" href="<?php echo URLROOT; ?>/customer/notifications" data-bell aria-label="Notifications">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-        </a>
-        <a class="icon-btn" href="<?php echo URLROOT; ?>/customer/cart" aria-label="Shopping cart">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.6"/><circle cx="19" cy="21" r="1.6"/><path d="M2.5 3h2.2l2.6 12.4a1.6 1.6 0 0 0 1.6 1.3h8.9a1.6 1.6 0 0 0 1.6-1.3L21 7H6"/></svg>
-        </a>
-        <span class="appbar__avatar" id="appbarAvatar" aria-hidden="true"></span>
-      </div>
-    </header>
-
-    <div class="content">
-      <h1 class="page__title">Budget Setup</h1>
-      <p class="page__sub">Configure your monthly spending limits and let Budget Pilot optimize your finances.</p>
-
-      <p class="hhnote" id="householdNote" hidden></p>
-
-      <div class="setup">
-        <section class="card">
-          <label class="label" for="income" id="incomeLabel">Estimated monthly income</label>
-          <div class="control control--money control--lg">
-            <span class="control__prefix" id="incomeSymbol">$</span>
-            <input id="income" type="number" min="0" step="1" placeholder="5000" data-member-lock />
-          </div>
-          <p class="err" id="incomeErr" role="alert"></p>
-
-          <!-- shown once there is more than one person on the account -->
-          <div class="salaries" id="salaries" hidden>
-            <h3 class="salaries__title">Who earns what</h3>
-            <p class="salaries__hint" id="salariesHint">
-              Enter each person's monthly salary. Together they make the income the plan is built on.
-            </p>
-            <ul class="salaries__list" id="salaryList"></ul>
-            <p class="salaries__total">
-              <span>Family income</span>
-              <strong id="familyIncome">$0</strong>
-            </p>
-          </div>
-
-          <div class="setup__actions">
-            <button class="btn btn--primary" type="button" id="suggestBtn" data-member-lock>
-              Auto-Suggest Budget
-            </button>
-            <button class="btn btn--soft" type="button" id="saveBtn" data-member-lock>Save Configuration</button>
-          </div>
-          <p class="setup__note" id="savedNote"></p>
+<div class="setup" style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+    <!-- LEFT COLUMN: Income and Categories -->
+    <div class="setup__main">
+        
+        <!-- Income Sources Section -->
+        <section class="dashboard-card" style="background: #fff; padding: 24px; border-radius: var(--radius-main); border: 1px solid #CBD5E1; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="margin: 0; color: var(--color-primary); font-size: 18px;">Income Sources</h3>
+                <button class="btn" onclick="document.getElementById('incomeModal').style.display='flex'" style="background: var(--color-success); border: 1px solid var(--color-success); color: #fff; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px;">+ Add Income</button>
+            </div>
+            
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #CBD5E1;">
+                        <th style="text-align: left; padding: 12px; color: var(--color-primary); font-weight: 600;">Source Name</th>
+                        <th style="text-align: right; padding: 12px; color: var(--color-primary); font-weight: 600;">Monthly Amount</th>
+                        <th style="text-align: right; padding: 12px; color: var(--color-primary); font-weight: 600;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #CBD5E1;">
+                        <td style="padding: 16px 12px; color: var(--color-primary); font-weight: 600;">Primary Salary</td>
+                        <td style="padding: 16px 12px; color: var(--color-text); text-align: right; font-weight: 500;">$4,500.00</td>
+                        <td style="padding: 16px 12px; text-align: right;">
+                            <button class="btn" style="background: transparent; border: 1px solid var(--color-primary); color: var(--color-primary); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">Edit</button>
+                        </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #CBD5E1;">
+                        <td style="padding: 16px 12px; color: var(--color-primary); font-weight: 600;">Freelance Work</td>
+                        <td style="padding: 16px 12px; color: var(--color-text); text-align: right; font-weight: 500;">$850.00</td>
+                        <td style="padding: 16px 12px; text-align: right;">
+                            <button class="btn" style="background: transparent; border: 1px solid var(--color-primary); color: var(--color-primary); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td style="padding: 16px 12px; color: var(--color-primary); font-weight: 700; text-align: right;">Total Estimated Income:</td>
+                        <td style="padding: 16px 12px; color: var(--color-success); font-weight: 700; text-align: right; font-size: 18px;">$5,350.00</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
         </section>
 
-        <div class="setup__side">
-          <section class="card card--navy total">
-            <span class="total__label">Total planned</span>
-            <strong class="total__value" id="totalPlanned">$0</strong>
-            <p class="total__hint" id="totalHint">Set your income, then auto-suggest a plan.</p>
-            <div class="total__bar"><span class="total__fill" id="totalFill"></span></div>
-            <p class="total__chip" id="unallocated" hidden>
-              <span class="total__chiplabel" id="unallocatedLabel">Unallocated</span>
-              <strong class="total__chipvalue" id="unallocatedValue">$0</strong>
-            </p>
-          </section>
-
-          <!-- Household savings goal = total of every member's savings goal -->
-          <section class="card goal" id="goalCard">
-            <div class="goal__head">
-              <span class="goal__label">Household savings goal</span>
-              <span class="goal__badge" id="goalBadge">No goal</span>
+        <!-- Categories block kept as static container for future backend loop -->
+        <section class="dashboard-card" style="background: #fff; padding: 24px; border-radius: var(--radius-main); border: 1px solid #CBD5E1; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="margin: 0; color: var(--color-primary); font-size: 18px;">Monthly Plan (Categories)</h3>
+                <button class="btn" style="background: var(--color-primary); border: 1px solid var(--color-primary); color: #fff; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px;">Auto-Suggest</button>
             </div>
-            <p class="goal__figures">
-              <strong class="goal__saved" id="goalSaved">$0</strong>
-              <span class="goal__of" id="goalOf">saved</span>
-            </p>
-            <div class="goal__bar"><span class="goal__fill" id="goalFill"></span></div>
-            <p class="goal__hint" id="goalHint">Add a savings goal in Settings.</p>
-            <ul class="goal__members" id="goalMembers" hidden></ul>
-          </section>
+            
+            <p style="color: var(--color-text-muted); font-size: 14px;">Categories will be loaded here dynamically from the database.</p>
+        </section>
+
+        <!-- Save button -->
+        <div style="text-align: right; padding-bottom: 40px;">
+            <button class="btn" style="background: var(--color-success); border: 1px solid var(--color-success); color: #fff; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 16px;">Save Configuration</button>
         </div>
-      </div>
 
-      <ul class="grid" id="categoryGrid"></ul>
-
-      <footer class="planbar">
-        <p class="planbar__note">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4.6-3 8-7 9-4-1-7-4.4-7-9V6z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg>
-          All entries are encrypted. Budget Pilot never shares your personal financial data with third-party advertisers.
-        </p>
-        <button class="btn btn--primary btn--lg" type="button" id="finalizeBtn" data-member-lock>Finalize Monthly Plan</button>
-      </footer>
     </div>
-  </div>
+
+    <!-- RIGHT COLUMN: Goals & Summary -->
+    <div class="setup__side">
+        <!-- Savings Goals Section -->
+        <section class="dashboard-card" style="background: #fff; padding: 24px; border-radius: var(--radius-main); border: 1px solid #CBD5E1; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="margin: 0; color: var(--color-primary); font-size: 18px;">Savings Goals</h3>
+                <button class="btn" onclick="document.getElementById('goalModal').style.display='flex'" style="background: var(--color-success); border: 1px solid var(--color-success); color: #fff; padding: 6px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px;">+ Add Goal</button>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <!-- Goal Card -->
+                <div style="border: 1px solid #CBD5E1; border-radius: 8px; padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <h4 style="margin: 0; color: var(--color-primary); font-size: 16px;">Emergency Fund</h4>
+                        <span style="background: #f1f5f9; color: var(--color-primary); font-size: 11px; padding: 4px 8px; border-radius: 12px; font-weight: 600; border: 1px solid #e2e8f0;">Household</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div>
+                            <p style="margin: 0 0 4px 0; color: var(--color-text-muted); font-size: 12px;">Target Amount</p>
+                            <strong style="color: var(--color-primary); font-size: 18px;">$10,000.00</strong>
+                        </div>
+                        <button class="btn" style="background: transparent; border: none; color: var(--color-primary); cursor: pointer; font-size: 12px; text-decoration: underline;">Edit</button>
+                    </div>
+                </div>
+
+                <!-- Goal Card -->
+                <div style="border: 1px solid #CBD5E1; border-radius: 8px; padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <h4 style="margin: 0; color: var(--color-primary); font-size: 16px;">New Car</h4>
+                        <span style="background: #f1f5f9; color: var(--color-primary); font-size: 11px; padding: 4px 8px; border-radius: 12px; font-weight: 600; border: 1px solid #e2e8f0;">Individual</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div>
+                            <p style="margin: 0 0 4px 0; color: var(--color-text-muted); font-size: 12px;">Target Amount</p>
+                            <strong style="color: var(--color-primary); font-size: 18px;">$3,500.00</strong>
+                        </div>
+                        <button class="btn" style="background: transparent; border: none; color: var(--color-primary); cursor: pointer; font-size: 12px; text-decoration: underline;">Edit</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Total Planned Summary -->
+        <section class="dashboard-card" style="background: var(--color-primary); padding: 24px; border-radius: var(--radius-main); color: #fff;">
+            <span style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; opacity: 0.9;">Total Planned</span>
+            <strong style="display: block; font-size: 32px; margin-bottom: 16px;">$0.00</strong>
+            <p style="font-size: 13px; opacity: 0.8; margin-bottom: 16px;">Set your income, then auto-suggest a plan.</p>
+            <div style="background: rgba(255,255,255,0.2); height: 8px; border-radius: 4px; overflow: hidden;">
+                <div style="background: #fff; width: 0%; height: 100%;"></div>
+            </div>
+        </section>
+    </div>
 </div>
 
-<div class="toast" id="toast" role="status" hidden></div>
+<!-- Modals -->
 
-<div class="modal" id="modal" hidden>
-  <div class="modal__backdrop" id="modalBackdrop"></div>
-  <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <h2 class="modal__title" id="modalTitle"></h2>
-    <div class="modal__body" id="modalBody"></div>
-    <div class="modal__actions" id="modalActions"></div>
-  </div>
+<!-- Add Income Modal -->
+<div class="modal" id="incomeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+    <div style="background: #fff; padding: 32px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h2 style="margin: 0 0 24px 0; color: var(--color-primary); font-size: 20px;">Add Income Source</h2>
+        <form>
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--color-primary);">Source Name</label>
+                <input type="text" placeholder="e.g., Primary Salary" style="width: 100%; padding: 10px 14px; border: 1px solid #CBD5E1; border-radius: 8px; color: var(--color-text);">
+            </div>
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--color-primary);">Monthly Amount ($)</label>
+                <input type="number" step="0.01" placeholder="0.00" style="width: 100%; padding: 10px 14px; border: 1px solid #CBD5E1; border-radius: 8px; color: var(--color-text);">
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                <button type="button" style="background: transparent; border: 1px solid #CBD5E1; color: var(--color-text-muted); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="document.getElementById('incomeModal').style.display='none'">Cancel</button>
+                <button type="button" style="background: var(--color-success); border: 1px solid var(--color-success); color: #fff; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">Add Income</button>
+            </div>
+        </form>
+    </div>
 </div>
 
-<template id="categoryTemplate">
-  <li class="cat">
-    <div class="cat__art">
-      <img class="cat__photo" src="" alt="" />
+<!-- Add Goal Modal -->
+<div class="modal" id="goalModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+    <div style="background: #fff; padding: 32px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h2 style="margin: 0 0 24px 0; color: var(--color-primary); font-size: 20px;">Add Savings Goal</h2>
+        <form>
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--color-primary);">Goal Name</label>
+                <input type="text" placeholder="e.g., Emergency Fund" style="width: 100%; padding: 10px 14px; border: 1px solid #CBD5E1; border-radius: 8px; color: var(--color-text);">
+            </div>
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--color-primary);">Target Amount ($)</label>
+                <input type="number" step="0.01" placeholder="0.00" style="width: 100%; padding: 10px 14px; border: 1px solid #CBD5E1; border-radius: 8px; color: var(--color-text);">
+            </div>
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--color-primary);">Goal Type</label>
+                <select style="width: 100%; padding: 10px 14px; border: 1px solid #CBD5E1; border-radius: 8px; color: var(--color-text); background: #fff; appearance: auto;">
+                    <option>Individual</option>
+                    <option>Household</option>
+                </select>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                <button type="button" style="background: transparent; border: 1px solid #CBD5E1; color: var(--color-text-muted); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;" onclick="document.getElementById('goalModal').style.display='none'">Cancel</button>
+                <button type="button" style="background: var(--color-success); border: 1px solid var(--color-success); color: #fff; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">Add Goal</button>
+            </div>
+        </form>
     </div>
-    <div class="cat__body">
-      <div class="cat__head">
-        <h3 class="cat__name"></h3>
-        <div class="control control--money cat__input">
-          <span class="control__prefix cat__symbol">$</span>
-          <input class="cat__amount" type="number" min="0" step="1" />
-        </div>
-      </div>
-      <div class="cat__meta">
-        <span class="cat__metacol"><span class="cat__metalabel">Suggested</span><strong class="cat__suggested">—</strong></span>
-        <span class="cat__metacol cat__metacol--right"><span class="cat__metalabel">Spent</span><strong class="cat__spent">$0</strong></span>
-      </div>
-      <div class="cat__bar"><span class="cat__fill"></span></div>
-      <div class="cat__foot">
-        <span class="cat__used">0% used</span>
-        <span class="cat__left">$0 left</span>
-      </div>
-    </div>
-  </li>
-</template>
+</div>
 
-<script>window.URLROOT = "<?php echo URLROOT; ?>";</script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/nav.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/nav.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/store.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/notify.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/notify.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/household-ui.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/household-ui.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/budgets.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/budgets.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/budget-hooks.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/budget-hooks.js'); ?>"></script>
-</body>
-</html>
+</main>
+<?php require APPROOT . '/Views/shared/footer.php'; ?>

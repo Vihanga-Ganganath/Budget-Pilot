@@ -8,131 +8,73 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/common.css?v=<?php echo filemtime(APPROOT . '/../public/css/common.css'); ?>">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/admin_auth.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/common.css?v=<?php echo @filemtime(APPROOT . '/../public/css/common.css'); ?>">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/assets/css/login.css?v=<?php echo @filemtime(APPROOT . '/../public/assets/css/login.css'); ?>">
 </head>
-<body data-page="login">
+<body class="login-page">
 
-    <!-- Brand — matches customer login brand--center style -->
-    <style>
-        .auth-brand-center {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            justify-content: center;
-            text-decoration: none;
-            margin-bottom: 28px;
-        }
-        .auth-brand-center__mark {
-            width: 40px; height: 40px;
-            min-width: 40px; min-height: 40px;
-            max-width: 40px; max-height: 40px;
-            border-radius: 10px;
-            background: #fff;
-            border: 1px solid #E6E9F0;
-            overflow: hidden;
-            display: grid;
-            place-items: center;
-            flex: none;
-            box-shadow: 0 1px 4px rgba(0,0,0,.08);
-        }
-        .auth-brand-center__mark img {
-            width: 100%; height: 100%;
-            object-fit: contain;
-            padding: 4px;
-            display: block;
-        }
-        .auth-brand-center__name {
-            font-family: 'Outfit', 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: 1.18rem;
-            color: #101C56;
-            letter-spacing: -.01em;
-            line-height: 1;
-        }
-    </style>
-
-    <a href="<?php echo URLROOT; ?>" class="auth-brand-center" aria-label="Budget Pilot home">
-        <span class="auth-brand-center__mark" aria-hidden="true">
+    <a href="<?php echo URLROOT; ?>/" class="login-brand" aria-label="Budget Pilot home">
+        <div class="login-brand__mark">
             <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
-        </span>
-        <span class="auth-brand-center__name">Budget Pilot</span>
+        </div>
+        <span class="login-brand__title">Budget Pilot</span>
     </a>
 
+    <div class="login-card">
+        <div class="login-card__header">
+            <h1 class="login-card__title">Admin Portal</h1>
+            <p class="login-card__sub">Sign in to manage the platform.</p>
+        </div>
 
+        <?php if (!empty($data['error']) || !empty($data['email_err']) || !empty($data['password_err'])): ?>
+            <div class="login-alert login-alert--error" style="background: #fee2e2; color: #991b1b; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; font-weight: 500; border: 1px solid #f87171; text-align: center;">
+                <?php 
+                    if (!empty($data['error'])) echo $data['error']; 
+                    else echo !empty($data['email_err']) ? $data['email_err'] : $data['password_err']; 
+                ?>
+            </div>
+        <?php endif; ?>
 
-    <!-- Login Card -->
-    <div class="admin-auth-card">
-        <form action="<?php echo URLROOT; ?>/admin/login" method="POST">
-
-            <div class="admin-form-group">
-                <div class="admin-form-header">
-                    <label>Email Address</label>
+        <form action="<?php echo URLROOT; ?>/admin/login" method="post">
+            <div class="form-group">
+                <div class="form-header">
+                    <label for="email">Email Address</label>
                 </div>
-                <div class="admin-input-wrapper">
-                    <span class="admin-input-icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    </span>
-                    <input type="email" name="email" placeholder="admin@budgetpilot.com" required>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <input type="email" id="email" name="email" value="<?php echo isset($data['email']) ? htmlspecialchars($data['email']) : ''; ?>" required>
                 </div>
             </div>
 
-            <div class="admin-form-group">
-                <div class="admin-form-header">
-                    <label>Password</label>
+            <div class="form-group">
+                <div class="form-header">
+                    <label for="password">Password</label>
+                    <a href="#">Forgot?</a>
                 </div>
-                <div class="admin-input-wrapper">
-                    <span class="admin-input-icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                    </span>
-                    <input type="password" name="password" id="admin-password" placeholder="••••••••" required>
-                    <span class="admin-action-icon" onclick="const p=document.getElementById('admin-password'); p.type = p.type === 'password' ? 'text' : 'password';">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                    </span>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <input type="password" id="password" name="password" required>
+                    <button type="button" class="input-action js-toggle-password" data-target="password" aria-label="Toggle password visibility">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
                 </div>
             </div>
 
-            <div class="admin-remember-row">
-                <input type="checkbox" id="remember" name="remember">
+            <div class="remember-row">
+                <input type="checkbox" id="remember" name="remember" <?php echo (isset($_COOKIE['admin_remember']) || isset($data['remember'])) ? 'checked' : ''; ?>>
                 <label for="remember">Remember me</label>
             </div>
 
-            <button type="submit" class="admin-submit-btn">Sign In</button>
+            <button type="submit" class="login-submit-btn">Sign In</button>
         </form>
-
-
     </div>
 
-    <a href="<?php echo URLROOT; ?>" class="admin-back-link">← Back to Home</a>
+    <a href="<?php echo URLROOT; ?>/" class="login-back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Back to Home
+    </a>
 
-    <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
-
-    <!-- ... ඔයාගේ Login Form එක සහ අනිත් HTML කේත ... -->
-
-    <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
-
-    <!-- PHP වලින් Error එකක් ඇවිත් තියෙනවා නම් Toast එක පෙන්වන්න -->
-    <?php if(!empty($data['error'])) : ?>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                toast('<?php echo $data['error']; ?>', 'error');
-            });
-        </script>
-    <?php endif; ?>
-
-    <!-- PHP වලින් Success එකක් ඇවිත් තියෙනවා නම් Toast එක පෙන්වලා Dashboard එකට යවන්න -->
-    <?php if(!empty($data['success'])) : ?>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                toast('<?php echo $data['success']; ?>', 'success');
-                
-                // තත්පරයකට පස්සේ ඇත්තටම Dashboard එකට Redirect කරනවා!
-                setTimeout(() => { 
-                    window.location.href = '<?php echo URLROOT; ?>/admin/dashboard'; 
-                }, 1000);
-            });
-        </script>
-    <?php endif; ?>
-
+    <script src="<?php echo URLROOT; ?>/public/assets/js/login.js?v=<?php echo @filemtime(APPROOT . '/../public/assets/js/login.js'); ?>"></script>
 </body>
 </html>
+

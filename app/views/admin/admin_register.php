@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/common.css?v=<?php echo filemtime(APPROOT . '/../public/css/common.css'); ?>">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/admin_auth.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/assets/css/sidebar.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/public/assets/css/topbar.css?v=<?php echo time(); ?>">
 </head>
 <body data-page="register">
 
@@ -58,7 +60,7 @@
                     <span class="admin-input-icon">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                     </span>
-                    <input type="password" name="password" id="reg-password" placeholder="••••••••" required
+                    <input type="password" name="password" id="reg-password" placeholder="" required
                            oninput="checkPasswordStrength(this.value)">
                     <span class="admin-action-icon" onclick="const p=document.getElementById('reg-password'); p.type = p.type === 'password' ? 'text' : 'password';">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
@@ -82,7 +84,7 @@
         </div>
     </div>
 
-    <a href="<?php echo URLROOT; ?>" class="admin-back-link">← Back to Home</a>
+    <a href="<?php echo URLROOT; ?>" class="admin-back-link"> Back to Home</a>
 
     <script>
         function checkPasswordStrength(value) {
@@ -96,5 +98,16 @@
         }
     </script>
     <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
+<script src="<?php echo URLROOT; ?>/public/assets/js/sidebar.js"></script>
+<script src="<?php echo URLROOT; ?>/public/assets/js/topbar.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+

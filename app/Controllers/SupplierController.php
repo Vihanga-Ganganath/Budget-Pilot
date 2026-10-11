@@ -222,7 +222,7 @@ class SupplierController extends Controller {
             'nutritional_value' => trim($_POST['nutritional_value'] ?? ''),
             'document_url' => trim($_POST['document_url'] ?? ''),
 
-            'variant_name' => trim($_POST['variant_name'] ?? ''),
+            'variant_name'   => trim($_POST['variant_name'] ?? 'Default'),
             'price' => $_POST['price'] ?? '',
             'stock_quantity' => $_POST['stock_quantity'] ?? '',
 
@@ -332,7 +332,7 @@ class SupplierController extends Controller {
 }
 
     
-    public function addProduct() {
+    public function saveProduct() {
 
     // Only logged-in suppliers can add products
     if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'supplier') {
@@ -345,14 +345,14 @@ class SupplierController extends Controller {
 
         $data = [
             'supplier_id'       => $_SESSION['user_id'],
-            'category_id'       => $_POST['category_id'] ?? '',
+            'category_id'       => $_POST['category_id'] ?? '1',
             'name'              => trim($_POST['name'] ?? ''),
             'description'       => trim($_POST['description'] ?? ''),
             'ingredients'       => trim($_POST['ingredients'] ?? ''),
             'nutritional_value' => trim($_POST['nutritional_value'] ?? ''),
             'document_url'   => trim($_POST['document_url'] ?? ''),
 
-            'variant_name'   => trim($_POST['variant_name'] ?? ''),
+            'variant_name'   => trim($_POST['variant_name'] ?? 'Default'),
             'price'          => $_POST['price'] ?? '',
             // Stock field was removed from the Add Product form; default to 0
             'stock_quantity' => ($_POST['stock_quantity'] ?? '') === '' ? 0 : (int)$_POST['stock_quantity'],
@@ -363,8 +363,8 @@ class SupplierController extends Controller {
         // Basic required-field validation
         if (
             empty($data['name']) ||
-            empty($data['category_id']) ||
-            empty($data['variant_name']) ||
+            
+            
             $data['price'] === ''
         ) {
             header('Location: ' . URLROOT . '/supplier/catalog?error=required');
@@ -450,5 +450,34 @@ if ($variantId) {
         }
         $this->view('supplier/verification');
     }
+
+    public function addProduct() {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'supplier') {
+            header('Location: ' . URLROOT . '/supplier/login');
+            exit();
+        }
+        $this->view('supplier/addProduct');
+    }
+
+    public function promotions() {
+                if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'supplier') {
+            header('Location: ' . URLROOT . '/supplier/login');
+            exit();
+        }
+        $this->view('supplier/promotions');
+    }
+
+    public function manage_pricing() {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'supplier') {
+            header('Location: ' . URLROOT . '/supplier/login');
+            exit();
+        }
+        $this->view('supplier/manage_pricing');
+    }
 }
+
+
 ?>
+
+
+

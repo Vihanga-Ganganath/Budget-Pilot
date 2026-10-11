@@ -1,249 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Shopping Cart — Budget Pilot</title>
-<link rel="icon" type="image/png" href="<?php echo URLROOT; ?>/public/assets/logos/favicon.png?v=2">
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/settings.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/settings.css'); ?>" />
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/grocery.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/grocery.css'); ?>" />
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/public/css/customer-css/cart.css?v=<?php echo @filemtime(APPROOT . '/../public/css/customer-css/cart.css'); ?>" />
-</head>
-<body class="settings">
+<?php require APPROOT . '/Views/shared/header.php'; ?>
+<main class="main-content">
+<header class="content-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 24px;">
+    <div class="header-left" style="flex: 1;">
+        <h2 class="page-title" style="color: var(--color-primary);">Shopping Cart</h2>
+        <p class="page-subtitle" style="color: var(--color-text);">Review your groceries and their impact on your budget.</p>
+    </div>
+    
+    <!-- Upgraded Budget Progress (Top Right) -->
+    <div class="dashboard-card" style="background: #fff; padding: 16px 24px; border-radius: var(--radius-main); border: 1px solid #CBD5E1; min-width: 320px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px;">
+            <div>
+                <span style="display: block; color: var(--color-text-muted); font-size: 13px; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Grocery Budget Status</span>
+                <strong style="color: var(--color-primary); font-size: 20px;">$45.50</strong> <span style="color: var(--color-text-muted); font-size: 14px;">/ $150.00</span>
+            </div>
+            <strong style="color: var(--color-success); font-size: 14px;">Healthy (30%)</strong>
+        </div>
+        <div style="background: #f1f5f9; height: 10px; border-radius: 5px; overflow: hidden; width: 100%;">
+            <div style="background: var(--color-success); width: 30%; height: 100%; border-radius: 5px;"></div>
+        </div>
+    </div>
+</header>
 
-<div class="shell">
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 40px;">
+    <!-- LEFT: Itemized List -->
+    <div>
+        <section class="dashboard-card" style="background: #fff; border-radius: var(--radius-main); border: 1px solid #CBD5E1; overflow: hidden;">
+            <div style="padding: 24px; border-bottom: 1px solid #CBD5E1; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; color: var(--color-primary); font-size: 18px;">Itemized List (3 items)</h3>
+                <button class="btn" style="background: transparent; border: none; color: var(--color-primary); cursor: pointer; font-size: 13px; font-weight: 600; text-decoration: underline;">Clear All</button>
+            </div>
+            
+            <div style="display: flex; flex-direction: column;">
+                
+                <!-- Dummy Item 1 -->
+                <div style="display: flex; align-items: center; padding: 24px; border-bottom: 1px solid #CBD5E1; gap: 24px;">
+                    <div style="width: 80px; height: 80px; background: #f8f9fa; border: 1px solid #CBD5E1; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: var(--color-text-muted); font-size: 10px;">[Image]</span>
+                    </div>
+                    <div style="flex-grow: 1;">
+                        <span style="color: var(--color-text-muted); font-size: 12px; font-weight: 600; text-transform: uppercase;">GreenHarvest</span>
+                        <h4 style="margin: 4px 0 8px 0; color: var(--color-primary); font-size: 16px;">Organic Bananas</h4>
+                        <strong style="color: var(--color-primary); font-size: 16px;">$2.99</strong>
+                    </div>
+                    <div style="display: flex; align-items: center; border: 1px solid #CBD5E1; border-radius: 8px; overflow: hidden;">
+                        <button style="background: #f8f9fa; border: none; padding: 8px 12px; cursor: pointer; color: var(--color-primary); font-weight: 600;">-</button>
+                        <input type="text" value="2" style="width: 40px; text-align: center; border: none; border-left: 1px solid #CBD5E1; border-right: 1px solid #CBD5E1; padding: 8px 0; font-size: 14px; font-weight: 600; color: var(--color-primary);">
+                        <button style="background: #f8f9fa; border: none; padding: 8px 12px; cursor: pointer; color: var(--color-primary); font-weight: 600;">+</button>
+                    </div>
+                    <div style="text-align: right; min-width: 80px;">
+                        <strong style="display: block; color: var(--color-primary); font-size: 18px; margin-bottom: 8px;">$5.98</strong>
+                        <button style="background: transparent; border: none; color: #DC2626; cursor: pointer; font-size: 13px; font-weight: 600; text-decoration: underline;">Remove</button>
+                    </div>
+                </div>
 
-  <aside class="sidebar" id="sidebar" aria-label="Main menu">
-    <div class="sidebar__head">
-      <a class="sidebar__brand" href="<?php echo URLROOT; ?>/customer/index">
-        <span class="sidebar__mark" aria-hidden="true">
-          <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
-        </span>
-        <span class="sidebar__brandtext">
-          <span class="sidebar__name">Budget Pilot</span>
-          <span class="sidebar__tag">Smart Finance Copilot</span>
-        </span>
-      </a>
-      <button class="sidebar__close" type="button" data-nav-close aria-label="Close menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
+                <!-- Dummy Item 2 -->
+                <div style="display: flex; align-items: center; padding: 24px; border-bottom: 1px solid #CBD5E1; gap: 24px;">
+                    <div style="width: 80px; height: 80px; background: #f8f9fa; border: 1px solid #CBD5E1; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: var(--color-text-muted); font-size: 10px;">[Image]</span>
+                    </div>
+                    <div style="flex-grow: 1;">
+                        <span style="color: var(--color-text-muted); font-size: 12px; font-weight: 600; text-transform: uppercase;">DairyPure</span>
+                        <h4 style="margin: 4px 0 8px 0; color: var(--color-primary); font-size: 16px;">Whole Milk (1 Gallon)</h4>
+                        <strong style="color: var(--color-primary); font-size: 16px;">$3.49</strong>
+                    </div>
+                    <div style="display: flex; align-items: center; border: 1px solid #CBD5E1; border-radius: 8px; overflow: hidden;">
+                        <button style="background: #f8f9fa; border: none; padding: 8px 12px; cursor: pointer; color: var(--color-primary); font-weight: 600;">-</button>
+                        <input type="text" value="1" style="width: 40px; text-align: center; border: none; border-left: 1px solid #CBD5E1; border-right: 1px solid #CBD5E1; padding: 8px 0; font-size: 14px; font-weight: 600; color: var(--color-primary);">
+                        <button style="background: #f8f9fa; border: none; padding: 8px 12px; cursor: pointer; color: var(--color-primary); font-weight: 600;">+</button>
+                    </div>
+                    <div style="text-align: right; min-width: 80px;">
+                        <strong style="display: block; color: var(--color-primary); font-size: 18px; margin-bottom: 8px;">$3.49</strong>
+                        <button style="background: transparent; border: none; color: #DC2626; cursor: pointer; font-size: 13px; font-weight: 600; text-decoration: underline;">Remove</button>
+                    </div>
+                </div>
+                
+                <!-- Dummy Item 3 -->
+                <div style="display: flex; align-items: center; padding: 24px; gap: 24px;">
+                    <div style="width: 80px; height: 80px; background: #f8f9fa; border: 1px solid #CBD5E1; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: var(--color-text-muted); font-size: 10px;">[Image]</span>
+                    </div>
+                    <div style="flex-grow: 1;">
+                        <span style="color: var(--color-text-muted); font-size: 12px; font-weight: 600; text-transform: uppercase;">EssenceCo</span>
+                        <h4 style="margin: 4px 0 8px 0; color: var(--color-primary); font-size: 16px;">Laundry Detergent</h4>
+                        <strong style="color: var(--color-primary); font-size: 16px;">$18.00</strong>
+                    </div>
+                    <div style="display: flex; align-items: center; border: 1px solid #CBD5E1; border-radius: 8px; overflow: hidden;">
+                        <button style="background: #f8f9fa; border: none; padding: 8px 12px; cursor: pointer; color: var(--color-primary); font-weight: 600;">-</button>
+                        <input type="text" value="2" style="width: 40px; text-align: center; border: none; border-left: 1px solid #CBD5E1; border-right: 1px solid #CBD5E1; padding: 8px 0; font-size: 14px; font-weight: 600; color: var(--color-primary);">
+                        <button style="background: #f8f9fa; border: none; padding: 8px 12px; cursor: pointer; color: var(--color-primary); font-weight: 600;">+</button>
+                    </div>
+                    <div style="text-align: right; min-width: 80px;">
+                        <strong style="display: block; color: var(--color-primary); font-size: 18px; margin-bottom: 8px;">$36.03</strong>
+                        <button style="background: transparent; border: none; color: #DC2626; cursor: pointer; font-size: 13px; font-weight: 600; text-decoration: underline;">Remove</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
     </div>
 
-    <nav class="sidebar__nav" aria-label="Sections">
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/index">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/></svg>
-        Home
-      </a>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/dashboard">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg>
-        Dashboard
-      </a>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/budgets">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 10h19"/></svg>
-        Budgets
-      </a>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/grocery">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h18l-1.5 11H4.5z"/><path d="M3 9l1.5-4h15L21 9"/></svg>
-        Grocery Catalog
-      </a>
-      <span class="navlink navlink--active" aria-current="page">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/><path d="M2.5 3h2.2l2.6 12.4a1.6 1.6 0 0 0 1.6 1.3h8.9a1.6 1.6 0 0 0 1.6-1.3L21 7H6"/></svg>
-        Shopping Cart
-        <span class="navlink__count" id="navCount" hidden>0</span>
-      </span>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/analytics">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l5-6 4 3 5-7 4 4"/></svg>
-        Analytics
-      </a>
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/household" data-main-only>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16.5 5.2a3.2 3.2 0 0 1 0 6"/><path d="M18 14.8c2 .7 3.2 2.4 3.5 5.2"/></svg>
-        Household
-      </a>
-    </nav>
-
-    <div class="sidebar__foot">
-      <a class="navlink" href="<?php echo URLROOT; ?>/customer/settings">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-3-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.3 6l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 2.9-1.2V2a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 3 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9H22a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-        Settings
-      </a>
-      <button class="navlink" type="button" id="logoutBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
-        Logout
-      </button>
+    <!-- RIGHT: Summary Panel -->
+    <div>
+        <section class="dashboard-card" style="background: #fff; padding: 24px; border-radius: var(--radius-main); border: 1px solid #CBD5E1; position: sticky; top: 100px;">
+            <h3 style="margin: 0 0 24px 0; color: var(--color-primary); font-size: 18px;">Order Summary</h3>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--color-text); font-size: 15px;">
+                <span>Subtotal (5 items)</span>
+                <strong>$45.50</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--color-text); font-size: 15px;">
+                <span>Estimated Tax</span>
+                <strong>$3.87</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 24px; color: var(--color-text); font-size: 15px;">
+                <span>Delivery Fee</span>
+                <strong>$0.00</strong>
+            </div>
+            
+            <div style="border-top: 1px solid #CBD5E1; padding-top: 16px; display: flex; justify-content: space-between; margin-bottom: 24px;">
+                <strong style="color: var(--color-primary); font-size: 18px;">Total</strong>
+                <strong style="color: var(--color-primary); font-size: 24px;">$49.37</strong>
+            </div>
+            
+            <button class="btn" style="width: 100%; background: var(--color-success); border: 1px solid var(--color-success); color: #fff; padding: 16px; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer; margin-bottom: 12px;">Checkout Now</button>
+            <p style="text-align: center; color: var(--color-text-muted); font-size: 12px; margin: 0;">Secure encrypted payment</p>
+        </section>
     </div>
-  </aside>
-
-  <div class="main">
-    <header class="appbar">
-      <button class="appbar__menu" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Open menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-      </button>
-      <a class="appbar__brand" href="<?php echo URLROOT; ?>/customer/index">
-        <img src="<?php echo URLROOT; ?>/public/assets/logos/budget-pilot-mark.png" alt="">
-        <span>Budget Pilot</span>
-      </a>
-      <div class="appbar__actions">
-        <a class="icon-btn" href="<?php echo URLROOT; ?>/customer/notifications" data-bell aria-label="Notifications">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-        </a>
-        <span class="icon-btn icon-btn--badged" aria-label="Shopping cart">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.6"/><circle cx="19" cy="21" r="1.6"/><path d="M2.5 3h2.2l2.6 12.4a1.6 1.6 0 0 0 1.6 1.3h8.9a1.6 1.6 0 0 0 1.6-1.3L21 7H6"/></svg>
-          <span class="icon-btn__badge" id="cartBadge" hidden>0</span>
-        </span>
-        <span class="appbar__avatar" id="appbarAvatar" aria-hidden="true"></span>
-      </div>
-    </header>
-
-    <div class="content">
-      <div class="carthead">
-        <div>
-          <h1 class="page__title">Shopping Cart</h1>
-          <p class="page__sub">Review your groceries and their impact on your budget.</p>
-        </div>
-        <div class="progress" id="progressCard">
-          <div class="progress__left">
-            <span class="progress__label">Budget progress <strong id="progressPercent">0%</strong></span>
-            <div class="progress__bar"><span class="progress__fill" id="progressFill"></span></div>
-          </div>
-          <div class="progress__right">
-            <span class="progress__label">Projected spend</span>
-            <strong class="progress__value" id="projectedSpend">—</strong>
-          </div>
-        </div>
-      </div>
-
-      <section class="alert" id="overAlert" hidden>
-        <span class="alert__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5L21.5 20h-19z"/><path d="M12 10v4M12 17.2v.1"/></svg>
-        </span>
-        <div class="alert__text">
-          <h2 class="alert__title">You are exceeding your grocery budget</h2>
-          <p class="alert__body" id="alertBody"></p>
-        </div>
-        <button class="btn btn--danger" type="button" id="optimizeBtn">Optimization Tools</button>
-      </section>
-
-      <section class="notice notice--plain" id="noBudget" hidden>
-        No grocery budget set yet. <a class="link" href="<?php echo URLROOT; ?>/customer/budgets">Set one on the Budgets page</a> to track this cart against it.
-      </section>
-
-      <div class="cartlayout">
-        <div class="cartlayout__main">
-          <section class="card items">
-            <div class="items__head">
-              <h2 class="card__title" id="itemsTitle">Itemized list</h2>
-              <button class="items__clear" type="button" id="clearBtn">Clear all</button>
-            </div>
-            <ul class="lines" id="lineList"></ul>
-            <p class="empty" id="emptyCart" hidden>
-              Your cart is empty. <a class="link" href="<?php echo URLROOT; ?>/customer/grocery">Browse the catalog</a> to add something.
-            </p>
-          </section>
-
-          <section id="swapSection" hidden>
-            <h2 class="swaps__title">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 0 1 0 18 9 9 0 0 1 0-18z"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
-              Recommended cheaper brands
-            </h2>
-            <div class="swaps" id="swapList"></div>
-          </section>
-        </div>
-
-        <aside class="cartlayout__side">
-          <section class="card summary">
-            <h2 class="card__title">Order summary</h2>
-            <div class="summary__row">
-              <span id="subtotalLabel">Subtotal</span>
-              <span id="subtotal">—</span>
-            </div>
-            <div class="summary__row summary__row--total">
-              <span>Total</span>
-              <strong id="total">—</strong>
-            </div>
-
-            <div class="budgetstate" id="budgetState">
-              <p class="budgetstate__head" id="budgetHead"></p>
-              <p class="budgetstate__body" id="budgetBody"></p>
-              <div class="progress__bar"><span class="progress__fill" id="stateFill"></span></div>
-            </div>
-
-            <div class="summary__foot">
-              <button class="btn btn--primary summary__checkout" type="button" id="checkoutBtn">
-                Checkout
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
-              </button>
-              <p class="summary__fine">Checking out records this spend against your grocery budget.</p>
-            </div>
-          </section>
-
-          <section class="savings" id="savingsCard" hidden>
-            <h2 class="savings__title">Savings potential</h2>
-            <p class="savings__text">Switch to the cheaper brands below and you would save:</p>
-            <p class="savings__value" id="savingsValue">—</p>
-            <p class="savings__pill" id="savingsPill"></p>
-          </section>
-        </aside>
-      </div>
-    </div>
-  </div>
 </div>
-
-<div class="toast" id="toast" role="status" hidden></div>
-
-<div class="modal" id="modal" hidden>
-  <div class="modal__backdrop" id="modalBackdrop"></div>
-  <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <h2 class="modal__title" id="modalTitle"></h2>
-    <div class="modal__body" id="modalBody"></div>
-    <div class="modal__actions" id="modalActions"></div>
-  </div>
-</div>
-
-<template id="lineTemplate">
-  <li class="line">
-    <a class="line__art" href="#"><img class="line__photo" src="" alt="" /></a>
-    <div class="line__text">
-      <a class="line__name" href="#"></a>
-      <p class="line__meta"></p>
-      <div class="qty">
-        <button class="qty__btn line__minus" type="button" aria-label="One less">&minus;</button>
-        <span class="line__qty">1</span>
-        <button class="qty__btn line__plus" type="button" aria-label="One more">+</button>
-      </div>
-    </div>
-    <div class="line__right">
-      <strong class="line__price"></strong>
-      <span class="line__unit"></span>
-      <button class="line__remove" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg>
-        Remove
-      </button>
-    </div>
-  </li>
-</template>
-
-<template id="swapTemplate">
-  <article class="swap">
-    <span class="swap__art"><img class="swap__photo" src="" alt="" /></span>
-    <div class="swap__text">
-      <p class="swap__from"></p>
-      <h3 class="swap__to"></h3>
-      <p class="swap__price"><strong class="swap__amount"></strong> <span class="swap__save"></span></p>
-      <button class="btn btn--primary swap__btn" type="button">Swap &amp; save</button>
-    </div>
-  </article>
-</template>
-
-<script>window.URLROOT = "<?php echo URLROOT; ?>";</script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/nav.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/nav.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/store.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/orders.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/orders.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/catalog-data.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/catalog-data.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/notify.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/notify.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/household-ui.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/household-ui.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/cart.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/cart.js'); ?>"></script>
-</body>
-</html>
+</main>
+<?php require APPROOT . '/Views/shared/footer.php'; ?>
