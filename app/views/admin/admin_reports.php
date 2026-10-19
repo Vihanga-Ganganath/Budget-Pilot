@@ -1,126 +1,24 @@
-
-<?php require APPROOT . '/Views/shared/header.php'; ?>
-<header class="content-header">
-                <div class="header-left">
-                    <h2 class="page-title">Reports &amp; Analytics</h2>
-                    <p class="page-subtitle">Overview of financial performance and platform activity.</p>
-                </div>
-                <div class="header-right">
-                    <select class="filter-select" id="period-select" style="font-weight:600;">
-                        <option value="7">Last 7 Days</option>
-                        <option value="30" selected>Last 30 Days</option>
-                        <option value="90">Last 90 Days</option>
-                    </select>
-                    <button class="btn btn-navy btn-lg" id="export-pdf-btn" type="button">
-                        
-                        Export PDF
-                    </button>
-                </div>
-            </header>
-
-            <!-- Stat Cards -->
-            <section class="stat-grid">
-                <div class="stat-card">
-                    <div class="stat-card-label">Total Transactions</div>
-                    <div class="stat-card-value" id="stat-total-transactions">124,592</div>
-                    <div class="stat-card-sub"><span class="stat-trend up" id="trend-transactions"> 12.5%</span> vs last month</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-label">Total Budget Tracked</div>
-                    <div class="stat-card-value" id="stat-total-budget">$4.2M</div>
-                    <div class="stat-card-sub"><span class="stat-trend up" id="trend-budget"> 8.2%</span> vs last month</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-label">Avg Transaction Value</div>
-                    <div class="stat-card-value" id="stat-avg-transaction">$34.50</div>
-                    <div class="stat-card-sub"><span class="stat-trend down" id="trend-avg"> 1.4%</span> vs last month</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-label">Active Suppliers</div>
-                    <div class="stat-card-value" id="stat-active-suppliers-report">842</div>
-                    <div class="stat-card-sub"><span class="stat-trend up" id="trend-suppliers"> 5.1%</span> vs last month</div>
-                </div>
-            </section>
-
-            <section class="admin-grid-2 even">
-                <!-- Category Performance -->
-                <div class="dashboard-card">
-                    <div class="card-heading-row">
-                        <h3>Category Performance</h3>
-                        <button class="activity-menu-btn" type="button"></button>
-                    </div>
-                    <div id="category-performance-container">
-                        <!-- rendered by js/admin.js -->
-                    </div>
-                </div>
-
-                <!-- Top Suppliers -->
-                <div class="dashboard-card">
-                    <div class="card-heading-row">
-                        <h3>Top Suppliers</h3>
-                        <span style="font-size:0.75rem;color:var(--text-light);font-weight:700;">BY VIEWS</span>
-                    </div>
-                    <div class="top-supplier-row">
-                        <div class="top-supplier-icon">
-                            
-                        </div>
-                        <div style="flex:1;">
-                            <div class="top-supplier-name">MegaMart Co.</div>
-                            <div class="top-supplier-cat">Grocery</div>
-                        </div>
-                        <div>
-                            <div class="top-supplier-value">45.2k</div>
-                            <div class="top-supplier-trend up"> 12%</div>
-                        </div>
-                    </div>
-                    <div class="top-supplier-row">
-                        <div class="top-supplier-icon">
-                            
-                        </div>
-                        <div style="flex:1;">
-                            <div class="top-supplier-name">Swift Transit</div>
-                            <div class="top-supplier-cat">Transport</div>
-                        </div>
-                        <div>
-                            <div class="top-supplier-value">38.9k</div>
-                            <div class="top-supplier-trend up"> 8%</div>
-                        </div>
-                    </div>
-                    <div class="top-supplier-row">
-                        <div class="top-supplier-icon">
-                            
-                        </div>
-                        <div style="flex:1;">
-                            <div class="top-supplier-name">City Utilities</div>
-                            <div class="top-supplier-cat">Utilities</div>
-                        </div>
-                        <div>
-                            <div class="top-supplier-value">29.1k</div>
-                            <div class="top-supplier-trend down"> 3%</div>
-                        </div>
-                    </div>
-                    <div class="top-supplier-row">
-                        <div class="top-supplier-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
-                        </div>
-                        <div style="flex:1;">
-                            <div class="top-supplier-name">Bistro Group</div>
-                            <div class="top-supplier-cat">Dining Out</div>
-                        </div>
-                        <div>
-                            <div class="top-supplier-value">22.4k</div>
-                            <div class="top-supplier-trend up"> 5%</div>
-                        </div>
-                    </div>
-                    <button class="btn btn-outline-navy btn-sm" id="view-full-suppliers-btn" type="button" style="width:100%; margin-top:16px;">View Full List</button>
-                </div>
-            </section>
-        <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
-
+<?php require APPROOT . '/Views/shared/header.php';
+$esc=static function($v){return htmlspecialchars((string)$v,ENT_QUOTES,'UTF-8');};
+$money=static function($v){return 'LKR '.number_format((float)$v,2);};
+$change=static function($now,$before){$before=(float)$before;return $before>0?number_format(((float)$now-$before)/$before*100,1).'% vs previous period':'Previous period: '.($before==0?'no data':number_format($before));};
+?>
+<style>
+.report-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.report-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;min-width:0}.report-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin:22px 0}.report-number{font-size:1.65rem;font-weight:750;color:#152441;overflow-wrap:anywhere}.report-muted{color:#64748b;font-size:.85rem}.report-panels{display:grid;grid-template-columns:1fr 1fr;gap:18px}.report-table-wrap{overflow-x:auto;width:100%}.report-table{border-collapse:collapse;width:100%;font-size:.9rem}.report-table th,.report-table td{padding:11px 9px;border-bottom:1px solid #e5e7eb;text-align:left}.report-table th{color:#475569}.report-bar{height:10px;border-radius:6px;background:#e2e8f0;overflow:hidden}.report-bar span{display:block;height:100%;background:#2563eb}.report-card h3{margin:0 0 14px}.report-note{margin:12px 0;color:#64748b;font-size:.85rem}.report-hidden{display:none}@media(max-width:900px){.report-panels{grid-template-columns:1fr}}@media print{.sidebar,.topbar,.report-controls,.report-no-print{display:none!important}.report-panels{grid-template-columns:1fr}.report-card{break-inside:avoid}.report-hidden{display:block!important}body{background:white!important}}
+</style>
+<header class="content-header"><div class="header-left"><h2 class="page-title">Reports &amp; Analytics</h2><p class="page-subtitle">Real platform transactions, budgets and supplier activity</p></div><div class="header-right report-controls"><form method="get" action="<?php echo $esc(URLROOT); ?>/admin/reports"><label for="period-select">Period </label><select class="filter-select" id="period-select" name="days" onchange="this.form.submit()"><option value="7" <?= $data['days']==7?'selected':'' ?>>Last 7 days</option><option value="30" <?= $data['days']==30?'selected':'' ?>>Last 30 days</option><option value="90" <?= $data['days']==90?'selected':'' ?>>Last 90 days</option></select></form><button class="btn btn-navy" type="button" onclick="window.print()">Print / Save PDF</button></div></header>
+<p class="report-note">Reporting period: <?= $esc($data['start']) ?> to <?= $esc(date('Y-m-d')) ?>. Transaction values are based on recorded transactions; budgets are separately recorded planned amounts.</p>
+<section class="report-cards">
+<div class="report-card"><div class="report-muted">Total Transactions</div><div class="report-number"><?= number_format($data['stats']['transactions']) ?></div><div class="report-muted"><?= $esc($change($data['stats']['transactions'],$data['prior']['transactions'])) ?></div></div>
+<div class="report-card"><div class="report-muted">Recorded Transaction Volume</div><div class="report-number"><?= $esc($money($data['stats']['volume'])) ?></div><div class="report-muted"><?= $esc($change($data['stats']['volume'],$data['prior']['volume'])) ?></div></div>
+<div class="report-card"><div class="report-muted">Average Transaction Value</div><div class="report-number"><?= $esc($money($data['stats']['average'])) ?></div><div class="report-muted"><?= $esc($change($data['stats']['average'],$data['prior']['average'])) ?></div></div>
+<div class="report-card"><div class="report-muted">Active Suppliers (current)</div><div class="report-number"><?= number_format($data['active']) ?></div><div class="report-muted">Not filtered by transaction period</div></div>
+<div class="report-card"><div class="report-muted">Recorded Income</div><div class="report-number"><?= $esc($money($data['stats']['income'])) ?></div></div>
+<div class="report-card"><div class="report-muted">Recorded Expenses</div><div class="report-number"><?= $esc($money($data['stats']['expenses'])) ?></div></div>
+<div class="report-card"><div class="report-muted">Budgets Recorded for Period</div><div class="report-number"><?= $esc($money($data['budget'])) ?></div><div class="report-muted">Monthly budgets with month dates in selected range</div></div>
+</section>
+<section class="report-panels"><div class="report-card"><h3>Expense Category Performance</h3><p class="report-muted">Based on recorded expense transactions (not product views)</p><?php $max=0;foreach($data['categories'] as $c){$max=max($max,(float)$c['total']);} if(!$data['categories']): ?><p>No expense transactions for this period.</p><?php else: ?><div class="report-table-wrap"><table class="report-table"><thead><tr><th>Category</th><th>Transactions</th><th>Total spent</th></tr></thead><tbody><?php foreach($data['categories'] as $c): ?><tr><td><?= $esc($c['name']) ?><div class="report-bar"><span style="width:<?= $max>0?round((float)$c['total']/$max*100):0 ?>%"></span></div></td><td><?= number_format($c['transaction_count']) ?></td><td><?= $esc($money($c['total'])) ?></td></tr><?php endforeach ?></tbody></table></div><?php endif ?></div>
+<div class="report-card"><h3>Suppliers by Product Count</h3><p class="report-muted">Product count is not a measure of sales or page views.</p><?php if(!$data['suppliers']): ?><p>No suppliers found.</p><?php else: ?><div class="report-table-wrap"><table class="report-table"><thead><tr><th>Supplier</th><th>Status</th><th>Products</th><th>Approved</th></tr></thead><tbody><?php foreach(array_slice($data['suppliers'],0,5) as $s): ?><tr><td><?= $esc($s['name']) ?></td><td><?= $esc($s['account_status']) ?></td><td><?= number_format($s['product_count']) ?></td><td><?= number_format($s['approved_products']) ?></td></tr><?php endforeach ?></tbody></table></div><button class="btn btn-outline-navy btn-sm report-no-print" type="button" id="show-suppliers" style="margin-top:12px">View Full List</button><div id="all-suppliers" class="report-hidden report-table-wrap"><table class="report-table"><thead><tr><th>Supplier</th><th>Email</th><th>Status</th><th>Products</th><th>Approved</th></tr></thead><tbody><?php foreach($data['suppliers'] as $s): ?><tr><td><?= $esc($s['name']) ?></td><td><?= $esc($s['email']) ?></td><td><?= $esc($s['account_status']) ?></td><td><?= number_format($s['product_count']) ?></td><td><?= number_format($s['approved_products']) ?></td></tr><?php endforeach ?></tbody></table></div><?php endif ?></div></section>
+<section class="report-card" style="margin-top:18px"><h3>Daily Income and Expenses</h3><?php if(!$data['daily']): ?><p>No transactions recorded during this period.</p><?php else: ?><div class="report-table-wrap"><table class="report-table"><thead><tr><th>Date</th><th>Income</th><th>Expenses</th></tr></thead><tbody><?php foreach($data['daily'] as $day): ?><tr><td><?= $esc($day['day']) ?></td><td><?= $esc($money($day['income'])) ?></td><td><?= $esc($money($day['expenses'])) ?></td></tr><?php endforeach ?></tbody></table></div><?php endif ?></section>
+<script>document.getElementById('show-suppliers')?.addEventListener('click',function(){const el=document.getElementById('all-suppliers');el.classList.toggle('report-hidden');this.textContent=el.classList.contains('report-hidden')?'View Full List':'Hide Full List';});</script>
 <?php require APPROOT . '/Views/shared/footer.php'; ?>
-
-
-
-
-
-

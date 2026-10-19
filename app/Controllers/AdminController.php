@@ -2,6 +2,7 @@
 // 1. මුලින්ම User Model ෆයිල් එක ලෝඩ් කරගන්නවා
 require_once '../app/Models/User.php';
 require_once '../app/Models/Notice.php';
+require_once '../app/Models/SecurityAudit.php';
 
 class AdminController extends Controller {
 
@@ -201,31 +202,75 @@ class AdminController extends Controller {
     }
 
     public function security() {
-
-        // 🔒 පිටුව ආරක්ෂා කිරීම: කවුරුහරි ලොග් වෙලා නැත්නම් හෝ Admin නෙවෙයි නම්
-        if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
-            // එයාව බලෙන්ම Login පිටුවට Redirect කරනවා
-            header('Location: ' . URLROOT . '/admin/login');
-            exit(); // මෙතනින් කේතය රන් වෙන එක සම්පූර්ණයෙන්ම නවත්වනවා
+        $this->requireSecurityAdmin();
+        try {
+            $audit = new SecurityAudit();
+            $data = $audit->overview();
+            foreach ($data['alerts'] as &$alert) {
+                $resolvedAt = $audit->resolved($alert['email'],$alert['role'],$alert['ip_address']);
+                $alert['resolved'] = $resolvedAt && strtotime($resolvedAt) >= strtotime($alert['last_attempt']);
+            }
+            unset($alert);
+            $data['error'] = '';
+        } catch (Throwable $e) {
+            error_log('Security page: '.$e->getMessage());
+            $data = ['error'=>'Security audit tables are not available. Import security_audit_migration.sql first.', 'failed'=>0,'resets'=>0,'sessions'=>0,'alerts'=>[],'recent'=>[]];
         }
-
-        // ලොග් වෙලා ඉන්න Admin කෙනෙක් නම් විතරක් admin_security_audit View එක ලෝඩ් කරනවා
-
-        $this->view('admin/security');
+        $data['flash'] = $_SESSION['security_flash'] ?? '';
+        unset($_SESSION['security_flash']);
+        if (empty($_SESSION['security_csrf'])) $_SESSION['security_csrf'] = bin2hex(random_bytes(32));
+        $this->view('admin/security', $data);
+    }
+    private function requireSecurityAdmin() {
+        if (empty($_SESSION['user_id']) || ($_SESSION['user_role'] ?? '') !== 'admin') {
+            header('Location: '.URLROOT.'/admin/login'); exit();
+        }
+    }
+    private function securityPost() {
+        $this->requireSecurityAdmin();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_SESSION['security_csrf']) || !hash_equals($_SESSION['security_csrf'], (string)($_POST['csrf'] ?? ''))) {
+            http_response_code(403); exit('Invalid request');
+        }
+    }
+    public function resolveSecurityAlert() {
+        $this->securityPost();
+        $email=trim($_POST['email'] ?? ''); $role=trim($_POST['role'] ?? ''); $ip=trim($_POST['ip'] ?? '');
+        if ($email !== '' && in_array($role,['admin','supplier','customer'],true) && filter_var($ip,FILTER_VALIDATE_IP)) {
+            (new SecurityAudit())->resolve($email,$role,$ip,(int)$_SESSION['user_id']);
+            $_SESSION['security_flash']='Alert marked as reviewed. New failures will appear again.';
+        }
+        header('Location: '.URLROOT.'/admin/security');exit();
+    }
+    public function revokeSecuritySessions() {
+        $this->securityPost();
+        $count=(new SecurityAudit())->revokeOthers((int)$_SESSION['user_id']);
+        $_SESSION['security_flash']=$count.' tracked sessions revoked (excluding your account).';
+        header('Location: '.URLROOT.'/admin/security');exit();
+    }
+    public function exportSecurityAudit() {
+        $this->requireSecurityAdmin();
+        $rows=(new SecurityAudit())->exportRows();
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="security-audit.csv"');
+        header('Cache-Control: no-store');
+        $out=fopen('php://output','w');
+        fputcsv($out,['Date and time','Email','Role','IP','Browser','Result']);
+        foreach($rows as $row) {
+            foreach($row as &$value) { $value=(string)$value; if (preg_match('/^[=+@\-\t\r]/',$value)) $value="'".$value; } unset($value);
+            $row['successful']=$row['successful'] ? 'Success':'Failed';
+            fputcsv($out,array_values($row));
+        }
+        fclose($out);exit();
     }
 
     public function reports() {
-
-        // 🔒 පිටුව ආරක්ෂා කිරීම: කවුරුහරි ලොග් වෙලා නැත්නම් හෝ Admin නෙවෙයි නම්
-        if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
-            // එයාව බලෙන්ම Login පිටුවට Redirect කරනවා
-            header('Location: ' . URLROOT . '/admin/login');
-            exit(); // මෙතනින් කේතය රන් වෙන එක සම්පූර්ණයෙන්ම නවත්වනවා
+        if (empty($_SESSION['user_id']) || ($_SESSION['user_role'] ?? '') !== 'admin') {
+            header('Location: '.URLROOT.'/admin/login'); exit();
         }
-
-        // ලොග් වෙලා ඉන්න Admin කෙනෙක් නම් විතරක් admin_reports View එක ලෝඩ් කරනවා
-
-        $this->view('admin/admin_reports');
+        require_once '../app/Models/AdminReports.php';
+        $days = filter_input(INPUT_GET, 'days', FILTER_VALIDATE_INT);
+        $data = (new AdminReports())->get($days ?: 30);
+        $this->view('admin/admin_reports', $data);
     }
 
     public function settings() {
@@ -431,10 +476,12 @@ class AdminController extends Controller {
             // Hardcode කරපු කෑල්ල අයින් කරලා, Model එක හරහා Database එකෙන් චෙක් කරනවා.
             // Role එක විදිහට 'admin' කියලත් යවනවා.
             $loggedInUser = $this->userModel->login($email, $password, 'admin');
+            (new SecurityAudit())->record($email, 'admin', (bool)($loggedInUser && !isset($loggedInUser['error'])), $loggedInUser['id'] ?? null);
 
             // Check for successful login (must be a row array, not an error array)
             if ($loggedInUser && is_array($loggedInUser) && !isset($loggedInUser['error'])) {
 
+                session_regenerate_id(true);
                 $_SESSION['user_id'] = $loggedInUser['id'];
                 $_SESSION['user_email'] = $loggedInUser['email'];
                 $_SESSION['user_name'] = $loggedInUser['name'];

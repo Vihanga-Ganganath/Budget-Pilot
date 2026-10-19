@@ -1,5 +1,6 @@
 <?php
 require_once '../app/Models/User.php';
+require_once '../app/Models/SecurityAudit.php';
 require_once '../app/Models/Notice.php';
 require_once '../app/Models/Product.php';
 
@@ -37,6 +38,7 @@ class SupplierController extends Controller {
             $password = $_POST['password'] ?? '';
 
             $result = $this->userModel->login($email, $password, 'supplier');
+            (new SecurityAudit())->record($email,'supplier',(bool)($result && !isset($result['error'])),$result['id'] ?? null);
 
             if (is_array($result) && isset($result['error'])) {
                 // Specific account-status error from model

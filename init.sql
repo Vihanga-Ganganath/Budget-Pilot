@@ -466,3 +466,24 @@ CREATE TABLE IF NOT EXISTS notices (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_notices_admin FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- security_logins
+CREATE TABLE IF NOT EXISTS security_login_attempts (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ email VARCHAR(150) NOT NULL, role VARCHAR(20) NOT NULL,
+ user_id INT NULL, ip_address VARCHAR(45) NOT NULL, user_agent VARCHAR(255) NOT NULL DEFAULT '',
+ successful TINYINT(1) NOT NULL DEFAULT 0, attempted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ INDEX idx_attempted (attempted_at), INDEX idx_email_ip (email,ip_address,attempted_at)
+);
+CREATE TABLE IF NOT EXISTS security_resolutions (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ email VARCHAR(150) NOT NULL, role VARCHAR(20) NOT NULL, ip_address VARCHAR(45) NOT NULL,
+ resolved_by INT NOT NULL, resolved_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ INDEX idx_resolution (email,role,ip_address,resolved_at)
+);
+CREATE TABLE IF NOT EXISTS security_sessions (
+ token_hash CHAR(64) PRIMARY KEY, user_id INT NOT NULL,
+ last_seen TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ revoked TINYINT(1) NOT NULL DEFAULT 0,
+ INDEX idx_active (last_seen,revoked)
+);
