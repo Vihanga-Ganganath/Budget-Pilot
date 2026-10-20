@@ -1,349 +1,225 @@
-
 <?php require APPROOT . '/Views/shared/header.php'; ?>
+<?php
+$u = $data['user'];
 
-      <div class="content">
-    <div class="dashboard-header">
+// Photo link: new photos are only a file name (in assets/img/avatars), old ones a path inside public/
+function avatarUrl($file) {
+    if (empty($file)) return '';
+    if (strpos($file, '/') !== false) return URLROOT . '/public/' . $file;
+    return URLROOT . '/public/assets/img/avatars/' . $file;
+}
+$photo    = avatarUrl($u['profile_picture_url']);
+$initials = strtoupper(substr($u['name'], 0, 1));
+$genders  = ['male' => 'Male', 'female' => 'Female', 'other' => 'Other', 'prefer_not_to_say' => 'Prefer not to say'];
+$currencies = ['USD' => 'USD - US Dollar ($)', 'EUR' => 'EUR - Euro (&euro;)', 'GBP' => 'GBP - British Pound (&pound;)',
+               'LKR' => 'LKR - Sri Lankan Rupee (Rs)', 'INR' => 'INR - Indian Rupee (&#8377;)', 'AUD' => 'AUD - Australian Dollar ($)'];
+?>
+
+<div>
+    <div class="dashboard-header" style="margin-bottom:20px;">
         <div>
             <h1 class="page__title">Profile &amp; Settings</h1>
             <p class="page__sub">Manage your personal information and application preferences.</p>
         </div>
     </div>
 
-      <div class="layout">
-        <!-- ---------- Left column ---------- -->
+    <?php if (!empty($data['flash'])): ?>
+        <p style="background:#DCFCE7; border:1px solid #BDE6CE; color:#166534; padding:12px 16px; border-radius:8px; margin:0 0 20px;"><?php echo htmlspecialchars($data['flash']); ?></p>
+    <?php endif; ?>
+
+    <div class="layout layout--even">
+        <!-- ---------- Left column: profile ---------- -->
         <div class="col">
 
-          <!-- Identity -->
-          <section class="card identity">
-            <div class="identity__photo" style="display:flex; align-items:center; gap:20px;">
-              <span class="identity__avatar" id="profileAvatar" aria-hidden="true"></span>
-              <div class="identity__upload">
-                <label class="btn" style="background:#fff; color:var(--color-primary); border:1px solid var(--color-primary); cursor:pointer;" for="avatarFile">Change Photo</label>
-                <input style="display:none;" id="avatarFile" type="file" accept="image/*" />
-              </div>
-            </div>
-            <div class="identity__text">
-              <h2 class="identity__name" id="displayName"></h2>
-              <p class="identity__role" id="displayRole"></p>
-            </div>
-            <button class="btn btn--outline" type="button" id="editBtn">Edit Profile</button>
-          </section>
+            <!-- ===== Profile form: identity + account details + preferences ===== -->
+            <form action="<?php echo URLROOT; ?>/customer/settings" method="post" enctype="multipart/form-data" class="col">
+                <input type="hidden" name="form" value="profile">
 
-          <!-- Account details -->
-          <section class="card">
-            <h2 class="card__title">Account Details</h2>
-            <p class="card__sub">Fill in anything you skipped at sign-up. Changes apply when you save.</p>
-            <div class="fields">
-              <div class="field">
-                <label class="label" for="fName">Full name</label>
-                <input class="control" id="fName" type="text" placeholder="Your full name" />
-                <p class="err" id="fNameErr" role="alert"></p>
-              </div>
-              <div class="field">
-                <label class="label" for="fEmail">Email address</label>
-                <input class="control" id="fEmail" type="email" placeholder="name@example.com" />
-                <p class="err" id="fEmailErr" role="alert"></p>
-              </div>
-              <div class="field">
-                <label class="label" for="fIncome">Monthly income</label>
-                <div class="control control--money">
-                  <span class="control__prefix" id="incomeSymbol">$</span>
-                  <input id="fIncome" type="number" min="0" step="0.01" placeholder="Add your monthly income" data-member-lock />
-                </div>
-                <p class="hint" id="incomeDerivedHint" hidden>Your sign-up income plus everything recorded under Financial Data.</p>
-                <p class="hint" id="incomeOwnerHint" hidden>Your salary is set by the account holder.</p>
-                <p class="err" id="fIncomeErr" role="alert"></p>
-              </div>
-              <div class="field">
-                <label class="label" for="fSavings">Savings goal</label>
-                <div class="control control--money">
-                  <span class="control__prefix" id="savingsSymbol">$</span>
-                  <input id="fSavings" type="number" min="0" step="0.01" placeholder="Add a savings goal" />
-                </div>
-                <p class="err" id="fSavingsErr" role="alert"></p>
-              </div>
-              <div class="field">
-                <label class="label" for="fNic">National ID card (NIC)</label>
-                <input class="control" id="fNic" type="text" placeholder="Add your NIC number" />
-                <p class="err" id="fNicErr" role="alert"></p>
-              </div>
-              <div class="field field--split">
-                <div>
-                  <label class="label" for="fGender">Gender</label>
-                  <div class="control control--select">
-                    <select id="fGender">
-                      <option value="">Not set</option>
-                      <option value="female">Female</option>
-                      <option value="male">Male</option>
-                      <option value="other">Other</option>
-                      <option value="undisclosed">Prefer not to say</option>
-                    </select>
-                  </div>
-                </div>
-                <div>
-                  <label class="label" for="fAge">Age</label>
-                  <input class="control" id="fAge" type="number" min="13" max="120" placeholder="Add your age" />
-                </div>
-                <p class="err" id="fAgeErr" role="alert"></p>
-              </div>
-            </div>
-          </section>
+                <!-- Identity -->
+                <section class="card identity">
+                    <span class="identity__avatar" style="<?php echo $photo ? "background-image:url('" . htmlspecialchars($photo) . "')" : 'background-color:var(--color-primary)'; ?>"><?php echo $photo ? '' : htmlspecialchars($initials); ?></span>
+                    <div class="identity__text">
+                        <h2 class="identity__name"><?php echo htmlspecialchars($u['name']); ?></h2>
+                        <p class="identity__role"><?php echo $u['household_role'] == 'head' ? 'Account Holder' : 'Family Member'; ?></p>
+                        <label class="label" for="photo" style="margin-top:12px;">Change photo</label>
+                        <input id="photo" name="photo" type="file" accept="image/*" />
+                    </div>
+                </section>
 
-          <!-- Change password -->
-          <section class="card" id="passwordCard">
-            <h2 class="card__title">Change Password</h2>
-            <p class="card__sub">Enter your current password, then choose a new one. This is saved straight away.</p>
-            <div class="fields">
-              <div class="field">
-                <label class="label" for="pwCurrent">Current password</label>
-                <input class="control" id="pwCurrent" type="password" autocomplete="current-password" />
-                <p class="err" id="pwCurrentErr" role="alert"></p>
-              </div>
-              <div class="field">
-                <label class="label" for="pwNew">New password</label>
-                <input class="control" id="pwNew" type="password" autocomplete="new-password" />
-                <p class="hint">8+ characters with upper and lower case, a number and a symbol.</p>
-                <p class="err" id="pwNewErr" role="alert"></p>
-              </div>
-              <div class="field">
-                <label class="label" for="pwConfirm">Confirm new password</label>
-                <input class="control" id="pwConfirm" type="password" autocomplete="new-password" />
-                <p class="err" id="pwConfirmErr" role="alert"></p>
-              </div>
-              <div class="field">
-                <button class="btn btn--primary" type="button" id="pwBtn">Update password</button>
-              </div>
-            </div>
-          </section>
+                <!-- Account details -->
+                <section class="card">
+                    <h2 class="card__title">Account Details</h2>
+                    <p class="card__sub">The details you entered when you created your account. Change anything and press Save.</p>
+                    <div class="fields">
+                        <div class="field">
+                            <label class="label" for="fName">Full name</label>
+                            <input class="control" id="fName" name="name" type="text" value="<?php echo htmlspecialchars($u['name']); ?>" />
+                        </div>
+                        <div class="field">
+                            <label class="label" for="fEmail">Email address</label>
+                            <input class="control" id="fEmail" name="email" type="email" value="<?php echo htmlspecialchars($u['email']); ?>" />
+                        </div>
+                        <div class="field">
+                            <label class="label" for="fIncome">Monthly income</label>
+                            <div class="control control--money">
+                                <span class="control__prefix">$</span>
+                                <input id="fIncome" name="income" type="number" min="0" step="0.01" value="<?php echo htmlspecialchars($u['monthly_income'] ?? ''); ?>" />
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label" for="fSavings">Savings goal</label>
+                            <div class="control control--money">
+                                <span class="control__prefix">$</span>
+                                <input id="fSavings" name="savings" type="number" min="0" step="0.01" value="<?php echo htmlspecialchars($u['financial_goals'] ?? ''); ?>" />
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label" for="fNic">National ID card (NIC)</label>
+                            <input class="control" id="fNic" name="nic" type="text" value="<?php echo htmlspecialchars($u['nic'] ?? ''); ?>" />
+                        </div>
+                        <div class="field field--split">
+                            <div>
+                                <label class="label" for="fGender">Gender</label>
+                                <div class="control control--select">
+                                    <select id="fGender" name="gender">
+                                        <option value="">Not set</option>
+                                        <?php foreach ($genders as $value => $text): ?>
+                                            <option value="<?php echo $value; ?>" <?php echo ($u['gender'] ?? '') == $value ? 'selected' : ''; ?>><?php echo $text; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="label" for="fAge">Age</label>
+                                <input class="control" id="fAge" name="age" type="number" min="13" max="120" value="<?php echo htmlspecialchars($u['age'] ?? ''); ?>" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-          <!-- Two-factor authentication (users.two_factor_enabled + security PIN)  two-factor.js -->
-          <section class="card" id="tfaCard">
-            <div class="tfa__head">
-              <h2 class="card__title">Two-Factor Authentication</h2>
-              <span class="tfa__badge" id="tfaBadge">Checking</span>
-            </div>
-            <p class="card__sub">Resetting a forgotten password always asks for your NIC. When two-factor is on, it also asks for a 6-digit security PIN that only you know.</p>
-            <p class="hint" id="tfaNoNic" hidden>Add your NIC under Account Details and save before turning this on.</p>
-            <div class="fields">
-              <div class="field">
-                <label class="label" for="tfaPin" id="tfaPinLabel">Security PIN</label>
-                <input class="control" id="tfaPin" type="password" inputmode="numeric" maxlength="6" placeholder="6 digits" autocomplete="off" />
-                <p class="hint" id="tfaPinHint">6 digits. Avoid easy ones like 123456 or 111111.</p>
-                <p class="err" id="tfaPinErr" role="alert"></p>
-              </div>
-              <div class="field">
-                <label class="label" for="tfaPinConfirm">Confirm PIN</label>
-                <input class="control" id="tfaPinConfirm" type="password" inputmode="numeric" maxlength="6" placeholder="6 digits" autocomplete="off" />
-                <p class="err" id="tfaPinConfirmErr" role="alert"></p>
-              </div>
-              <div class="field">
-                <label class="label" for="tfaPassword">Current password to confirm</label>
-                <input class="control" id="tfaPassword" type="password" autocomplete="current-password" />
-                <p class="err" id="tfaPasswordErr" role="alert"></p>
-              </div>
-              <div class="field tfa__actions">
-                <button class="btn btn--primary" type="button" id="tfaBtn" disabled>Turn on</button>
-                <button class="btn btn--danger" type="button" id="tfaOffBtn" hidden>Turn off</button>
-              </div>
-            </div>
-          </section>
+                <!-- Financial preferences -->
+                <section class="card">
+                    <h2 class="card__title">Financial Preferences</h2>
+                    <p class="card__sub">The currency used across your budgets.</p>
+                    <div class="fields">
+                        <div class="field">
+                            <label class="label" for="fCurrency">Preferred currency</label>
+                            <div class="control control--select">
+                                <select id="fCurrency" name="currency">
+                                    <?php foreach ($currencies as $code => $text): ?>
+                                        <option value="<?php echo $code; ?>" <?php echo ($u['preferred_currency'] ?? 'USD') == $code ? 'selected' : ''; ?>><?php echo $text; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-          <!-- Financial preferences -->
-          <section class="card">
-            <h2 class="card__title">Financial Preferences</h2>
-            <p class="card__sub">Sets the currency and reporting year used across your budgets.</p>
-            <div class="fields">
-              <div class="field">
-                <label class="label" for="fCurrency">Preferred currency</label>
-                <div class="control control--select">
-                  <select id="fCurrency">
-                    <option value="USD">USD - US Dollar ($)</option>
-                    <option value="EUR">EUR - Euro ()</option>
-                    <option value="GBP">GBP - British Pound ()</option>
-                    <option value="LKR">LKR - Sri Lankan Rupee (Rs)</option>
-                    <option value="INR">INR - Indian Rupee ()</option>
-                    <option value="AUD">AUD - Australian Dollar ($)</option>
-                  </select>
-                </div>
-              </div>
-              <div class="field">
-                <label class="label" for="fFiscal">Fiscal year start</label>
-                <div class="control control--select">
-                  <select id="fFiscal">
-                    <option>January</option><option>February</option><option>March</option>
-                    <option>April</option><option>May</option><option>June</option>
-                    <option>July</option><option>August</option><option>September</option>
-                    <option>October</option><option>November</option><option>December</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </section>
+                <!-- Save bar -->
+                <footer class="actionbar" style="margin-top:0;">
+                    <p class="err" style="margin:0 auto 0 0;"><?php echo htmlspecialchars($data['error']); ?></p>
+                    <a class="btn btn--ghost" href="<?php echo URLROOT; ?>/customer/settings">Discard Changes</a>
+                    <button class="btn btn--primary" type="submit">Save All Changes</button>
+                </footer>
+            </form>
 
-          <!-- Financial data -->
-          <section class="card" id="financeCard">
-            <h2 class="card__title">Financial Data</h2>
-            <p class="card__sub">Add where your money comes from, and keep your pay sheets in one place.</p>
-
-            <div class="field finperson" id="finPersonField" hidden>
-              <label class="label" for="finPerson">Whose financial data</label>
-              <div class="control control--select">
-                <select id="finPerson"></select>
-              </div>
-              <p class="hint">You record this for everyone on the account. Saving updates that person's monthly income.</p>
-            </div>
-
-            <p class="locknote" id="financeLocked" hidden></p>
-
-            <div class="field">
-              <label class="label" for="finBase">Income at sign-up</label>
-              <div class="control control--money">
-                <span class="control__prefix" id="finBaseSymbol">$</span>
-                <input id="finBase" type="number" min="0" step="0.01" placeholder="0" data-member-lock />
-              </div>
-              <p class="hint">The figure entered when the account was created. Income sources are added on top of it.</p>
-              <p class="err" id="finBaseErr" role="alert"></p>
-            </div>
-
-            <h3 class="subhead">Income sources</h3>
-            <ul class="sources" id="sourceList"></ul>
-            <p class="empty" id="sourceEmpty">No income sources yet. Add your salary or any other income below.</p>
-
-            <div class="addsource" id="addSourceBlock">
-              <div class="addsource__grid">
-                <div class="field">
-                  <label class="label" for="srcName">Source</label>
-                  <input class="control" id="srcName" type="text" placeholder="Salary  Acme Ltd" data-member-lock />
-                </div>
-                <div class="field">
-                  <label class="label" for="srcAmount">Amount</label>
-                  <div class="control control--money">
-                    <span class="control__prefix" id="srcSymbol">$</span>
-                    <input id="srcAmount" type="number" min="0" step="0.01" placeholder="4,000" data-member-lock />
-                  </div>
-                </div>
-                <div class="field">
-                  <label class="label" for="srcFreq">Frequency</label>
-                  <div class="control control--select">
-                    <select id="srcFreq" data-member-lock>
-                      <option value="monthly">Monthly</option>
-                      <option value="weekly">Weekly</option>
-                      <option value="annual">Annual</option>
-                      <option value="once">One-off</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <p class="err" id="srcErr" role="alert"></p>
-              <button class="btn btn--soft" type="button" id="addSourceBtn" data-member-lock>Add income source</button>
-            </div>
-
-            <ul class="breakdown" id="incomeBreakdown">
-              <li><span>Income at sign-up</span><strong id="bdBase">$0</strong></li>
-              <li><span>Income sources</span><strong id="bdSources">$0</strong></li>
-              <li class="breakdown__total"><span id="bdWho">Monthly income</span><strong id="bdTotal">$0</strong></li>
-            </ul>
-
-            <h3 class="subhead">Pay sheets and statements</h3>
-            <ul class="docs" id="docList"></ul>
-            <p class="empty" id="docEmpty">No documents yet. Upload a pay sheet to keep it with your account.</p>
-            <p class="err" id="docErr" role="alert"></p>
-            <div class="docs__actions" id="docActions">
-              <label class="btn btn--soft" for="docFile">Upload pay sheet</label>
-              <input class="sr-only" id="docFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.csv,.xlsx,.doc,.docx" data-member-lock />
-              <span class="docs__hint">PDF, image, or spreadsheet up to 1MB.</span>
-            </div>
-          </section>
         </div>
 
-        <!-- ---------- Right column ---------- -->
+        <!-- ---------- Right column: password, two-factor, household ---------- -->
         <div class="col col--side">
+            <!-- ===== Change password (separate form) ===== -->
+            <section class="card" id="passwordCard">
+                <h2 class="card__title">Change Password</h2>
+                <p class="card__sub">Enter your current password, then choose a new one.</p>
+                <form action="<?php echo URLROOT; ?>/customer/settings#passwordCard" method="post" class="fields">
+                    <input type="hidden" name="form" value="password">
+                    <div class="field">
+                        <label class="label" for="pwCurrent">Current password</label>
+                        <input class="control" id="pwCurrent" name="current" type="password" autocomplete="current-password" />
+                    </div>
+                    <div class="field">
+                        <label class="label" for="pwNew">New password</label>
+                        <input class="control" id="pwNew" name="new" type="password" autocomplete="new-password" />
+                        <p class="hint">At least 8 characters.</p>
+                    </div>
+                    <div class="field">
+                        <label class="label" for="pwConfirm">Confirm new password</label>
+                        <input class="control" id="pwConfirm" name="confirm" type="password" autocomplete="new-password" />
+                    </div>
+                    <!-- button sits at the bottom of the row, level with the Confirm box -->
+                    <div class="field" style="align-self:end;">
+                        <button class="btn btn--primary" type="submit" style="width:100%; min-height:50px;">Update password</button>
+                    </div>
+                    <p class="err" style="grid-column:1 / -1; margin:0;"><?php echo htmlspecialchars($data['pwError']); ?></p>
+                </form>
+            </section>
 
-          <section class="card">
-            <h2 class="card__title">App Settings</h2>
+            <!-- ===== Two-factor authentication (security PIN for Forgot Password) ===== -->
+            <?php $tfaOn = !empty($u['two_factor_enabled']); ?>
+            <section class="card" id="tfaCard">
+                <div class="tfa__head">
+                    <h2 class="card__title">Two-Factor Authentication</h2>
+                    <span class="tfa__badge <?php echo $tfaOn ? 'is-on' : ''; ?>"><?php echo $tfaOn ? 'On' : 'Off'; ?></span>
+                </div>
+                <p class="card__sub">
+                    <?php if ($tfaOn): ?>
+                        Two-factor is <strong>on</strong>. Forgot Password asks for your <strong>email and your 6-digit security PIN</strong>.
+                    <?php else: ?>
+                        Two-factor is <strong>off</strong>. Forgot Password only asks for your <strong>email</strong>. Set a PIN to make it safer.
+                    <?php endif; ?>
+                </p>
+                <form action="<?php echo URLROOT; ?>/customer/settings#tfaCard" method="post" class="fields">
+                    <input type="hidden" name="form" value="<?php echo $tfaOn ? 'tfa_off' : 'tfa_on'; ?>">
+                    <?php if (!$tfaOn): ?>
+                        <div class="field">
+                            <label class="label" for="tfaPin">Security PIN</label>
+                            <input class="control" id="tfaPin" name="pin" type="password" inputmode="numeric" maxlength="6" placeholder="6 digits" autocomplete="off" />
+                            <p class="hint">6 digits. Avoid easy ones like 123456 or 111111.</p>
+                        </div>
+                        <div class="field">
+                            <label class="label" for="tfaPinConfirm">Confirm PIN</label>
+                            <input class="control" id="tfaPinConfirm" name="pin_confirm" type="password" inputmode="numeric" maxlength="6" placeholder="6 digits" autocomplete="off" />
+                        </div>
+                    <?php endif; ?>
+                    <div class="field">
+                        <label class="label" for="tfaPassword">Current password to confirm</label>
+                        <input class="control" id="tfaPassword" name="password" type="password" autocomplete="current-password" />
+                    </div>
+                    <div class="field" style="align-self:end;">
+                        <?php if ($tfaOn): ?>
+                            <button class="btn btn--danger" type="submit" style="width:100%; min-height:50px;">Turn off</button>
+                        <?php else: ?>
+                            <button class="btn btn--primary" type="submit" style="width:100%; min-height:50px;">Turn on</button>
+                        <?php endif; ?>
+                    </div>
+                    <p class="err" style="grid-column:1 / -1; margin:0;"><?php echo htmlspecialchars($data['tfaError']); ?></p>
+                </form>
+            </section>
 
-            
-
-            <div class="setting">
-              <span class="setting__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-              </span>
-              <span class="setting__text">
-                <span class="setting__name">Smart Alerts</span>
-                <span class="setting__desc">Budget &amp; spend alerts</span>
-              </span>
-              <button class="toggle" type="button" id="alertToggle" role="switch" aria-checked="true" aria-label="Smart alerts"><span class="toggle__knob"></span></button>
-            </div>
-          </section>
-
-          <section class="card card--navy">
-            <h2 class="card__title card__title--light">Security Checkup</h2>
-            <p class="checkup__text" id="checkupText">Checking your account</p>
-            <div class="checkup__bar"><span class="checkup__fill" id="checkupFill"></span></div>
-            <button class="btn btn--white" type="button" id="checkupBtn">View Details</button>
-          </section>
-
-          <section class="card">
-            <h2 class="card__title">Data Management</h2>
-            <button class="rowbtn" type="button" id="exportBtn">
-              
-              <span>Export Financial Data</span>
-              <svg class="rowbtn__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
-            </button>
-            
-            <button class="rowbtn rowbtn--danger" type="button" id="deactivateBtn">
-              <svg class="rowbtn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5L21.5 20h-19z"/><path d="M12 10v4M12 17.2v.1"/></svg>
-              <span>Deactivate Account</span>
-              <svg class="rowbtn__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
-            </button>
-          </section>
-          <section class="card">
-            <h2 class="card__title">Household</h2>
-            <p class="card__sub">Everyone who can sign in to this account.</p>
-            <ul class="people" id="peopleList"></ul>
-            <a class="btn btn--soft btn--block" href="<?php echo URLROOT; ?>/customer/register#members">Add family member</a>
-          </section>
+            <section class="card">
+                <h2 class="card__title">Household</h2>
+                <p class="card__sub">Everyone who can sign in to this account.</p>
+                <ul class="people">
+                    <?php foreach ($data['people'] as $person): ?>
+                        <?php $pPhoto = avatarUrl($person['profile_picture_url']); ?>
+                        <li class="person">
+                            <span class="person__avatar" style="<?php echo $pPhoto ? "background-image:url('" . htmlspecialchars($pPhoto) . "')" : 'background-color:var(--color-primary)'; ?>"><?php echo $pPhoto ? '' : htmlspecialchars(strtoupper(substr($person['name'], 0, 1))); ?></span>
+                            <span class="person__text">
+                                <span class="person__name"><?php echo htmlspecialchars($person['name']); ?></span>
+                                <span class="person__mail"><?php echo htmlspecialchars($person['email']); ?></span>
+                            </span>
+                            <?php if ($person['id'] == $_SESSION['user_id']): ?>
+                                <span class="person__tag person__tag--you">You</span>
+                            <?php elseif ($person['household_role'] == 'head'): ?>
+                                <span class="person__tag person__tag--main">Holder</span>
+                            <?php endif; ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+                <a class="btn btn--soft btn--block" href="<?php echo URLROOT; ?>/customer/household">Manage household</a>
+            </section>
         </div>
-      </div>
-
-      <!-- ---------- Save bar ---------- -->
-      <footer class="actionbar">
-        <p class="actionbar__state" id="dirtyState"></p>
-        <button class="btn btn--ghost" type="button" id="discardBtn" disabled>Discard Changes</button>
-        <button class="btn btn--primary" type="button" id="saveBtn" disabled>Save All Changes</button>
-      </footer>
-    <!-- Toast -->
-<div class="toast" id="toast" role="status" hidden></div>
-
-<!-- Modal -->
-<div class="modal" id="modal" hidden>
-  <div class="modal__backdrop" id="modalBackdrop"></div>
-  <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <h2 class="modal__title" id="modalTitle"></h2>
-    <div class="modal__body" id="modalBody"></div>
-    <div class="modal__actions" id="modalActions">
-      </div>
     </div>
-  </div>
-
-  <script>window.URLROOT = "<?php echo URLROOT; ?>";</script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/store.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/store.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/notify.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/notify.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/household-ui.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/household-ui.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/deactivate.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/deactivate.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/settings.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/settings.js'); ?>"></script>
-<script src="<?php echo URLROOT; ?>/public/js/customer-js/two-factor.js?v=<?php echo @filemtime(APPROOT . '/../public/js/customer-js/two-factor.js'); ?>" defer></script>
-
 </div>
 
 <?php require APPROOT . '/Views/shared/footer.php'; ?>
-
-
-
-
-
-
-
-
-
-

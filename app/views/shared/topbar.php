@@ -73,8 +73,9 @@ if (!$initials) $initials = strtoupper(substr($userRole, 0, 1));
 
     <!-- Profile Circle & Dropdown -->
     <div class="appbar__profile" id="topbarProfileDropdownBtn">
-      <span class="appbar__avatar has-bg" title="<?php echo htmlspecialchars($userName); ?>" aria-hidden="true">
-        <?php echo htmlspecialchars($initials); ?>
+      <?php $userPhoto = $_SESSION['user_photo'] ?? ''; // set at customer login / settings ?>
+      <span class="appbar__avatar has-bg" title="<?php echo htmlspecialchars($userName); ?>" aria-hidden="true" style="<?php echo $userPhoto ? "background-image:url('" . htmlspecialchars($userPhoto) . "')" : ''; ?>">
+        <?php echo $userPhoto ? '' : htmlspecialchars($initials); ?>
       </span>
       <div id="topbarProfilePanel" class="dropdown-panel">
           <div class="dropdown-header"><?php echo htmlspecialchars($userName); ?></div>
@@ -91,4 +92,3 @@ if (!$initials) $initials = strtoupper(substr($userRole, 0, 1));
     </div>
   </div>
 </header>
-

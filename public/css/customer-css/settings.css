@@ -571,10 +571,6 @@ input,select,textarea{min-width:0;max-width:100%;}
 .tfa__actions .btn[hidden]{display:none;}
 #tfaPin,#tfaPinConfirm{letter-spacing:.3em;}
 
-
-
-
-
-
-
-
+/* Settings page: two equal columns that use the full page width */
+.layout--even{grid-template-columns:1fr 1fr;}
+@media (max-width:1080px){ .layout--even{grid-template-columns:1fr;} }

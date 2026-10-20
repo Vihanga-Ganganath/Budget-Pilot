@@ -49,6 +49,7 @@ CREATE TABLE transaction_categories (
     household_id INT NULL, -- NULL means it's a global system category (e.g., 'Groceries', 'Transport')
     name VARCHAR(100) NOT NULL,
     type ENUM('income', 'expense') NOT NULL,
+    suggested_percent DECIMAL(5,2) NOT NULL DEFAULT 0, -- % of (income - savings goal) suggested for this category on the Budgets page
     icon VARCHAR(50), -- For UI display (e.g., a material icon name)
     is_active BOOLEAN DEFAULT TRUE,
     
@@ -429,30 +430,30 @@ CREATE TABLE inventory_logs (
     FOREIGN KEY (variant_id) REFERENCES product_variants(id) ON DELETE CASCADE
 );
 
--- ============================================================
+-- =====================================================
 -- MIGRATION: Run this once on an existing database
 -- ALTER TABLE users
 --   MODIFY COLUMN account_status
 --     ENUM('active','locked','suspended','pending') DEFAULT 'active';
--- ============================================================
+-- =====================================================
 
--- ============================================================
+-- =====================================================
 -- MIGRATION: customer profile fields (run once on an existing database)
 -- ALTER TABLE users
 --   DROP COLUMN date_of_birth,
 --   ADD COLUMN age TINYINT UNSIGNED NULL AFTER nic;
--- ============================================================
+-- =====================================================
 
--- ============================================================
+-- =====================================================
 -- MIGRATION: forgot password with NIC + security PIN (run once on an
 -- existing database; Customer::ensureSchema() also does this on its own)
 -- ALTER TABLE users ADD COLUMN two_factor_pin_hash VARCHAR(255) NULL AFTER two_factor_enabled;
 -- DROP TABLE IF EXISTS password_resets;
 -- then run the CREATE TABLE password_resets above.
--- ============================================================
+-- =====================================================
 
 
--- ============================================================
+-- =====================================================
 -- Admin Notice Management
 CREATE TABLE IF NOT EXISTS notices (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -466,6 +467,22 @@ CREATE TABLE IF NOT EXISTS notices (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_notices_admin FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
 );
+
+
+-- =====================================================
+-- Budget plan categories (global, household_id = NULL)
+-- suggested_percent = % of the money left after the savings goal.
+-- The 8 expense percentages add up to 100. Change them here to change the suggested plan.
+INSERT INTO transaction_categories (household_id, name, type, suggested_percent) VALUES
+(NULL, 'Grocery',        'expense', 30),
+(NULL, 'Transportation', 'expense', 10),
+(NULL, 'Clothing',       'expense', 5),
+(NULL, 'Tuition',        'expense', 10),
+(NULL, 'Rent',           'expense', 25),
+(NULL, 'Loan',           'expense', 10),
+(NULL, 'Medicine',       'expense', 5),
+(NULL, 'Other',          'expense', 5),
+(NULL, 'Additional Income', 'income', 0);
 
 -- for security 
 CREATE TABLE IF NOT EXISTS security_login_attempts (

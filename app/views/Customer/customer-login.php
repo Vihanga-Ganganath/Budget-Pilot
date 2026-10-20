@@ -32,9 +32,9 @@
             </div>
         <?php endif; ?>
 
-        <?php if (!empty($_GET['registered'])): ?>
+        <?php if (!empty($_GET['registered']) || !empty($_GET['reset'])): ?>
             <div class="login-alert login-alert--success">
-                Registration successful! Please log in.
+                <?php echo !empty($_GET['reset']) ? 'Password changed! Please log in with your new password.' : 'Registration successful! Please log in.'; ?>
             </div>
         <?php endif; ?>
 
@@ -52,7 +52,7 @@
             <div class="form-group">
                 <div class="form-header">
                     <label for="password">Password</label>
-                    <a href="#">Forgot password?</a>
+                    <a href="<?php echo URLROOT; ?>/customer/forgot">Forgot password?</a>
                 </div>
                 <div class="input-wrapper">
                     <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
@@ -84,4 +84,3 @@
     <script src="<?php echo URLROOT; ?>/public/assets/js/login.js?v=<?php echo @filemtime(APPROOT . '/../public/assets/js/login.js'); ?>"></script>
 </body>
 </html>
-

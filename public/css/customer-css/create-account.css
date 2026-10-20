@@ -7,9 +7,18 @@
 [hidden]{display:none !important;}
 
 body.signup{
-  background:#FFFFFF;
+  /* same colours and fonts as the login page */
+  --color-primary:#16A34A;
+  --color-primary-dark:#16A34A;
+  --color-success:#16A34A;
+  --color-text:#1B2333;
+  --color-bg:#F9FAFB;
+  --font-title:'Outfit','Poppins',sans-serif;
+  background:var(--color-bg);
   margin:0;
 }
+body.signup .btn--primary:hover{background:#15803D;}
+.page-head .login-brand{justify-self:center;margin-bottom:0;}
 
 /* ---------- Page header ---------- */
 .page-head{
@@ -26,7 +35,6 @@ body.signup{
   color:#3F4654;
 }
 .page-head__back:hover{color:var(--color-primary);}
-.page-head .brand{justify-self:center;}
 .page-head__alt{
   justify-self:end;
   margin:0;
@@ -233,7 +241,3 @@ body.signup{
   .signup__title{font-size:1.7rem;}
   .grid-2{grid-template-columns:1fr;}
 }
-
-
-
-
