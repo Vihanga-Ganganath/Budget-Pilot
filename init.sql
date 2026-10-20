@@ -467,7 +467,7 @@ CREATE TABLE IF NOT EXISTS notices (
     CONSTRAINT fk_notices_admin FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- security_logins
+-- for security 
 CREATE TABLE IF NOT EXISTS security_login_attempts (
  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
  email VARCHAR(150) NOT NULL, role VARCHAR(20) NOT NULL,

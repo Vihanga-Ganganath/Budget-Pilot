@@ -27,7 +27,7 @@ class User {
                 return ['error' => 'pending'];
             }
             // Block suspended accounts
-            if ($row['account_status'] === 'suspended') {
+            if ($row['account_status'] === 'suspended' || $row['account_status'] === 'locked') {
                 return ['error' => 'suspended'];
             }
             if (password_verify($password, $row['password_hash'])) {
@@ -95,6 +95,36 @@ class User {
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function searchManagedUsers($search, $role, $status, $limit, $offset) {
+        $where = []; $args = [];
+        if ($search !== '') { $where[] = '(name LIKE :search OR email LIKE :search)'; $args[':search'] = '%' . $search . '%'; }
+        if (in_array($role, ['admin','customer','supplier'], true)) { $where[] = 'role = :role'; $args[':role'] = $role; }
+        if (in_array($status, ['active','suspended','locked','pending'], true)) { $where[] = 'account_status = :status'; $args[':status'] = $status; }
+        $clause = $where ? ' WHERE ' . implode(' AND ', $where) : '';
+        $count = $this->db->prepare('SELECT COUNT(*) FROM users' . $clause);
+        foreach ($args as $k=>$v) $count->bindValue($k,$v);
+        $count->execute(); $total = (int)$count->fetchColumn();
+        $stmt = $this->db->prepare('SELECT id,name,email,role,account_status,last_login_at FROM users' . $clause . ' ORDER BY id DESC LIMIT :lim OFFSET :off');
+        foreach ($args as $k=>$v) $stmt->bindValue($k,$v);
+        $stmt->bindValue(':lim',(int)$limit,PDO::PARAM_INT); $stmt->bindValue(':off',(int)$offset,PDO::PARAM_INT);
+        $stmt->execute(); return ['total'=>$total,'users'=>$stmt->fetchAll(PDO::FETCH_OBJ)];
+    }
+
+    public function findManagedUser($id) {
+        $stmt=$this->db->prepare('SELECT id,role,account_status FROM users WHERE id=?');
+        $stmt->execute([$id]); return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateManagedUser($id,$role,$status) {
+        $stmt=$this->db->prepare('UPDATE users SET role=?, account_status=? WHERE id=?');
+        return $stmt->execute([$role,$status,$id]);
+    }
+
+    public function deleteManagedUser($id) {
+        $stmt=$this->db->prepare('DELETE FROM users WHERE id=? AND role<>\'admin\'');
+        return $stmt->execute([$id]);
     }
 
     // ─── Admin profile picture ────────────────────────────────────────────────

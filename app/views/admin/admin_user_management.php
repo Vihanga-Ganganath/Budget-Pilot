@@ -21,7 +21,7 @@
                 $ftx  = $ft === 'success' ? '#1B6B42' : ($ft === 'warning' ? '#7A5C00' : '#C2373C');
             ?>
             <div style="background:<?php echo $fbg;?>;border:1px solid <?php echo $fbd;?>;color:<?php echo $ftx;?>;border-radius:9px;padding:12px 16px;margin-bottom:20px;font-size:.9rem;font-weight:500;">
-                <?php echo $data['flash']; ?>
+                <?php echo htmlspecialchars($data['flash'], ENT_QUOTES, 'UTF-8'); ?>
                 <button onclick="this.parentElement.remove()" style="float:right;background:none;border:0;cursor:pointer;font-size:1rem;color:<?php echo $ftx;?>;line-height:1;"></button>
             </div>
             <?php endif; ?>
@@ -35,7 +35,7 @@
                     </div>
                     <!-- Total  -->
                     <div class="stat-card-value" id="stat-total-users"><?php echo $data['stats']->total_users; ?></div>
-                    <div class="stat-card-sub"><span class="stat-trend up"> 12%</span> vs last month</div>
+                    <div class="stat-card-sub">All registered accounts</div>
                 </div>
 
                 <div class="stat-card">
@@ -69,37 +69,22 @@
                 </div>
             </section>
 
-            <!-- Filter Bar -->
-            <div class="filter-bar">
-                <div class="admin-search-wrapper">
-                    
-                    <input type="text" id="user-search-input" placeholder="Filter users...">
-                </div>
-                <select class="filter-select" id="role-filter">
-                    <option value="all">All Roles</option>
-                    <option value="customer">Customer</option>
-                    <option value="supplier">Supplier</option>
-                    <option value="admin">Admin</option>
-                </select>
-                <select class="filter-select" id="status-filter">
-                    <option value="all">All Statuses</option>
-                    <option value="active">Active</option>
-                    <option value="suspended">Suspended</option>
-                    <option value="locked">Locked</option>
-                </select>
-                <div class="filter-spacer"></div>
-                <button class="btn btn-outline-navy btn-sm" id="more-filters-btn" type="button">
-                    
-                    More Filters
-                </button>
-            </div>
+            <form class="filter-bar" method="GET" action="<?php echo URLROOT; ?>/admin/users" style="flex-wrap:wrap;gap:10px;">
+                <input type="search" name="q" class="filter-select" placeholder="Search name or email" value="<?php echo htmlspecialchars($data['search'], ENT_QUOTES, 'UTF-8'); ?>">
+                <select class="filter-select" name="role"><option value="all">All Roles</option>
+                    <?php foreach (['customer'=>'Customer','supplier'=>'Supplier','admin'=>'Admin'] as $key=>$label): ?><option value="<?php echo $key; ?>" <?php echo $data['roleFilter']===$key?'selected':''; ?>><?php echo $label; ?></option><?php endforeach; ?></select>
+                <select class="filter-select" name="status"><option value="all">All Statuses</option>
+                    <?php foreach (['active'=>'Active','suspended'=>'Suspended','locked'=>'Locked','pending'=>'Pending'] as $key=>$label): ?><option value="<?php echo $key; ?>" <?php echo $data['statusFilter']===$key?'selected':''; ?>><?php echo $label; ?></option><?php endforeach; ?></select>
+                <button class="btn btn-navy btn-sm" type="submit">Apply Filters</button>
+                <a class="btn btn-outline-navy btn-sm" href="<?php echo URLROOT; ?>/admin/users">Clear</a>
+            </form>
 
             <!-- User Table -->
             <div class="admin-table-card">
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" class="admin-checkbox" id="select-all-checkbox"></th>
+                            
                             <th>User</th>
                             <th>Role</th>
                             <th>Status</th>
@@ -132,24 +117,24 @@
                                 
                                 <!--   active    Background  (flagged-row)  -->
                                 <tr class="<?php echo $user->account_status != 'active' ? 'flagged-row' : ''; ?>" data-user-id="<?php echo $user->id; ?>">
-                                    <td><input type="checkbox" class="admin-checkbox row-checkbox"></td>
+                                    
                                     <td>
                                         <div class="cell-user">
                                             <div class="cell-avatar" style="background:#E0E7FF;color:#3730A3;"><?php echo $initial; ?></div>
                                             <div>
-                                                <div class="cell-name"><?php echo $user->name; ?></div>
-                                                <div class="cell-sub"><?php echo $user->email; ?></div>
+                                                <div class="cell-name"><?php echo htmlspecialchars($user->name, ENT_QUOTES, 'UTF-8'); ?></div>
+                                                <div class="cell-sub"><?php echo htmlspecialchars($user->email, ENT_QUOTES, 'UTF-8'); ?></div>
                                             </div>
                                         </div>
                                     </td>
                                     <td><span class="pill <?php echo $roleClass; ?>"><?php echo strtoupper($user->role); ?></span></td>
                                     <td><span class="pill <?php echo $statusClass; ?>"><span class="pill-dot"></span><?php echo $status; ?></span></td>
                                     <td><?php echo $user->last_login_at ? date('Y-m-d H:i', strtotime($user->last_login_at)) : 'Never'; ?></td>
-                                    <td style="position:relative;"><button class="row-actions-btn" data-user-id="<?php echo $user->id; ?>"></button></td>
+                                    <td><button type="button" class="btn btn-outline-navy btn-sm edit-managed-user" data-id="<?php echo (int)$user->id; ?>" data-role="<?php echo htmlspecialchars($user->role, ENT_QUOTES, 'UTF-8'); ?>" data-status="<?php echo htmlspecialchars($user->account_status, ENT_QUOTES, 'UTF-8'); ?>" data-name="<?php echo htmlspecialchars($user->name, ENT_QUOTES, 'UTF-8'); ?>">Edit</button></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else : ?>
-                            <tr><td colspan="6" style="text-align:center;color:var(--text-light);padding:32px;">No users found in database.</td></tr>
+                            <tr><td colspan="5" style="text-align:center;color:var(--text-light);padding:32px;">No users found in database.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -163,19 +148,19 @@
                     <div class="pagination" id="pagination-container">
                         <!--     -->
                         <?php if($data['currentPage'] > 1) : ?>
-                            <a href="?page=<?php echo $data['currentPage'] - 1; ?>" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; color: #334155; text-decoration: none; background: white;">&lsaquo;</a>
+                            <a href="?<?php echo htmlspecialchars(http_build_query(['q'=>$data['search'],'role'=>$data['roleFilter'],'status'=>$data['statusFilter'],'page'=>$data['currentPage'] - 1]), ENT_QUOTES, 'UTF-8'); ?>" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; color: #334155; text-decoration: none; background: white;">&lsaquo;</a>
                         <?php endif; ?>
 
                         <!--    -->
                         <?php for($i = 1; $i <= $data['totalPages']; $i++) : ?>
-                            <a href="?page=<?php echo $i; ?>" style="padding: 6px 14px; margin: 0 4px; border-radius: 6px; text-decoration: none; display: inline-block; font-weight: 600; <?php echo ($i == $data['currentPage']) ? 'background: #1e293b; color: #ffffff;' : 'background: #ffffff; color: #334155; border: 1px solid #cbd5e1;'; ?>">
+                            <a href="?<?php echo htmlspecialchars(http_build_query(['q'=>$data['search'],'role'=>$data['roleFilter'],'status'=>$data['statusFilter'],'page'=>$i]), ENT_QUOTES, 'UTF-8'); ?>" style="padding: 6px 14px; margin: 0 4px; border-radius: 6px; text-decoration: none; display: inline-block; font-weight: 600; <?php echo ($i == $data['currentPage']) ? 'background: #1e293b; color: #ffffff;' : 'background: #ffffff; color: #334155; border: 1px solid #cbd5e1;'; ?>">
                                 <?php echo $i; ?>
                             </a>
                         <?php endfor; ?>
 
                         <!--     -->
                         <?php if($data['currentPage'] < $data['totalPages']) : ?>
-                            <a href="?page=<?php echo $data['currentPage'] + 1; ?>" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; color: #334155; text-decoration: none; background: white;">&rsaquo;</a>
+                            <a href="?<?php echo htmlspecialchars(http_build_query(['q'=>$data['search'],'role'=>$data['roleFilter'],'status'=>$data['statusFilter'],'page'=>$data['currentPage'] + 1]), ENT_QUOTES, 'UTF-8'); ?>" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; color: #334155; text-decoration: none; background: white;">&rsaquo;</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -183,6 +168,38 @@
         </main>
     </div>
 
+    <div class="modal-overlay" id="manage-user-modal" style="display:none;align-items:center;justify-content:center;">
+      <div class="modal-card" style="max-width:440px;width:95%;margin:auto;padding:24px;">
+        <h3 id="managed-user-heading">Edit User</h3>
+        <form method="POST" action="<?php echo URLROOT; ?>/admin/manageUser" id="manage-user-form">
+          <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['user_manage_csrf'],ENT_QUOTES,'UTF-8'); ?>">
+          <input type="hidden" name="id" id="manage-user-id"><input type="hidden" name="action" id="manage-user-action" value="update">
+          <div class="form-field-group"><label>Role</label><select name="role" id="manage-user-role" required><option value="customer">Customer</option><option value="supplier">Supplier</option><option value="admin">Admin</option></select></div>
+          <div class="form-field-group"><label>Status</label><select name="status" id="manage-user-status" required><option value="active">Active</option><option value="suspended">Suspended</option><option value="locked">Locked</option><option value="pending">Pending</option></select></div>
+          <p id="manage-user-note" style="font-size:.85rem;color:#64748b"></p>
+          <div class="modal-actions"><button type="button" class="btn btn-outline-navy btn-sm" id="close-manage-user">Cancel</button><button type="submit" class="btn btn-navy btn-sm">Save Changes</button><button type="button" class="btn btn-reject btn-sm" id="delete-managed-user">Delete User</button></div>
+        </form>
+      </div>
+    </div>
+    <script>
+    (function(){
+      const modal=document.getElementById('manage-user-modal'),form=document.getElementById('manage-user-form');
+      document.querySelectorAll('.edit-managed-user').forEach(btn=>btn.addEventListener('click',()=>{
+        document.getElementById('manage-user-id').value=btn.dataset.id;
+        document.getElementById('manage-user-role').value=btn.dataset.role;
+        document.getElementById('manage-user-status').value=btn.dataset.status;
+        document.getElementById('managed-user-heading').textContent='Edit: '+btn.dataset.name;
+        const isAdmin=btn.dataset.role==='admin';
+        document.getElementById('manage-user-role').disabled=false;
+        document.getElementById('delete-managed-user').hidden=isAdmin;
+        document.getElementById('manage-user-note').textContent=isAdmin?'Admin accounts can change status, but cannot change role or be deleted.':'Deleting a user is permanent and may be blocked if related records exist.';
+        document.getElementById('manage-user-action').value='update';modal.style.display='flex';
+      }));
+      document.getElementById('close-manage-user').onclick=()=>modal.style.display='none';
+      modal.addEventListener('click',e=>{if(e.target===modal)modal.style.display='none'});
+      document.getElementById('delete-managed-user').onclick=()=>{if(confirm('Permanently delete this account? This cannot be undone.')){document.getElementById('manage-user-action').value='delete';form.submit()}};
+    })();
+    </script>
     <!-- Add Admin User Modal -->
     <div class="modal-overlay" id="add-admin-modal" style="display:none;align-items:center;justify-content:center;">
         <div class="modal-card" style="max-width:460px;width:100%;margin:auto;">

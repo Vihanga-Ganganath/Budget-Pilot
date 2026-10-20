@@ -1,145 +1,68 @@
-<?php require APPROOT . '/Views/shared/header.php'; ?>
+<?php require APPROOT . '/Views/shared/header.php';
+$esc=fn($v)=>htmlspecialchars((string)($v??''),ENT_QUOTES,'UTF-8');
+$f=$data['filters'];$r=$data['results'];$stats=$data['stats'];
+$query=function($overrides=[]) use($f){return http_build_query(array_merge(['q'=>$f['q'],'status'=>$f['status'],'category'=>$f['category'],'sort'=>$f['sort'],'incomplete'=>$f['incomplete']?'1':'0'],$overrides));};
+?>
+<style>
+.pm-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.pm-grid{display:grid;grid-template-columns:repeat(5,minmax(125px,1fr));gap:12px;margin-bottom:20px}
+.pm-card,.pm-panel{background:#fff;border:1px solid #dbe2ea;border-radius:12px;padding:18px}
+.pm-card strong{display:block;font-size:28px;color:#182d4a;margin-top:8px}
+.pm-card span{color:#536579;font-size:13px}
+.pm-filters{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
+.pm-filters label{display:flex;flex-direction:column;gap:5px;font-size:13px;color:#475569}
+.pm-filters input,.pm-filters select{padding:10px;border:1px solid #cbd5e1;border-radius:7px;max-width:100%}
+.pm-btn{border:1px solid #1c3557;background:#1c3557;color:white;border-radius:7px;padding:9px 13px;cursor:pointer;text-decoration:none;display:inline-block;font-size:13px}
+.pm-btn.light{background:white;color:#1c3557}.pm-btn.danger{background:#a83232;border-color:#a83232}
+.pm-table{overflow-x:auto;margin-top:16px}.pm-table table{width:100%;border-collapse:collapse;min-width:790px}
+.pm-table th,.pm-table td{padding:13px;text-align:left;border-bottom:1px solid #e2e8f0;vertical-align:top;font-size:13px}
+.pm-table th{background:#f4f7fb;color:#1c3557}
+.pm-actions{display:flex;gap:7px;flex-wrap:wrap}.pm-actions form{display:inline}
+.pm-muted{color:#64748b;font-size:12px}.pm-flash{padding:12px;border-radius:8px;margin-bottom:15px;background:#edf7ef;border:1px solid #b8dcc2}
+.pm-flash.error{background:#fff0f0;border-color:#e9b4b4}
+.pm-pages{display:flex;gap:8px;align-items:center;margin-top:16px;flex-wrap:wrap}
+@media(max-width:900px){.pm-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pm-head{align-items:flex-start}}
+@media(max-width:500px){.pm-grid{grid-template-columns:1fr 1fr}.pm-card{padding:12px}.pm-card strong{font-size:22px}.pm-filters>*{width:100%}.pm-filters input,.pm-filters select{width:100%}}
+</style>
 <main class="main-content">
-<header class="content-header" style="margin-bottom: 24px;">
-    <div class="header-left">
-        <h2 class="page-title" style="color: var(--color-primary);">Product Moderation</h2>
-        <p class="page-subtitle" style="color: var(--color-text);">Review and manage pending product submissions.</p>
-    </div>
-    <div class="header-right" style="display: flex; gap: 12px;">
-        <button class="btn" style="background: transparent; border: 1px solid var(--color-primary); color: var(--color-primary); padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;">
-            Export List
-        </button>
-        <button class="btn" style="background: var(--color-primary); border: 1px solid var(--color-primary); color: #fff; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;">
-            Auto-Approve Batch
-        </button>
-    </div>
-</header>
-
-<!-- Stat Cards -->
-<section style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
-    <div class="dashboard-card" style="background: var(--color-primary); color: #fff; padding: 24px; border-radius: var(--radius-main); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        <div style="font-size: 14px; font-weight: 600; opacity: 0.9; margin-bottom: 8px;">Pending Reviews <span style="background: rgba(255,255,255,0.15); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 8px;">12%</span></div>
-        <div style="font-size: 36px; font-weight: 700; margin-bottom: 4px;">1,432</div>
-        <div style="font-size: 13px; opacity: 0.8;">Requires manual verification</div>
-    </div>
-    <div class="dashboard-card" style="background: #fff; border: 1px solid #CBD5E1; color: var(--color-primary); padding: 24px; border-radius: var(--radius-main); box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-        <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Incomplete Data</div>
-        <div style="font-size: 36px; font-weight: 700; margin-bottom: 4px;">215</div>
-        <div style="font-size: 13px; color: var(--color-text-muted);">Missing critical attributes <a href="#" style="color: var(--color-primary); font-weight: 600; margin-left: 8px; text-decoration: underline;">View List</a></div>
-    </div>
-</section>
-
-<!-- Filter Bar -->
-<section class="dashboard-card" style="background: #fff; padding: 24px; border-radius: var(--radius-main); border: 1px solid #CBD5E1; margin-bottom: 24px;">
-    <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
-        <input type="text" placeholder="Search SKU or Name" style="flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid #CBD5E1; border-radius: 8px; color: var(--color-text);">
-        <select style="padding: 10px 14px; border: 1px solid #CBD5E1; border-radius: 8px; color: var(--color-text); background: #fff; appearance: auto;">
-            <option value="all">All Categories</option>
-            <option value="dairy">Dairy</option>
-            <option value="bakery">Bakery</option>
-            <option value="pantry">Pantry</option>
-        </select>
-        <div style="flex-grow: 1;"></div>
-        <span style="font-size: 13px; font-weight: 600; color: var(--color-text-muted);">Sort by:</span>
-        <select style="padding: 10px 14px; border: 1px solid #CBD5E1; border-radius: 8px; color: var(--color-text); background: #fff; appearance: auto;">
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-        </select>
-    </div>
-</section>
-
-<!-- Moderation Table -->
-<section class="dashboard-card" style="background: #fff; border-radius: var(--radius-main); border: 1px solid #CBD5E1; overflow: hidden;">
-    <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr style="border-bottom: 2px solid #CBD5E1; background: #f8f9fa;">
-                    <th style="text-align: left; padding: 16px; color: var(--color-primary); font-weight: 600;">Product Details</th>
-                    <th style="text-align: left; padding: 16px; color: var(--color-primary); font-weight: 600;">Category / Brand</th>
-                    <th style="text-align: left; padding: 16px; color: var(--color-primary); font-weight: 600;">Status</th>
-                    <th style="text-align: right; padding: 16px; color: var(--color-primary); font-weight: 600;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                
-                <!-- Row 1 -->
-                <tr style="border-bottom: 1px solid #CBD5E1;">
-                    <td style="padding: 16px; display: flex; align-items: center; gap: 16px;">
-                        <div style="width: 48px; height: 48px; background: #f1f5f9; border: 1px solid #CBD5E1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--color-text-muted);">[Img]</div>
-                        <div>
-                            <strong style="display: block; color: var(--color-primary); font-size: 15px; margin-bottom: 4px;">Organic Whole Milk</strong>
-                            <span style="color: var(--color-text-muted); font-size: 13px;">SKU: MILK-ORG-1G</span>
-                        </div>
-                    </td>
-                    <td style="padding: 16px;">
-                        <strong style="display: block; color: var(--color-text); font-size: 14px; margin-bottom: 4px;">Dairy</strong>
-                        <span style="color: var(--color-text-muted); font-size: 13px;">GreenHarvest Farms</span>
-                    </td>
-                    <td style="padding: 16px;">
-                        <span style="background: rgba(30, 41, 59, 0.1); color: var(--color-primary); font-weight: 600; font-size: 12px; padding: 6px 10px; border-radius: 4px; border: 1px solid var(--color-primary);">Pending</span>
-                    </td>
-                    <td style="padding: 16px; text-align: right;">
-                        <button class="btn" style="background: transparent; border: 1px solid var(--color-primary); color: var(--color-primary); padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; margin-right: 8px;">Reject</button>
-                        <button class="btn" style="background: var(--color-success); border: 1px solid var(--color-success); color: #fff; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px;">Approve</button>
-                    </td>
-                </tr>
-
-                <!-- Row 2 -->
-                <tr style="border-bottom: 1px solid #CBD5E1;">
-                    <td style="padding: 16px; display: flex; align-items: center; gap: 16px;">
-                        <div style="width: 48px; height: 48px; background: #f1f5f9; border: 1px solid #CBD5E1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--color-text-muted);">[Img]</div>
-                        <div>
-                            <strong style="display: block; color: var(--color-primary); font-size: 15px; margin-bottom: 4px;">Almond Butter (Crunchy)</strong>
-                            <span style="color: var(--color-text-muted); font-size: 13px;">SKU: NUT-ALM-CRU</span>
-                        </div>
-                    </td>
-                    <td style="padding: 16px;">
-                        <strong style="display: block; color: var(--color-text); font-size: 14px; margin-bottom: 4px;">Pantry</strong>
-                        <span style="color: var(--color-text-muted); font-size: 13px;">NutriNaturals</span>
-                    </td>
-                    <td style="padding: 16px;">
-                        <span style="background: rgba(30, 41, 59, 0.1); color: var(--color-primary); font-weight: 600; font-size: 12px; padding: 6px 10px; border-radius: 4px; border: 1px solid var(--color-primary);">Pending</span>
-                    </td>
-                    <td style="padding: 16px; text-align: right;">
-                        <button class="btn" style="background: transparent; border: 1px solid var(--color-primary); color: var(--color-primary); padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; margin-right: 8px;">Reject</button>
-                        <button class="btn" style="background: var(--color-success); border: 1px solid var(--color-success); color: #fff; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px;">Approve</button>
-                    </td>
-                </tr>
-
-                <!-- Row 3 -->
-                <tr>
-                    <td style="padding: 16px; display: flex; align-items: center; gap: 16px;">
-                        <div style="width: 48px; height: 48px; background: #f1f5f9; border: 1px solid #CBD5E1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--color-text-muted);">[Img]</div>
-                        <div>
-                            <strong style="display: block; color: var(--color-primary); font-size: 15px; margin-bottom: 4px;">Premium Coffee Beans</strong>
-                            <span style="color: var(--color-text-muted); font-size: 13px;">SKU: COF-PRM-1KG</span>
-                        </div>
-                    </td>
-                    <td style="padding: 16px;">
-                        <strong style="display: block; color: var(--color-text); font-size: 14px; margin-bottom: 4px;">Beverages</strong>
-                        <span style="color: var(--color-text-muted); font-size: 13px;">Morning Roast Co.</span>
-                    </td>
-                    <td style="padding: 16px;">
-                        <span style="background: rgba(30, 41, 59, 0.1); color: var(--color-primary); font-weight: 600; font-size: 12px; padding: 6px 10px; border-radius: 4px; border: 1px solid var(--color-primary);">Pending</span>
-                    </td>
-                    <td style="padding: 16px; text-align: right;">
-                        <button class="btn" style="background: transparent; border: 1px solid var(--color-primary); color: var(--color-primary); padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; margin-right: 8px;">Reject</button>
-                        <button class="btn" style="background: var(--color-success); border: 1px solid var(--color-success); color: #fff; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px;">Approve</button>
-                    </td>
-                </tr>
-
-            </tbody>
-        </table>
-    </div>
-    
-    <div style="padding: 16px 24px; border-top: 1px solid #CBD5E1; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa;">
-        <span style="color: var(--color-text-muted); font-size: 13px;">Showing 3 of 1,432 entries</span>
-        <div style="display: flex; gap: 4px;">
-            <button style="background: var(--color-primary); border: 1px solid var(--color-primary); color: #fff; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer;">1</button>
-            <button style="background: transparent; border: 1px solid #CBD5E1; color: var(--color-primary); padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer;">2</button>
-            <button style="background: transparent; border: 1px solid #CBD5E1; color: var(--color-primary); padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer;">3</button>
-        </div>
-    </div>
-</section>
-</main>
+<div class="pm-head">
+<div><h2 class="page-title">Product Moderation</h2><p class="page-subtitle">Review real supplier product submissions.</p></div>
+<a class="pm-btn light" href="<?= $esc(URLROOT.'/admin/products?'.$query(['export'=>'csv'])) ?>">Export filtered list (CSV)</a>
+</div>
+<?php if($data['flash']): ?><div class="pm-flash <?= $data['flash_type']==='error'?'error':'' ?>"><?= $esc($data['flash']) ?></div><?php endif; ?>
+<div class="pm-grid">
+<?php foreach(['Pending Reviews'=>'pending','Incomplete Data'=>'incomplete','Approved'=>'approved','Rejected'=>'rejected','All Products'=>'total'] as $label=>$key): ?>
+<div class="pm-card"><span><?= $esc($label) ?></span><strong><?= number_format((int)$stats[$key]) ?></strong>
+<?php if($key==='incomplete'): ?><a href="<?= $esc(URLROOT.'/admin/products?'.$query(['incomplete'=>1,'status'=>'all','page'=>1])) ?>" class="pm-muted">View incomplete products</a><?php endif; ?></div>
+<?php endforeach; ?>
+</div>
+<section class="pm-panel">
+<form method="get" action="<?= $esc(URLROOT.'/admin/products') ?>" class="pm-filters">
+<label>Search product or SKU<input name="q" maxlength="100" value="<?= $esc($f['q']) ?>" placeholder="Product name or SKU"></label>
+<label>Verification status<select name="status"><?php foreach(['all'=>'All statuses','Pending'=>'Pending','Approved'=>'Approved','Rejected'=>'Rejected'] as $value=>$label): ?><option value="<?= $esc($value) ?>" <?= $f['status']===$value?'selected':'' ?>><?= $esc($label) ?></option><?php endforeach; ?></select></label>
+<label>Category<select name="category"><option value="0">All categories</option><?php foreach($data['categories'] as $cat): ?><option value="<?= (int)$cat['id'] ?>" <?= (int)$f['category']===(int)$cat['id']?'selected':'' ?>><?= $esc($cat['name']) ?></option><?php endforeach; ?></select></label>
+<label>Sort<select name="sort"><option value="newest" <?= $f['sort']==='newest'?'selected':'' ?>>Newest first</option><option value="oldest" <?= $f['sort']==='oldest'?'selected':'' ?>>Oldest first</option></select></label>
+<label><span>Data quality</span><select name="incomplete"><option value="0" <?= !$f['incomplete']?'selected':'' ?>>All products</option><option value="1" <?= $f['incomplete']?'selected':'' ?>>Incomplete only</option></select></label>
+<button class="pm-btn" type="submit">Apply filters</button><a class="pm-btn light" href="<?= $esc(URLROOT.'/admin/products') ?>">Reset</a>
+</form>
+<p class="pm-muted" style="margin-top:15px">Showing <?= count($r['rows']) ?> of <?= number_format($r['total']) ?> matching products. Only pending products can be approved or rejected. Approval requires a name, description and valid SKU/price variant.</p>
+<div class="pm-table"><table><thead><tr><th>Product / SKU</th><th>Category / Supplier</th><th>Data check</th><th>Verification</th><th>Submitted</th><th>Actions</th></tr></thead><tbody>
+<?php foreach($r['rows'] as $product):
+$complete=trim((string)$product['name'])!=='' && trim((string)$product['description'])!=='' && (int)$product['valid_variants']>0;
+?>
+<tr><td><strong><?= $esc($product['name']) ?></strong><div class="pm-muted">SKU: <?= $esc($product['skus']?:'Not assigned') ?></div><div class="pm-muted">ID: <?= (int)$product['id'] ?></div></td>
+<td><?= $esc($product['category_name']?:'Uncategorized') ?><div class="pm-muted"><?= $esc($product['supplier_name']?:'Unknown supplier') ?></div><div class="pm-muted"><?= $esc($product['supplier_email']) ?></div></td>
+<td><?= $complete?'Complete':'Incomplete' ?></td><td><strong><?= $esc($product['admin_verification']) ?></strong></td><td><?= $esc($product['created_at']) ?></td>
+<td><?php if($product['admin_verification']==='Pending'): ?><div class="pm-actions">
+<form method="post" action="<?= $esc(URLROOT.'/admin/moderateProduct') ?>" onsubmit="return confirm('Approve this product?')"><input type="hidden" name="csrf" value="<?= $esc($data['csrf']) ?>"><input type="hidden" name="id" value="<?= (int)$product['id'] ?>"><input type="hidden" name="action" value="approve"><button class="pm-btn" type="submit" <?= !$complete?'disabled title="Incomplete product"':'' ?>>Approve</button></form>
+<form method="post" action="<?= $esc(URLROOT.'/admin/moderateProduct') ?>" onsubmit="return confirm('Reject this product?')"><input type="hidden" name="csrf" value="<?= $esc($data['csrf']) ?>"><input type="hidden" name="id" value="<?= (int)$product['id'] ?>"><input type="hidden" name="action" value="reject"><button class="pm-btn danger" type="submit">Reject</button></form>
+</div><?php else: ?><span class="pm-muted">Already reviewed</span><?php endif; ?></td></tr>
+<?php endforeach; ?>
+<?php if(!$r['rows']): ?><tr><td colspan="6" style="text-align:center;padding:28px">No products match these filters.</td></tr><?php endif; ?>
+</tbody></table></div>
+<div class="pm-pages">
+<?php if($r['page']>1): ?><a class="pm-btn light" href="<?= $esc(URLROOT.'/admin/products?'.$query(['page'=>$r['page']-1])) ?>">Previous</a><?php endif; ?>
+<span class="pm-muted">Page <?= $r['page'] ?> of <?= $r['pages'] ?></span>
+<?php if($r['page']<$r['pages']): ?><a class="pm-btn light" href="<?= $esc(URLROOT.'/admin/products?'.$query(['page'=>$r['page']+1])) ?>">Next</a><?php endif; ?>
+</div></section></main>
 <?php require APPROOT . '/Views/shared/footer.php'; ?>
