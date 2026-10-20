@@ -15,64 +15,66 @@ class AdminController extends Controller {
         $this->noticeModel = new Notice();
     }
     // Default method (If someone just types /admin)
-    public function index() {
-        $this->view('admin/dashboard');
-    }
+    public function index() { $this->dashboard(); }
 
     public function dashboard() {
-        // 🔒 පිටුව ආරක්ෂා කිරීම: කවුරුහරි ලොග් වෙලා නැත්නම් හෝ Admin නෙවෙයි නම්
-        if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
-            // එයාව බලෙන්ම Login පිටුවට Redirect කරනවා
-            header('Location: ' . URLROOT . '/admin/login');
-            exit(); // මෙතනින් කේතය රන් වෙන එක සම්පූර්ණයෙන්ම නවත්වනවා
-        }
-
-        // ලොග් වෙලා ඉන්න Admin කෙනෙක් නම් විතරක් Dashboard View එක ලෝඩ් කරනවා
-        $this->view('admin/dashboard');
+        $this->requireAdmin();
+        require_once '../app/Models/AdminDashboard.php';
+        $model=new AdminDashboard();
+        $data=$model->getData();
+        $data['userName']=$_SESSION['user_name'] ?? 'Admin';
+        $this->view('admin/dashboard',$data);
     }
 
     public function users() {
-        // 🔒 පිටුව ආරක්ෂා කිරීම: කවුරුහරි ලොග් වෙලා නැත්නම් හෝ Admin නෙවෙයි නම්
-        if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
-            header('Location: ' . URLROOT . '/admin/login');
-            exit();
+        $this->requireAdmin();
+        $search = trim(substr((string)($_GET['q'] ?? ''),0,100));
+        $role = (string)($_GET['role'] ?? 'all');
+        $status = (string)($_GET['status'] ?? 'all');
+        $limit = 10; $page = max(1,(int)($_GET['page'] ?? 1));
+        $stats = $this->userModel->getUserStats();
+        $result = $this->userModel->searchManagedUsers($search,$role,$status,$limit,($page-1)*$limit);
+        $pages = max(1,(int)ceil($result['total']/$limit));
+        $page = min($page,$pages);
+        if ($page !== max(1,(int)($_GET['page'] ?? 1))) $result=$this->userModel->searchManagedUsers($search,$role,$status,$limit,($page-1)*$limit);
+        $data = ['users'=>$result['users'],'stats'=>$stats,'currentPage'=>$page,'totalPages'=>$pages,'limit'=>$limit,'offset'=>($page-1)*$limit,'totalUsers'=>$result['total'],'search'=>$search,'roleFilter'=>$role,'statusFilter'=>$status,
+            'flash'=>$_SESSION['admin_flash'] ?? '', 'flash_type'=>$_SESSION['admin_flash_type'] ?? 'success', 'modal_error'=>$_SESSION['admin_modal_error'] ?? ''];
+        unset($_SESSION['admin_flash'],$_SESSION['admin_flash_type'],$_SESSION['admin_modal_error']);
+        if (empty($_SESSION['user_manage_csrf'])) $_SESSION['user_manage_csrf']=bin2hex(random_bytes(32));
+        $this->view('admin/admin_user_management',$data);
+    }
+
+    public function manageUser() {
+        $this->requireAdmin();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !hash_equals($_SESSION['user_manage_csrf'] ?? '', (string)($_POST['csrf'] ?? ''))) {
+            http_response_code(403); exit('Invalid request or security token.');
         }
-
-        // Model එක Load කරගැනීම
-        $userModel = $this->model('User'); 
-        
-        // ඩේටාබේස් එකෙන් Stats ලබා ගැනීම
-        $stats = $userModel->getUserStats();
-
-        // --- Pagination ගණනය කිරීම් ---
-        $limit = 6; 
-        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1; 
-        $offset = ($currentPage - 1) * $limit; 
-        
-        $totalUsers = $stats->total_users;
-        $totalPages = ceil($totalUsers / $limit); 
-
-        // අදාළ පිටුවට අදාළ යූසර්ස්ලා පමණක් ලබා ගැනීම
-        $users = $userModel->getUsers($limit, $offset);
-
-        // View එකට යැවිය යුතු සියලුම දත්ත එකතු කිරීම
-        $data = [
-            'users' => $users,
-            'stats' => $stats,
-            'currentPage' => $currentPage,
-            'totalPages' => $totalPages,
-            'limit' => $limit,
-            'offset' => $offset,
-            'totalUsers' => $totalUsers
-        ];
-
-        // View එක Load කිරීම
-        $data['flash']      = $_SESSION['admin_flash']       ?? '';
-        $data['flash_type'] = $_SESSION['admin_flash_type']  ?? 'success';
-        $data['modal_error']  = $_SESSION['admin_modal_error'] ?? '';
-        unset($_SESSION['admin_flash'], $_SESSION['admin_flash_type'], $_SESSION['admin_modal_error']);
-
-        $this->view('admin/admin_user_management', $data);
+        $id=filter_var($_POST['id'] ?? null,FILTER_VALIDATE_INT);
+        $action=(string)($_POST['action'] ?? '');
+        $existing=$id ? $this->userModel->findManagedUser($id) : false;
+        $message='User not found.'; $type='error';
+        if ($existing) {
+            try {
+                if ($action === 'update') {
+                    $role=(string)($_POST['role'] ?? ''); $status=(string)($_POST['status'] ?? '');
+                    if (!in_array($role,['admin','customer','supplier'],true) || !in_array($status,['active','suspended','locked','pending'],true)) {
+                        $message='Invalid role or status.';
+                    } elseif ($existing['role']==='admin' && $role!=='admin') {
+                        $message='Admin accounts cannot be changed to another role.';
+                    } elseif ((int)$id === (int)$_SESSION['user_id'] && $status!=='active') {
+                        $message='You cannot disable your own admin account.';
+                    } else {
+                        $this->userModel->updateManagedUser($id,$role,$status);
+                        $message='User updated successfully.'; $type='success';
+                    }
+                } elseif ($action === 'delete') {
+                    if ($existing['role']==='admin') $message='Admin accounts cannot be deleted.';
+                    else { $this->userModel->deleteManagedUser($id); $message='User deleted successfully.'; $type='success'; }
+                }
+            } catch (PDOException $e) { $message='Unable to save. The account may have related records or the role/email combination may already exist.'; }
+        }
+        $_SESSION['admin_flash']=$message; $_SESSION['admin_flash_type']=$type;
+        header('Location: '.URLROOT.'/admin/users'); exit();
     }
 
     // ─── Add Admin User ───────────────────────────────────────────────────────
@@ -188,17 +190,53 @@ class AdminController extends Controller {
 
 
     public function products() {
-
-        // 🔒 පිටුව ආරක්ෂා කිරීම: කවුරුහරි ලොග් වෙලා නැත්නම් හෝ Admin නෙවෙයි නම්
-        if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
-            // එයාව බලෙන්ම Login පිටුවට Redirect කරනවා
-            header('Location: ' . URLROOT . '/admin/login');
-            exit(); // මෙතනින් කේතය රන් වෙන එක සම්පූර්ණයෙන්ම නවත්වනවා
+        $this->requireAdmin();
+        require_once '../app/Models/AdminProductModeration.php';
+        $model=new AdminProductModeration();
+        $search=trim(substr((string)($_GET['q']??''),0,100));
+        $status=(string)($_GET['status']??'Pending');
+        if (!in_array($status,['all','Pending','Approved','Rejected'],true)) $status='Pending';
+        $category=max(0,(int)($_GET['category']??0));
+        $sort=($_GET['sort']??'newest')==='oldest'?'oldest':'newest';
+        $incomplete=($_GET['incomplete']??'')==='1';
+        if (empty($_SESSION['product_moderation_csrf'])) $_SESSION['product_moderation_csrf']=bin2hex(random_bytes(32));
+        $filters=[$search,$status,$category,$incomplete,$sort];
+        if (($_GET['export']??'')==='csv') {
+            $this->requireAdmin();
+            $rows=$model->listing(...array_merge($filters,[1,10000]))['rows'];
+            header('Content-Type: text/csv; charset=utf-8');
+            header('Content-Disposition: attachment; filename="product-moderation.csv"');
+            $output=fopen('php://output','w');
+            fputcsv($output,['ID','Product','SKU(s)','Category','Supplier','Supplier Email','Status','Created']);
+            foreach($rows as $r) { $cells=[$r['id'],$r['name'],$r['skus'],$r['category_name'],$r['supplier_name'],$r['supplier_email'],$r['admin_verification'],$r['created_at']]; foreach($cells as &$cell) { $cell=(string)$cell; if (preg_match('/^[\\s]*[=+@-]/u',$cell)) $cell="'".$cell; } unset($cell); fputcsv($output,$cells); }
+            fclose($output);exit;
         }
+        $data=['stats'=>$model->stats(),'categories'=>$model->categories(),'filters'=>['q'=>$search,'status'=>$status,'category'=>$category,'incomplete'=>$incomplete,'sort'=>$sort],
+            'results'=>$model->listing(...array_merge($filters,[max(1,(int)($_GET['page']??1))])),
+            'flash'=>$_SESSION['product_moderation_flash']??'','flash_type'=>$_SESSION['product_moderation_flash_type']??'success',
+            'csrf'=>$_SESSION['product_moderation_csrf']];
+        unset($_SESSION['product_moderation_flash'],$_SESSION['product_moderation_flash_type']);
+        $this->view('admin/admin_product_moderation',$data);
+    }
 
-        // ලොග් වෙලා ඉන්න Admin කෙනෙක් නම් විතරක් admin_product_moderation View එක ලෝඩ් කරනවා
-
-        $this->view('admin/admin_product_moderation');
+    public function moderateProduct() {
+        $this->requireAdmin();
+        if ($_SERVER['REQUEST_METHOD']!=='POST' || empty($_SESSION['product_moderation_csrf']) ||
+            !hash_equals($_SESSION['product_moderation_csrf'],(string)($_POST['csrf']??''))) {
+            http_response_code(403);exit('Invalid request or security token.');
+        }
+        $id=filter_var($_POST['id']??null,FILTER_VALIDATE_INT);
+        $action=(string)($_POST['action']??'');
+        $type='error';$message='Invalid moderation request.';
+        if ($id && in_array($action,['approve','reject'],true)) {
+            try {
+                require_once '../app/Models/AdminProductModeration.php';
+                $message=(new AdminProductModeration())->moderate((int)$id,$action);$type='success';
+            } catch(Throwable $e) {$message=$e instanceof RuntimeException?$e->getMessage():'Could not update product. Please check the database.';error_log('Product moderation: '.$e->getMessage());}
+        }
+        $_SESSION['product_moderation_flash']=$message;
+        $_SESSION['product_moderation_flash_type']=$type;
+        header('Location: '.URLROOT.'/admin/products');exit;
     }
 
     public function security() {

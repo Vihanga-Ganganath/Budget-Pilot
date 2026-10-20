@@ -1,151 +1,28 @@
-
-<?php require APPROOT . '/Views/shared/header.php'; ?>
-<header class="content-header">
-                <div class="header-left">
-                    <h2 class="page-title">Welcome back, <strong><?php echo htmlspecialchars($userName); ?></strong> </h2>
-                    <p class="page-subtitle">Platform-wide overview and pending actions across Budget Pilot.</p>
-                </div>
-                <div class="header-right">
-                    <button class="btn btn-navy btn-lg" id="export-report-btn">
-                        
-                        Export System Report
-                    </button>
-                </div>
-            </header>
-
-            <!-- Stat Cards -->
-            <section class="stat-grid">
-                <div class="stat-card">
-                    <div class="stat-card-label">
-                        Total Users
-                        
-                    </div>
-                    <div class="stat-card-value">2,846 <span class="stat-trend">+8.2%</span></div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-label">
-                        Active Suppliers
-                        
-                    </div>
-                    <div class="stat-card-value">132 <span class="stat-trend">+3.1%</span></div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-label">
-                        Pending Approvals
-                        
-                    </div>
-                    <div class="stat-card-value">23 <span class="stat-trend">Review</span></div>
-                </div>
-                <div class="stat-card ">
-                    <div class="stat-card-label">
-                        Security Alerts
-                        
-                    </div>
-                    <div class="stat-card-value">3 <span class="stat-trend">Critical</span></div>
-                </div>
-            </section>
-
-            <!-- Charts -->
-            <section class="admin-grid-2">
-                <div class="dashboard-card">
-                    <div class="card-heading-row">
-                        <h3>Platform Growth</h3>
-                        <div class="chip-toggle-group">
-                            <button class="chip-toggle" id="chip-1m" type="button">1M</button>
-                            <button class="chip-toggle active" id="chip-1y" type="button">1Y</button>
-                        </div>
-                    </div>
-                    <div class="line-chart-wrap">
-    <svg viewBox="0 0 600 220" preserveAspectRatio="none">
-        <g id="chart-line-1y" style="display:block;">
-            <polyline points="0,190 50,175 100,160 150,168 200,120 250,110 300,95 350,80 400,55 450,45 500,30 550,20 600,15" fill="none" stroke="var(--color-primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <polyline points="0,205 50,200 100,198 150,195 200,180 250,175 300,165 350,155 400,145 450,130 500,120 550,112 600,105" fill="none" stroke="var(--color-success)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        </g>
-    </svg>
-</div>
-                    <div class="chart-legend">
-                        <div class="legend-item"><span class="legend-dot" style="background:#00106B;"></span>Users</div>
-                        <div class="legend-item"><span class="legend-dot" style="background:#10B981;"></span>Suppliers</div>
-                    </div>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-heading-row">
-                        <h3>User Distribution</h3>
-                    </div>
-                    <div class="donut-chart" style="background: conic-gradient(#00106B 0% 78%, #10B981 78% 96%, #CBD5E1 96% 100%);">
-                        <div class="donut-center">
-                            <span class="donut-value">2.8k</span>
-                            <span class="donut-label">Total</span>
-                        </div>
-                    </div>
-                    <div class="donut-legend">
-                        <div class="donut-legend-row">
-                            <span class="legend-name"><span class="legend-dot" style="background:#00106B;"></span>Customers</span>
-                            <span class="legend-pct">78%</span>
-                        </div>
-                        <div class="donut-legend-row">
-                            <span class="legend-name"><span class="legend-dot" style="background:#10B981;"></span>Suppliers</span>
-                            <span class="legend-pct">18%</span>
-                        </div>
-                        <div class="donut-legend-row">
-                            <span class="legend-name"><span class="legend-dot" style="background:#CBD5E1;"></span>Admins</span>
-                            <span class="legend-pct">4%</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Recent Activity -->
-            <section class="dashboard-card">
-                <div class="card-heading-row">
-                    <h3>Recent Admin Activity</h3>
-                    <a href="admin_security_audit.html" class="view-all-link">View All</a>
-                </div>
-                <div class="activity-list">
-                    <div class="activity-row">
-                        
-                        <div class="activity-text">
-                            <div class="activity-title">Approved supplier  GreenLeaf Grocers</div>
-                            <div class="activity-sub">10 min ago by You</div>
-                        </div>
-                        <button class="activity-menu-btn" type="button"></button>
-                    </div>
-                    <div class="activity-row">
-                        
-                        <div class="activity-text">
-                            <div class="activity-title">Suspended account  user_2291</div>
-                            <div class="activity-sub">1 hr ago by System Admin</div>
-                        </div>
-                        <button class="activity-menu-btn" type="button"></button>
-                    </div>
-                    <div class="activity-row">
-                        
-                        <div class="activity-text">
-                            <div class="activity-title">Rejected product  Choco Deluxe 250g</div>
-                            <div class="activity-sub">2 hr ago by Moderation Bot</div>
-                        </div>
-                        <button class="activity-menu-btn" type="button"></button>
-                    </div>
-                    <div class="activity-row">
-                        
-                        <div class="activity-text">
-                            <div class="activity-title">Unlocked account  sarah.perera@mail.com</div>
-                            <div class="activity-sub">5 hr ago by You</div>
-                        </div>
-                        <button class="activity-menu-btn" type="button"></button>
-                    </div>
-                </div>
-            </section>
-        <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
-
+<?php
+require APPROOT . '/Views/shared/header.php';
+$esc=static fn($x)=>htmlspecialchars((string)$x,ENT_QUOTES,'UTF-8');
+$tot=$data['totals'];
+$months=[]; $userSeries=[];$supplierSeries=[];
+for($i=11;$i>=0;$i--){$month=date('Y-m',strtotime('first day of this month -'.$i.' months'));$months[]=$month;$userSeries[$month]=0;$supplierSeries[$month]=0;}
+foreach($data['monthly'] as $r){if(isset($userSeries[$r['month']])){$userSeries[$r['month']]+=(int)$r['total'];if($r['role']==='supplier')$supplierSeries[$r['month']]+=(int)$r['total'];}}
+$monthKeys=array_keys($userSeries);
+$lastMonth=end($monthKeys);$lastUsers=$userSeries[$lastMonth];$lastSuppliers=$supplierSeries[$lastMonth];
+$max=max(1,max($userSeries),max($supplierSeries));
+$points=static function($series)use($max){$out=[];$i=0;foreach($series as $v){$out[]=round($i*600/11,1).','.round(205-($v/$max)*185,1);$i++;}return implode(' ',$out);};
+$total=(int)$tot['total_users'];$customerPct=$total?100*(int)$tot['customers']/$total:0;$supplierPct=$total?100*(int)$tot['suppliers']/$total:0;
+?>
+<header class="content-header"><div class="header-left"><h2 class="page-title">Welcome back, <strong><?= $esc($data['userName']) ?></strong></h2><p class="page-subtitle">Live platform overview based on recorded database activity.</p></div><div class="header-right"><a class="btn btn-navy btn-lg" href="<?= $esc(URLROOT) ?>/admin/reports">Open Reports &amp; Analytics</a></div></header>
+<section class="stat-grid">
+<div class="stat-card"><div class="stat-card-label">Total Users</div><div class="stat-card-value"><?= number_format($total) ?></div><small>Registered accounts</small></div>
+<div class="stat-card"><div class="stat-card-label">Active Suppliers</div><div class="stat-card-value"><?= number_format((int)$tot['active_suppliers']) ?></div><small>Active supplier accounts</small></div>
+<div class="stat-card"><div class="stat-card-label">Pending Approvals</div><div class="stat-card-value"><?= number_format((int)$tot['pending_approvals']) ?></div><small><?= (int)$tot['pending_suppliers'] ?> supplier accounts + <?= (int)$tot['pending_approvals']-(int)$tot['pending_suppliers'] ?> products</small></div>
+<div class="stat-card"><div class="stat-card-label">Security Alerts</div><div class="stat-card-value"><?= number_format((int)$tot['security_alerts']) ?></div><small>Login-failure groups (last 24 hours)</small></div>
+</section>
+<section class="admin-grid-2">
+<div class="dashboard-card"><div class="card-heading-row"><h3>Monthly Registrations</h3><span>Last 12 months</span></div><div class="line-chart-wrap"><svg viewBox="0 0 600 220" role="img" aria-label="Monthly user and supplier registrations"><line x1="0" y1="205" x2="600" y2="205" stroke="#94a3b8" stroke-width="1"/><polyline points="<?= $esc($points($userSeries)) ?>" fill="none" stroke="#00106B" stroke-width="3"/><polyline points="<?= $esc($points($supplierSeries)) ?>" fill="none" stroke="#10B981" stroke-width="3"/></svg></div><div class="chart-legend"><div class="legend-item"><span class="legend-dot" style="background:#00106B"></span>All new users (<?= (int)array_sum($userSeries) ?>)</div><div class="legend-item"><span class="legend-dot" style="background:#10B981"></span>New suppliers (<?= (int)array_sum($supplierSeries) ?>)</div></div><p class="dashboard-note">Monthly registrations, not cumulative growth. Latest month: <?= $esc($lastMonth) ?> (<?= $lastUsers ?> users, <?= $lastSuppliers ?> suppliers).</p></div>
+<div class="dashboard-card"><div class="card-heading-row"><h3>User Distribution</h3></div><div class="donut-chart" style="background:conic-gradient(#00106B 0% <?= round($customerPct,3) ?>%, #10B981 <?= round($customerPct,3) ?>% <?= round($customerPct+$supplierPct,3) ?>%, #CBD5E1 <?= round($customerPct+$supplierPct,3) ?>% 100%)"><div class="donut-center"><span class="donut-value"><?= number_format($total) ?></span><span class="donut-label">Total users</span></div></div><div class="donut-legend"><div class="donut-legend-row"><span class="legend-name"><span class="legend-dot" style="background:#00106B"></span>Customers</span><span class="legend-pct"><?= (int)$tot['customers'] ?> (<?= round($customerPct,1) ?>%)</span></div><div class="donut-legend-row"><span class="legend-name"><span class="legend-dot" style="background:#10B981"></span>Suppliers</span><span class="legend-pct"><?= (int)$tot['suppliers'] ?> (<?= round($supplierPct,1) ?>%)</span></div><div class="donut-legend-row"><span class="legend-name"><span class="legend-dot" style="background:#CBD5E1"></span>Admins</span><span class="legend-pct"><?= (int)$tot['admins'] ?> (<?= $total?round(100*(int)$tot['admins']/$total,1):0 ?>%)</span></div></div></div>
+</section>
+<section class="dashboard-card"><div class="card-heading-row"><h3>Recently Registered Accounts</h3><a href="<?= $esc(URLROOT) ?>/admin/users" class="view-all-link">Manage Users</a></div><div class="activity-list"><?php if(empty($data['recent'])): ?><p>No registered accounts yet.</p><?php else: foreach($data['recent'] as $entry): ?><div class="activity-row"><div class="activity-text"><div class="activity-title"><?= $esc($entry['name']) ?> <span>(<?= $esc(ucfirst($entry['role'])) ?>)</span></div><div class="activity-sub">Status: <?= $esc(ucfirst($entry['account_status'])) ?> &bull; Registered <?= $esc($entry['created_at']) ?></div></div></div><?php endforeach;endif; ?></div></section>
+<section class="dashboard-card"><div class="card-heading-row"><h3>Suspicious Login Failures</h3><a href="<?= $esc(URLROOT) ?>/admin/security" class="view-all-link">Security &amp; Audit</a></div><p class="dashboard-note">Three or more failed attempts from the same email, role and IP in 24 hours.</p><?php if(empty($data['alerts'])): ?><p>No suspicious login-failure groups found.</p><?php else: ?><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;text-align:left"><thead><tr><th>Email</th><th>Role</th><th>IP</th><th>Failures</th><th>Last attempt</th></tr></thead><tbody><?php foreach(array_slice($data['alerts'],0,8) as $alert): ?><tr><td><?= $esc($alert['email']) ?></td><td><?= $esc($alert['role']) ?></td><td><?= $esc($alert['ip_address']) ?></td><td><?= (int)$alert['attempts'] ?></td><td><?= $esc($alert['last_attempt']) ?></td></tr><?php endforeach; ?></tbody></table></div><?php endif; ?></section>
+<style>.dashboard-note{color:var(--color-text-muted,#64748b);font-size:.85rem;margin-top:12px}.dashboard-card table th,.dashboard-card table td{padding:11px;border-bottom:1px solid #e2e8f0}.stat-card small{display:block;color:#64748b;margin-top:5px}.activity-row{padding:12px 0;border-bottom:1px solid #e2e8f0}</style>
 <?php require APPROOT . '/Views/shared/footer.php'; ?>
-
-
-
-
-
-
-
-
-
