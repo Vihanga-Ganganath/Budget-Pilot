@@ -1,6 +1,7 @@
 <?php
 require_once '../app/Models/Customer.php';
 require_once '../app/Models/User.php';
+require_once '../app/Models/SecurityAudit.php';
 require_once '../app/Models/Notice.php';
 
 class CustomerController extends Controller {
@@ -51,6 +52,7 @@ class CustomerController extends Controller {
             
             if (empty($data['email_err']) && empty($data['password_err'])) {
                 $loggedInUser = $this->userModel->login($data['email'], $data['password'], 'customer');
+                (new SecurityAudit())->record($data['email'],'customer',(bool)($loggedInUser && !isset($loggedInUser['error'])),$loggedInUser['id'] ?? null);
                 
                 if ($loggedInUser && is_array($loggedInUser) && !isset($loggedInUser['error'])) {
                     $_SESSION['user_id'] = $loggedInUser['id'];
