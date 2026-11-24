@@ -1,4 +1,4 @@
-<?php require APPROOT . '/Views/shared/header.php'; ?>
+<?php $pageCss = 'customer-css/settings'; require APPROOT . '/Views/shared/header.php'; ?>
 <?php
 $u = $data['user'];
 
@@ -16,7 +16,7 @@ $currencies = ['USD' => 'USD - US Dollar ($)', 'EUR' => 'EUR - Euro (&euro;)', '
 ?>
 
 <div>
-    <div class="dashboard-header" style="margin-bottom:20px;">
+    <div class="dashboard-header settings-header-mb">
         <div>
             <h1 class="page__title">Profile &amp; Settings</h1>
             <p class="page__sub">Manage your personal information and application preferences.</p>
@@ -24,7 +24,7 @@ $currencies = ['USD' => 'USD - US Dollar ($)', 'EUR' => 'EUR - Euro (&euro;)', '
     </div>
 
     <?php if (!empty($data['flash'])): ?>
-        <p style="background:#DCFCE7; border:1px solid #BDE6CE; color:#166534; padding:12px 16px; border-radius:8px; margin:0 0 20px;"><?php echo htmlspecialchars($data['flash']); ?></p>
+        <p class="settings-flash"><?php echo htmlspecialchars($data['flash']); ?></p>
     <?php endif; ?>
 
     <div class="layout layout--even">
@@ -41,7 +41,7 @@ $currencies = ['USD' => 'USD - US Dollar ($)', 'EUR' => 'EUR - Euro (&euro;)', '
                     <div class="identity__text">
                         <h2 class="identity__name"><?php echo htmlspecialchars($u['name']); ?></h2>
                         <p class="identity__role"><?php echo $u['household_role'] == 'head' ? 'Account Holder' : 'Family Member'; ?></p>
-                        <label class="label" for="photo" style="margin-top:12px;">Change photo</label>
+                        <label class="label settings-photo-label" for="photo">Change photo</label>
                         <input id="photo" name="photo" type="file" accept="image/*" />
                     </div>
                 </section>
@@ -116,8 +116,8 @@ $currencies = ['USD' => 'USD - US Dollar ($)', 'EUR' => 'EUR - Euro (&euro;)', '
                 </section>
 
                 <!-- Save bar -->
-                <footer class="actionbar" style="margin-top:0;">
-                    <p class="err" style="margin:0 auto 0 0;"><?php echo htmlspecialchars($data['error']); ?></p>
+                <footer class="actionbar settings-actionbar-mt0">
+                    <p class="err settings-err-auto"><?php echo htmlspecialchars($data['error']); ?></p>
                     <a class="btn btn--ghost" href="<?php echo URLROOT; ?>/customer/settings">Discard Changes</a>
                     <button class="btn btn--primary" type="submit">Save All Changes</button>
                 </footer>
@@ -147,10 +147,10 @@ $currencies = ['USD' => 'USD - US Dollar ($)', 'EUR' => 'EUR - Euro (&euro;)', '
                         <input class="control" id="pwConfirm" name="confirm" type="password" autocomplete="new-password" />
                     </div>
                     <!-- button sits at the bottom of the row, level with the Confirm box -->
-                    <div class="field" style="align-self:end;">
-                        <button class="btn btn--primary" type="submit" style="width:100%; min-height:50px;">Update password</button>
+                    <div class="field settings-field-end">
+                        <button class="btn btn--primary settings-btn-full" type="submit">Update password</button>
                     </div>
-                    <p class="err" style="grid-column:1 / -1; margin:0;"><?php echo htmlspecialchars($data['pwError']); ?></p>
+                    <p class="err settings-err-col"><?php echo htmlspecialchars($data['pwError']); ?></p>
                 </form>
             </section>
 
@@ -185,14 +185,14 @@ $currencies = ['USD' => 'USD - US Dollar ($)', 'EUR' => 'EUR - Euro (&euro;)', '
                         <label class="label" for="tfaPassword">Current password to confirm</label>
                         <input class="control" id="tfaPassword" name="password" type="password" autocomplete="current-password" />
                     </div>
-                    <div class="field" style="align-self:end;">
+                    <div class="field settings-field-end">
                         <?php if ($tfaOn): ?>
-                            <button class="btn btn--danger" type="submit" style="width:100%; min-height:50px;">Turn off</button>
+                            <button class="btn btn--danger settings-btn-full" type="submit">Turn off</button>
                         <?php else: ?>
-                            <button class="btn btn--primary" type="submit" style="width:100%; min-height:50px;">Turn on</button>
+                            <button class="btn btn--primary settings-btn-full" type="submit">Turn on</button>
                         <?php endif; ?>
                     </div>
-                    <p class="err" style="grid-column:1 / -1; margin:0;"><?php echo htmlspecialchars($data['tfaError']); ?></p>
+                    <p class="err settings-err-col"><?php echo htmlspecialchars($data['tfaError']); ?></p>
                 </form>
             </section>
 

@@ -1,0 +1,213 @@
+/* ==========================================================================
+   Budget Pilot — Add Expense Page Styles
+   ========================================================================== */
+
+.expense-layout {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 24px;
+    align-items: start;
+}
+
+@media (max-width: 1080px) {
+    .expense-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.expense-card {
+    background: #fff;
+    padding: 28px;
+    border-radius: var(--radius-main);
+    border: 1px solid #CBD5E1;
+}
+
+.expense-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.expense-field {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.expense-field-select {
+    background: #fff;
+}
+
+.pending-fixed-card {
+    background: #F8FAFC;
+    padding: 28px;
+    border-radius: var(--radius-main);
+    border: 1px solid #CBD5E1;
+    margin-bottom: 24px;
+}
+
+.pending-fixed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.pending-fixed-title {
+    margin: 0;
+    color: var(--color-primary);
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pending-fixed-subtitle {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+.pending-fixed-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+}
+
+.pending-item-card {
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 14px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.pending-item-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 6px;
+}
+
+.pending-item-name {
+    font-size: 15px;
+    color: var(--color-primary);
+    display: block;
+}
+
+.pending-item-cat {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.pending-item-amount {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.pending-item-meta {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-bottom: 12px;
+}
+
+.pending-item-meta .overdue-tag {
+    background: #FEE2E2;
+    color: #B91C1C;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 3px;
+}
+
+.pending-pay-btn {
+    width: 100%;
+    background: var(--color-success);
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.pending-pay-all-btn {
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.expense-actions-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.expense-btn-cancel {
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.expense-btn-submit {
+    background: var(--color-success);
+    border: none;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.spending-track-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.spending-cat-name {
+    display: block;
+    font-size: 14px;
+    color: var(--color-primary);
+}
+
+.spending-cat-remaining {
+    font-size: 12px;
+    margin-top: 3px;
+    font-weight: 500;
+}
+
+.spending-cat-remaining.is-over {
+    color: #DC2626;
+}
+
+.spending-cat-remaining.is-ok {
+    color: var(--color-success);
+}

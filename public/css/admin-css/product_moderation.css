@@ -1,0 +1,187 @@
+/* ==========================================================================
+   Budget Pilot — Admin Product Moderation Styles
+   ========================================================================== */
+
+.pm-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+}
+
+.pm-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(125px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.pm-card,
+.pm-panel {
+    background: #fff;
+    border: 1px solid #dbe2ea;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.pm-card strong {
+    display: block;
+    font-size: 28px;
+    color: #182d4a;
+    margin-top: 8px;
+}
+
+.pm-card span {
+    color: #536579;
+    font-size: 13px;
+}
+
+.pm-filters {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: end;
+}
+
+.pm-filters label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 13px;
+    color: #475569;
+}
+
+.pm-filters input,
+.pm-filters select {
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    max-width: 100%;
+}
+
+.pm-btn {
+    border: 1px solid #1c3557;
+    background: #1c3557;
+    color: white;
+    border-radius: 7px;
+    padding: 9px 13px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+}
+
+.pm-btn.light {
+    background: white;
+    color: #1c3557;
+}
+
+.pm-btn.danger {
+    background: #a83232;
+    border-color: #a83232;
+}
+
+.pm-table {
+    overflow-x: auto;
+    margin-top: 16px;
+}
+
+.pm-table table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 790px;
+}
+
+.pm-table th,
+.pm-table td {
+    padding: 13px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: top;
+    font-size: 13px;
+}
+
+.pm-table th {
+    background: #f4f7fb;
+    color: #1c3557;
+}
+
+.pm-actions {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.pm-actions form {
+    display: inline;
+}
+
+.pm-muted {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.pm-muted-lead {
+    margin-top: 15px;
+}
+
+.pm-table-empty {
+    text-align: center;
+    padding: 28px;
+}
+
+.pm-flash {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background: #edf7ef;
+    border: 1px solid #b8dcc2;
+}
+
+.pm-flash.error {
+    background: #fff0f0;
+    border-color: #e9b4b4;
+}
+
+.pm-pages {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+    .pm-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .pm-head {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 500px) {
+    .pm-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .pm-card {
+        padding: 12px;
+    }
+
+    .pm-card strong {
+        font-size: 22px;
+    }
+
+    .pm-filters > * {
+        width: 100%;
+    }
+
+    .pm-filters input,
+    .pm-filters select {
+        width: 100%;
+    }
+}

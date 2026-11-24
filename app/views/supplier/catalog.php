@@ -1,4 +1,4 @@
-<?php $spActive = 'catalog'; $spActiveLink = false; ?>
+<?php $spActive = 'catalog'; $spActiveLink = false; $pageCss = 'supplier/supplier'; ?>
 <?php require APPROOT . '/Views/shared/header.php'; ?>
 
     <h1 class="page-title">Product Catalog</h1>
@@ -52,7 +52,7 @@
     </div>
 
     <!-- Inventory Table + Sidebar Cards -->
-    <div class="grid2" style="margin-top:22px">
+    <div class="grid2 grid-mt-22">
       <div class="card table-card">
         <div class="toolbar">
           <div>
@@ -90,34 +90,19 @@
 
               <tr>
     <td>
-    <div style="display:flex; align-items:center; gap:10px;">
+    <div class="prod-cell">
 
         <?php if (!empty($product['image_url'])): ?>
 
             <img
                 src="<?= URLROOT . '/' . htmlspecialchars($product['image_url']) ?>"
                 alt="<?= htmlspecialchars($product['name']) ?>"
-                style="
-                    width:50px;
-                    height:50px;
-                    object-fit:cover;
-                    border-radius:8px;
-                "
+                class="prod-thumb"
             >
 
         <?php else: ?>
 
-            <div style="
-                width:50px;
-                height:50px;
-                border-radius:8px;
-                background:#eee;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                font-size:11px;
-                color:#777;
-            ">
+            <div class="prod-thumb-placeholder">
                 No Image
             </div>
 
@@ -160,7 +145,7 @@
            href="<?= URLROOT ?>/supplier/editProduct/<?= $product['id'] ?>">
             Edit
         </a>
-          <a class="btn" style="background: transparent; border: 1px solid var(--color-primary); color: var(--color-primary);" href="<?= URLROOT ?>/supplier/manage_pricing">Pricing</a>
+          <a class="btn btn-outline-pricing" href="<?= URLROOT ?>/supplier/manage_pricing">Pricing</a>
 
         <a class="btn"
            href="<?= URLROOT ?>/supplier/deleteProduct/<?= $product['id'] ?>"
@@ -175,7 +160,7 @@
           <?php else: ?>
 
             <tr>
-              <td colspan="8" style="text-align:center;">
+              <td colspan="8" class="text-center">
                 No products found.
               </td>
             </tr>
@@ -189,28 +174,28 @@
       <div>
         <div class="card">
           <h2 class="section-title">Top Sellers</h2>
-          <p><b>Organic Whole Milk</b><br><span class="small">420 units sold</span><b style="float:right;color:#18752b">+15%</b></p>
+          <p><b>Organic Whole Milk</b><br><span class="small">420 units sold</span><b class="float-right text-success">+15%</b></p>
           <hr>
-          <p><b>Hass Avocados</b><br><span class="small">385 units sold</span><b style="float:right;color:#18752b">+8%</b></p>
+          <p><b>Hass Avocados</b><br><span class="small">385 units sold</span><b class="float-right text-success">+8%</b></p>
         </div>
-        <div class="card" style="margin-top:22px;background:var(--navy2);color:#fff">
-          <h2 style="margin-top:0">Catalog Health</h2>
+        <div class="card card-navy-highlight">
+          <h2 class="mt-0">Catalog Health</h2>
           <p>98% of your listings meet the 'Premium' quality standard. 2 items need image updates.</p>
           <button class="btn green" id="fix">Fix Issues</button>
         </div>
-        <div class="card" style="margin-top:22px">
+        <div class="card card-mt-22">
           <h2 class="section-title">Market Trends</h2>
-          <div style="border:1px solid #ccd1dd;border-radius:9px;padding:14px;margin-bottom:12px">
-            <b>Organic Demand</b><b style="float:right;color:#18752b">+24%</b>
+          <div class="trend-card trend-card-mb">
+            <b>Organic Demand</b><b class="float-right text-success">+24%</b>
             <hr>
-            <div style="height:6px;background:#dfe3e8">
-              <div style="width:82%;height:100%;background:#18752b"></div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill w-82"></div>
             </div>
           </div>
-          <div style="border:1px solid #ccd1dd;border-radius:9px;padding:14px">
-            <b>Bulk Pricing Index</b><b style="float:right;color:var(--navy)">Stable</b>
+          <div class="trend-card">
+            <b>Bulk Pricing Index</b><b class="float-right text-navy">Stable</b>
           </div>
-          <button class="btn" id="report" style="width:100%;margin-top:14px">View Full Report </button>
+          <button class="btn btn-full-mt14" id="report">View Full Report </button>
         </div>
       </div>
     </div>
@@ -219,21 +204,6 @@
 <div id="modalRoot"></div>
 <script>
     const URLROOT = '<?php echo URLROOT; ?>';
-
-    );
-        }
-    }
-
-    }
 </script>
-<!--<script src="<?php echo URLROOT; ?>/js/supplier/catalog.js"></script> -->
 
 <?php require APPROOT . '/Views/shared/footer.php'; ?>
-
-
-
-
-
-
-
-

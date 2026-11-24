@@ -1,5 +1,5 @@
 
-<?php require APPROOT . '/Views/shared/header.php'; ?>
+<?php $pageCss = ['admin-css/base', 'admin-css/security']; require APPROOT . '/Views/shared/header.php'; ?>
 <header class="content-header">
                 <div class="header-left">
                     <h2 class="page-title">Security &amp; Audit Management</h2>

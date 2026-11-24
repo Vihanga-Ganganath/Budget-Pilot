@@ -1,0 +1,60 @@
+/* ==========================================================================
+   Budget Pilot — Supplier Edit Product Styles
+   ========================================================================== */
+
+.edit-product-card {
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+.edit-product-desc-lead {
+    margin-bottom: 25px;
+}
+
+.edit-product-group {
+    margin-bottom: 18px;
+}
+
+.edit-product-group.mb-25 {
+    margin-bottom: 25px;
+}
+
+.edit-product-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+@media (max-width: 768px) {
+    .edit-product-row-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+.edit-product-img-preview {
+    margin: 8px 0 10px 0;
+}
+
+.edit-product-img-label {
+    margin: 0 0 5px 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.edit-product-thumb {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.edit-product-hint {
+    color: #777;
+}
+
+.edit-product-btn-row {
+    display: flex;
+    gap: 12px;
+}

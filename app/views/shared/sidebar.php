@@ -113,7 +113,7 @@ if ($userRole === 'admin') {
             </a>
             <a href="<?php echo URLROOT; ?>/customer/cart" class="navlink <?php echo strpos($currentURL, 'cart') !== false ? 'active' : ''; ?>">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/><path d="M2.5 3h2.2l2.6 12.4a1.6 1.6 0 0 0 1.6 1.3h8.9a1.6 1.6 0 0 0 1.6-1.3L21 7H6"/></svg>
-                Shopping Cart
+                Shopping List
             </a>
             <a href="<?php echo URLROOT; ?>/customer/analytics" class="navlink <?php echo strpos($currentURL, 'analytics') !== false ? 'active' : ''; ?>">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 3 5-7 4 4"/></svg>

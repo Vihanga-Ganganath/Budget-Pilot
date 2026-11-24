@@ -1,5 +1,4 @@
-
-<?php require APPROOT . '/Views/shared/header.php'; ?>
+<?php $pageCss = ['admin-css/base', 'admin-css/users']; require APPROOT . '/Views/shared/header.php'; ?>
 <header class="content-header">
                 <div class="header-left">
                     <h2 class="page-title">User Management</h2>
@@ -7,7 +6,6 @@
                 </div>
                 <div class="header-right">
                     <button class="btn btn-navy btn-lg" onclick="document.getElementById('add-admin-modal').style.display='flex'" type="button">
-                        
                         Add Admin User
                     </button>
                 </div>
@@ -31,9 +29,7 @@
                 <div class="stat-card">
                     <div class="stat-card-label">
                         Total Users
-                        
                     </div>
-                    <!-- Total  -->
                     <div class="stat-card-value" id="stat-total-users"><?php echo $data['stats']->total_users; ?></div>
                     <div class="stat-card-sub">All registered accounts</div>
                 </div>
@@ -41,9 +37,7 @@
                 <div class="stat-card">
                     <div class="stat-card-label">
                         Active
-                        
                     </div>
-                    <!-- Active  -->
                     <div class="stat-card-value" id="stat-active-users"><?php echo $data['stats']->active_users ?: 0; ?></div>
                     <div class="stat-card-sub">Current active accounts</div>
                 </div>
@@ -51,9 +45,7 @@
                 <div class="stat-card">
                     <div class="stat-card-label">
                         Suspended
-                        
                     </div>
-                    <!-- Suspended  -->
                     <div class="stat-card-value" id="stat-suspended-users"><?php echo $data['stats']->suspended_users ?: 0; ?></div>
                     <div class="stat-card-sub">Blocked from platform</div>
                 </div>
@@ -61,20 +53,18 @@
                 <div class="stat-card accent-navy">
                     <div class="stat-card-label">
                         Locked Accounts
-                        
                     </div>
-                    <!-- Locked  -->
                     <div class="stat-card-value" id="stat-locked-users"><?php echo $data['stats']->locked_users ?: 0; ?></div>
                     <div class="stat-card-sub">Requires immediate action</div>
                 </div>
             </section>
 
-            <form class="filter-bar" method="GET" action="<?php echo URLROOT; ?>/admin/users" style="flex-wrap:wrap;gap:10px;">
+            <form class="filter-bar filter-bar-wrap" method="GET" action="<?php echo URLROOT; ?>/admin/users">
                 <input type="search" name="q" class="filter-select" placeholder="Search name or email" value="<?php echo htmlspecialchars($data['search'], ENT_QUOTES, 'UTF-8'); ?>">
                 <select class="filter-select" name="role"><option value="all">All Roles</option>
-                    <?php foreach (['customer'=>'Customer','supplier'=>'Supplier','admin'=>'Admin'] as $key=>$label): ?><option value="<?php echo $key; ?>" <?php echo $data['roleFilter']===$key?'selected':''; ?>><?php echo $label; ?></option><?php endforeach; ?></select>
+                    <?php foreach (['customer'=>'Customer','supplier'=>'Supplier','admin'=>'Admin'] as $key=>$label): ?><option value="<?php echo $key; ?>" <?php echo $data['role_filter']===$key?'selected':''; ?>><?php echo $label; ?></option><?php endforeach; ?></select>
                 <select class="filter-select" name="status"><option value="all">All Statuses</option>
-                    <?php foreach (['active'=>'Active','suspended'=>'Suspended','locked'=>'Locked','pending'=>'Pending'] as $key=>$label): ?><option value="<?php echo $key; ?>" <?php echo $data['statusFilter']===$key?'selected':''; ?>><?php echo $label; ?></option><?php endforeach; ?></select>
+                    <?php foreach (['active'=>'Active','suspended'=>'Suspended','locked'=>'Locked','pending'=>'Pending'] as $key=>$label): ?><option value="<?php echo $key; ?>" <?php echo $data['status_filter']===$key?'selected':''; ?>><?php echo $label; ?></option><?php endforeach; ?></select>
                 <button class="btn btn-navy btn-sm" type="submit">Apply Filters</button>
                 <a class="btn btn-outline-navy btn-sm" href="<?php echo URLROOT; ?>/admin/users">Clear</a>
             </form>
@@ -84,7 +74,6 @@
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            
                             <th>User</th>
                             <th>Role</th>
                             <th>Status</th>
@@ -96,15 +85,12 @@
                         <?php if(!empty($data['users'])) : ?>
                             <?php foreach($data['users'] as $user) : ?>
                                 <?php 
-                                    // 1.   
                                     $initial = strtoupper(substr($user->name, 0, 1));
                                     
-                                    // 2. Role   
                                     $roleClass = 'pill-gray';
                                     if($user->role == 'admin') { $roleClass = 'pill-navy'; }
                                     elseif($user->role == 'supplier') { $roleClass = 'pill-blue'; }
                                     
-                                    // 3.  Status    
                                     $status = strtoupper($user->account_status);
                                     $statusClass = 'pill-green'; // Default is active
                                     
@@ -115,12 +101,10 @@
                                     }
                                 ?>
                                 
-                                <!--   active    Background  (flagged-row)  -->
                                 <tr class="<?php echo $user->account_status != 'active' ? 'flagged-row' : ''; ?>" data-user-id="<?php echo $user->id; ?>">
-                                    
                                     <td>
                                         <div class="cell-user">
-                                            <div class="cell-avatar" style="background:#E0E7FF;color:#3730A3;"><?php echo $initial; ?></div>
+                                            <div class="cell-avatar user-avatar-indigo"><?php echo $initial; ?></div>
                                             <div>
                                                 <div class="cell-name"><?php echo htmlspecialchars($user->name, ENT_QUOTES, 'UTF-8'); ?></div>
                                                 <div class="cell-sub"><?php echo htmlspecialchars($user->email, ENT_QUOTES, 'UTF-8'); ?></div>
@@ -134,33 +118,30 @@
                                 </tr>
                             <?php endforeach; ?>
                         <?php else : ?>
-                            <tr><td colspan="5" style="text-align:center;color:var(--text-light);padding:32px;">No users found in database.</td></tr>
+                            <tr><td colspan="5" class="users-empty-cell">No users found in database.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
                 <div class="table-footer">
                     <span class="table-footer-info" id="table-footer-info">
-                        Showing <?php echo ($data['totalUsers'] > 0) ? $data['offset'] + 1 : 0; ?> to 
-                        <?php echo min($data['offset'] + $data['limit'], $data['totalUsers']); ?> 
-                        of <?php echo $data['totalUsers']; ?> entries
+                        Showing <?php echo ($data['total_users'] > 0) ? $data['offset'] + 1 : 0; ?> to 
+                        <?php echo min($data['offset'] + $data['limit'], $data['total_users']); ?> 
+                        of <?php echo $data['total_users']; ?> entries
                     </span>
                     
                     <div class="pagination" id="pagination-container">
-                        <!--     -->
-                        <?php if($data['currentPage'] > 1) : ?>
-                            <a href="?<?php echo htmlspecialchars(http_build_query(['q'=>$data['search'],'role'=>$data['roleFilter'],'status'=>$data['statusFilter'],'page'=>$data['currentPage'] - 1]), ENT_QUOTES, 'UTF-8'); ?>" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; color: #334155; text-decoration: none; background: white;">&lsaquo;</a>
+                        <?php if($data['current_page'] > 1) : ?>
+                            <a href="?<?php echo htmlspecialchars(http_build_query(['q'=>$data['search'],'role'=>$data['role_filter'],'status'=>$data['status_filter'],'page'=>$data['current_page'] - 1]), ENT_QUOTES, 'UTF-8'); ?>" class="users-pagination-link">&lsaquo;</a>
                         <?php endif; ?>
 
-                        <!--    -->
-                        <?php for($i = 1; $i <= $data['totalPages']; $i++) : ?>
-                            <a href="?<?php echo htmlspecialchars(http_build_query(['q'=>$data['search'],'role'=>$data['roleFilter'],'status'=>$data['statusFilter'],'page'=>$i]), ENT_QUOTES, 'UTF-8'); ?>" style="padding: 6px 14px; margin: 0 4px; border-radius: 6px; text-decoration: none; display: inline-block; font-weight: 600; <?php echo ($i == $data['currentPage']) ? 'background: #1e293b; color: #ffffff;' : 'background: #ffffff; color: #334155; border: 1px solid #cbd5e1;'; ?>">
+                        <?php for($i = 1; $i <= $data['total_pages']; $i++) : ?>
+                            <a href="?<?php echo htmlspecialchars(http_build_query(['q'=>$data['search'],'role'=>$data['role_filter'],'status'=>$data['status_filter'],'page'=>$i]), ENT_QUOTES, 'UTF-8'); ?>" class="users-page-number <?php echo ($i == $data['current_page']) ? 'active' : 'inactive'; ?>">
                                 <?php echo $i; ?>
                             </a>
                         <?php endfor; ?>
 
-                        <!--     -->
-                        <?php if($data['currentPage'] < $data['totalPages']) : ?>
-                            <a href="?<?php echo htmlspecialchars(http_build_query(['q'=>$data['search'],'role'=>$data['roleFilter'],'status'=>$data['statusFilter'],'page'=>$data['currentPage'] + 1]), ENT_QUOTES, 'UTF-8'); ?>" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; color: #334155; text-decoration: none; background: white;">&rsaquo;</a>
+                        <?php if($data['current_page'] < $data['total_pages']) : ?>
+                            <a href="?<?php echo htmlspecialchars(http_build_query(['q'=>$data['search'],'role'=>$data['role_filter'],'status'=>$data['status_filter'],'page'=>$data['current_page'] + 1]), ENT_QUOTES, 'UTF-8'); ?>" class="users-pagination-link">&rsaquo;</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -168,15 +149,15 @@
         </main>
     </div>
 
-    <div class="modal-overlay" id="manage-user-modal" style="display:none;align-items:center;justify-content:center;">
-      <div class="modal-card" style="max-width:440px;width:95%;margin:auto;padding:24px;">
+    <div class="modal-overlay users-modal-overlay" id="manage-user-modal">
+      <div class="modal-card users-modal-edit">
         <h3 id="managed-user-heading">Edit User</h3>
         <form method="POST" action="<?php echo URLROOT; ?>/admin/manageUser" id="manage-user-form">
           <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['user_manage_csrf'],ENT_QUOTES,'UTF-8'); ?>">
           <input type="hidden" name="id" id="manage-user-id"><input type="hidden" name="action" id="manage-user-action" value="update">
           <div class="form-field-group"><label>Role</label><select name="role" id="manage-user-role" required><option value="customer">Customer</option><option value="supplier">Supplier</option><option value="admin">Admin</option></select></div>
           <div class="form-field-group"><label>Status</label><select name="status" id="manage-user-status" required><option value="active">Active</option><option value="suspended">Suspended</option><option value="locked">Locked</option><option value="pending">Pending</option></select></div>
-          <p id="manage-user-note" style="font-size:.85rem;color:#64748b"></p>
+          <p id="manage-user-note" class="users-manage-note"></p>
           <div class="modal-actions"><button type="button" class="btn btn-outline-navy btn-sm" id="close-manage-user">Cancel</button><button type="submit" class="btn btn-navy btn-sm">Save Changes</button><button type="button" class="btn btn-reject btn-sm" id="delete-managed-user">Delete User</button></div>
         </form>
       </div>
@@ -201,20 +182,20 @@
     })();
     </script>
     <!-- Add Admin User Modal -->
-    <div class="modal-overlay" id="add-admin-modal" style="display:none;align-items:center;justify-content:center;">
-        <div class="modal-card" style="max-width:460px;width:100%;margin:auto;">
+    <div class="modal-overlay users-modal-overlay" id="add-admin-modal">
+        <div class="modal-card users-modal-admin">
             <div class="modal-header">
                 <h3>Add Admin User</h3>
                 <button class="modal-close-btn" type="button" id="closeAdminModal">&#x2715;</button>
             </div>
 
             <?php if (!empty($data['modal_error'])): ?>
-            <div style="background:#FDF6F6;border:1px solid #F0BCBC;color:#C2373C;border-radius:8px;padding:11px 14px;margin:0 0 16px;font-size:.88rem;font-weight:500;">
+            <div class="users-modal-error">
                 <?php echo htmlspecialchars($data['modal_error']); ?>
             </div>
             <?php endif; ?>
 
-            <p style="font-size:.88rem;color:#6B7280;margin:0 0 18px;">
+            <p class="users-modal-desc">
                 This creates a new admin row in the users table.
                 If the email already exists as a customer or supplier, a separate admin account will be added for it.
             </p>
@@ -222,7 +203,7 @@
             <form method="POST" action="<?php echo URLROOT; ?>/admin/addAdmin" id="add-admin-form">
 
                 <div class="form-field-group">
-                    <label>Full Name <span style="color:#C2373C">*</span></label>
+                    <label>Full Name <span class="users-req-star">*</span></label>
                     <input type="text" name="full_name"
                            placeholder="Jane Doe"
                            value="<?php echo htmlspecialchars($_SESSION['admin_form_name'] ?? ''); ?>"
@@ -230,50 +211,49 @@
                 </div>
 
                 <div class="form-field-group">
-                    <label>Email Address <span style="color:#C2373C">*</span></label>
+                    <label>Email Address <span class="users-req-star">*</span></label>
                     <input type="email" name="email"
                            placeholder="jane@budgetpilot.com"
                            value="<?php echo htmlspecialchars($_SESSION['admin_form_email'] ?? ''); ?>"
                            required autocomplete="email" />
-                    <p style="font-size:.8rem;color:#9CA3AF;margin:4px 0 0;">
+                    <p class="users-help-text">
                         If this email already has a customer or supplier account, a <em>new admin row</em> is created alongside it.
                     </p>
                 </div>
 
                 <div class="form-field-group">
-                    <label>Password <span style="color:#C2373C">*</span></label>
-                    <div style="position:relative;">
+                    <label>Password <span class="users-req-star">*</span></label>
+                    <div class="users-pw-wrapper">
                         <input type="password" name="password" id="adminPw"
                                placeholder="Min. 8 characters"
                                required autocomplete="new-password"
-                               style="width:100%;padding-right:42px;" />
+                               class="users-pw-input" />
                         <button type="button" id="toggleAdminPw"
-                                style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:0;cursor:pointer;color:#9CA3AF;padding:4px;"
+                                class="users-pw-toggle"
                                 aria-label="Show password">
-                            
                         </button>
                     </div>
                 </div>
 
                 <div class="form-field-group">
-                    <label>Confirm Password <span style="color:#C2373C">*</span></label>
-                    <div style="position:relative;">
+                    <label>Confirm Password <span class="users-req-star">*</span></label>
+                    <div class="users-pw-wrapper">
                         <input type="password" name="password_confirm" id="adminPwConfirm"
                                placeholder="Re-enter password"
                                required autocomplete="new-password"
-                               style="width:100%;padding-right:42px;" />
+                               class="users-pw-input" />
                         <button type="button" id="toggleAdminPwConfirm"
-                                style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:0;cursor:pointer;color:#9CA3AF;padding:4px;"
+                                class="users-pw-toggle"
                                 aria-label="Show confirm password">
                             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>
                             </svg>
                         </button>
                     </div>
-                    <p id="pwMatchMsg" style="font-size:.8rem;margin:4px 0 0;display:none;"></p>
+                    <p id="pwMatchMsg" class="users-match-msg"></p>
                 </div>
 
-                <div class="modal-actions" style="margin-top:22px;">
+                <div class="modal-actions users-modal-actions">
                     <button type="button" class="btn btn-reject btn-sm" id="cancelAdminModal">Cancel</button>
                     <button type="submit" class="btn btn-navy btn-sm">Create Admin Account</button>
                 </div>
@@ -343,9 +323,3 @@
     </script>
 
 <?php require APPROOT . '/Views/shared/footer.php'; ?>
-
-
-
-
-
-

@@ -1,5 +1,4 @@
-
-<?php require APPROOT . '/Views/shared/header.php'; ?>
+<?php $pageCss = ['admin-css/base', 'admin-css/suppliers']; require APPROOT . '/Views/shared/header.php'; ?>
 <header class="content-header">
                 <div class="header-left">
                     <h2 class="page-title">Supplier Approvals</h2>
@@ -45,9 +44,8 @@
             <?php if (empty($data['pending'])): ?>
               <div class="approval-grid">
                 <div class="empty-state">
-                  
-                  <p style="font-size:1rem;font-weight:600;color:#6B7280">All caught up!</p>
-                  <p style="font-size:.9rem">No pending supplier registrations at this time.</p>
+                  <p class="empty-state-title">All caught up!</p>
+                  <p class="empty-state-desc">No pending supplier registrations at this time.</p>
                 </div>
               </div>
             <?php else: ?>
@@ -87,7 +85,7 @@
                     </div>
                     <div class="approval-card__actions">
                       <!-- Approve -->
-                      <form method="POST" action="<?php echo URLROOT; ?>/admin/approveSupplier" style="flex:1">
+                      <form method="POST" action="<?php echo URLROOT; ?>/admin/approveSupplier" class="approval-form-flex">
                         <input type="hidden" name="supplier_id" value="<?php echo (int) $s->id; ?>">
                         <button class="btn-approve" type="submit"
                                 onclick="return confirm('Approve <?php echo htmlspecialchars(addslashes($s->name)); ?>?')">
@@ -95,7 +93,7 @@
                         </button>
                       </form>
                       <!-- Reject -->
-                      <form method="POST" action="<?php echo URLROOT; ?>/admin/rejectSupplier" style="flex:1">
+                      <form method="POST" action="<?php echo URLROOT; ?>/admin/rejectSupplier" class="approval-form-flex">
                         <input type="hidden" name="supplier_id" value="<?php echo (int) $s->id; ?>">
                         <button class="btn-reject" type="submit"
                                 onclick="return confirm('Reject this application from <?php echo htmlspecialchars(addslashes($s->name)); ?>? This action sets their account to suspended.')">
@@ -109,9 +107,9 @@
             <?php endif; ?>
 
             <!-- Recent Decisions -->
-            <div class="dashboard-card" style="padding:0;">
-                <div style="padding:24px 24px 0;">
-                    <h3 style="margin-bottom:16px;">Recent Decisions</h3>
+            <div class="dashboard-card dashboard-card-flush">
+                <div class="card-header-padded">
+                    <h3 class="heading-mb-16">Recent Decisions</h3>
                 </div>
                 <table class="admin-table">
                     <thead>
@@ -124,13 +122,13 @@
                     </thead>
                     <tbody>
                         <?php if (empty($data['recent_decisions'])): ?>
-                          <tr><td colspan="4" style="text-align:center;color:#9CA3AF;padding:28px">No decisions recorded yet.</td></tr>
+                          <tr><td colspan="4" class="empty-table-cell">No decisions recorded yet.</td></tr>
                         <?php else: ?>
                           <?php foreach ($data['recent_decisions'] as $r): ?>
                             <tr>
                               <td>
                                 <strong><?php echo htmlspecialchars($r->name); ?></strong><br>
-                                <span style="font-size:.82rem;color:#9CA3AF"><?php echo htmlspecialchars($r->email); ?></span>
+                                <span class="supplier-email-sub"><?php echo htmlspecialchars($r->email); ?></span>
                               </td>
                               <td><?php echo htmlspecialchars($r->company_name ?? ''); ?></td>
                               <td>
@@ -150,9 +148,3 @@
         <script src="<?php echo URLROOT; ?>/public/js/admin.js?v=<?php echo filemtime(APPROOT . '/../public/js/admin.js'); ?>"></script>
 
 <?php require APPROOT . '/Views/shared/footer.php'; ?>
-
-
-
-
-
-

@@ -4,81 +4,116 @@ require_once '../app/Models/User.php';
 require_once '../app/Models/Notice.php';
 require_once '../app/Models/SecurityAudit.php';
 
-class AdminController extends Controller {
+class AdminController extends Controller
+{
 
     private $userModel;
     private $noticeModel;
 
     // 2. Constructor එකක් හදලා ඒක ඇතුළේ User Model එකෙන් ඔබ්ජෙක්ට් එකක් හදාගන්නවා
-    public function __construct() {
+    public function __construct()
+    {
         $this->userModel = new User();
         $this->noticeModel = new Notice();
     }
     // Default method (If someone just types /admin)
-    public function index() { $this->dashboard(); }
+    public function index()
+    {
+        $this->dashboard();
+    }
 
-    public function dashboard() {
+    public function dashboard()
+    {
         $this->requireAdmin();
         require_once '../app/Models/AdminDashboard.php';
-        $model=new AdminDashboard();
-        $data=$model->getData();
-        $data['userName']=$_SESSION['user_name'] ?? 'Admin';
-        $this->view('admin/dashboard',$data);
+        $model = new AdminDashboard();
+        $data = $model->getData();
+        $data['user_name'] = $_SESSION['user_name'] ?? 'Admin';
+        $this->view('admin/dashboard', $data);
     }
 
-    public function users() {
+    public function users()
+    {
         $this->requireAdmin();
-        $search = trim(substr((string)($_GET['q'] ?? ''),0,100));
+        $search = trim(substr((string)($_GET['q'] ?? ''), 0, 100));
         $role = (string)($_GET['role'] ?? 'all');
         $status = (string)($_GET['status'] ?? 'all');
-        $limit = 10; $page = max(1,(int)($_GET['page'] ?? 1));
+        $limit = 10;
+        $page = max(1, (int)($_GET['page'] ?? 1));
         $stats = $this->userModel->getUserStats();
-        $result = $this->userModel->searchManagedUsers($search,$role,$status,$limit,($page-1)*$limit);
-        $pages = max(1,(int)ceil($result['total']/$limit));
-        $page = min($page,$pages);
-        if ($page !== max(1,(int)($_GET['page'] ?? 1))) $result=$this->userModel->searchManagedUsers($search,$role,$status,$limit,($page-1)*$limit);
-        $data = ['users'=>$result['users'],'stats'=>$stats,'currentPage'=>$page,'totalPages'=>$pages,'limit'=>$limit,'offset'=>($page-1)*$limit,'totalUsers'=>$result['total'],'search'=>$search,'roleFilter'=>$role,'statusFilter'=>$status,
-            'flash'=>$_SESSION['admin_flash'] ?? '', 'flash_type'=>$_SESSION['admin_flash_type'] ?? 'success', 'modal_error'=>$_SESSION['admin_modal_error'] ?? ''];
-        unset($_SESSION['admin_flash'],$_SESSION['admin_flash_type'],$_SESSION['admin_modal_error']);
-        if (empty($_SESSION['user_manage_csrf'])) $_SESSION['user_manage_csrf']=bin2hex(random_bytes(32));
-        $this->view('admin/admin_user_management',$data);
+        $result = $this->userModel->searchManagedUsers($search, $role, $status, $limit, ($page - 1) * $limit);
+        $pages = max(1, (int)ceil($result['total'] / $limit));
+        $page = min($page, $pages);
+        if ($page !== max(1, (int)($_GET['page'] ?? 1))) $result = $this->userModel->searchManagedUsers($search, $role, $status, $limit, ($page - 1) * $limit);
+        $data = [
+            'users'         => $result['users'],
+            'stats'         => $stats,
+            'current_page'  => $page,
+            'total_pages'   => $pages,
+            'limit'         => $limit,
+            'offset'        => ($page - 1) * $limit,
+            'total_users'   => $result['total'],
+            'search'        => $search,
+            'role_filter'   => $role,
+            'status_filter' => $status,
+            'flash'         => $_SESSION['admin_flash'] ?? '',
+            'flash_type'    => $_SESSION['admin_flash_type'] ?? 'success',
+            'modal_error'   => $_SESSION['admin_modal_error'] ?? ''
+        ];
+        unset($_SESSION['admin_flash'], $_SESSION['admin_flash_type'], $_SESSION['admin_modal_error']);
+        if (empty($_SESSION['user_manage_csrf'])) $_SESSION['user_manage_csrf'] = bin2hex(random_bytes(32));
+        $this->view('admin/admin_user_management', $data);
     }
 
-    public function manageUser() {
+    public function manageUser()
+    {
         $this->requireAdmin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !hash_equals($_SESSION['user_manage_csrf'] ?? '', (string)($_POST['csrf'] ?? ''))) {
-            http_response_code(403); exit('Invalid request or security token.');
+            http_response_code(403);
+            exit('Invalid request or security token.');
         }
-        $id=filter_var($_POST['id'] ?? null,FILTER_VALIDATE_INT);
-        $action=(string)($_POST['action'] ?? '');
-        $existing=$id ? $this->userModel->findManagedUser($id) : false;
-        $message='User not found.'; $type='error';
+        $id = filter_var($_POST['id'] ?? null, FILTER_VALIDATE_INT);
+        $action = (string)($_POST['action'] ?? '');
+        $existing = $id ? $this->userModel->findManagedUser($id) : false;
+        $message = 'User not found.';
+        $type = 'error';
         if ($existing) {
             try {
                 if ($action === 'update') {
-                    $role=(string)($_POST['role'] ?? ''); $status=(string)($_POST['status'] ?? '');
-                    if (!in_array($role,['admin','customer','supplier'],true) || !in_array($status,['active','suspended','locked','pending'],true)) {
-                        $message='Invalid role or status.';
-                    } elseif ($existing['role']==='admin' && $role!=='admin') {
-                        $message='Admin accounts cannot be changed to another role.';
-                    } elseif ((int)$id === (int)$_SESSION['user_id'] && $status!=='active') {
-                        $message='You cannot disable your own admin account.';
+                    $role = (string)($_POST['role'] ?? '');
+                    $status = (string)($_POST['status'] ?? '');
+                    if (!in_array($role, ['admin', 'customer', 'supplier'], true) || !in_array($status, ['active', 'suspended', 'locked', 'pending'], true)) {
+                        $message = 'Invalid role or status.';
+                    } elseif ($existing['role'] === 'admin' && $role !== 'admin') {
+                        $message = 'Admin accounts cannot be changed to another role.';
+                    } elseif ((int)$id === (int)$_SESSION['user_id'] && $status !== 'active') {
+                        $message = 'You cannot disable your own admin account.';
                     } else {
-                        $this->userModel->updateManagedUser($id,$role,$status);
-                        $message='User updated successfully.'; $type='success';
+                        $this->userModel->updateManagedUser($id, $role, $status);
+                        $message = 'User updated successfully.';
+                        $type = 'success';
                     }
                 } elseif ($action === 'delete') {
-                    if ($existing['role']==='admin') $message='Admin accounts cannot be deleted.';
-                    else { $this->userModel->deleteManagedUser($id); $message='User deleted successfully.'; $type='success'; }
+                    if ($existing['role'] === 'admin') $message = 'Admin accounts cannot be deleted.';
+                    else {
+                        $this->userModel->deleteManagedUser($id);
+                        $message = 'User deleted successfully.';
+                        $type = 'success';
+                    }
                 }
-            } catch (PDOException $e) { $message='Unable to save. The account may have related records or the role/email combination may already exist.'; }
+            } catch (PDOException $e) {
+                $message = 'Unable to save. The account may have related records or the role/email combination may already exist.';
+            }
         }
-        $_SESSION['admin_flash']=$message; $_SESSION['admin_flash_type']=$type;
-        header('Location: '.URLROOT.'/admin/users'); exit();
+        $_SESSION['admin_flash'] = $message;
+        $_SESSION['admin_flash_type'] = $type;
+        header('Location: ' . URLROOT . '/admin/users');
+        exit();
     }
 
     // ─── Add Admin User ───────────────────────────────────────────────────────
-    public function addAdmin() {
+    public function addAdmin()
+    {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
             header('Location: ' . URLROOT . '/admin/login');
             exit();
@@ -139,7 +174,8 @@ class AdminController extends Controller {
     }
 
 
-    public function suppliers() {
+    public function suppliers()
+    {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
             header('Location: ' . URLROOT . '/admin/login');
             exit();
@@ -156,7 +192,8 @@ class AdminController extends Controller {
         $this->view('admin/admin_supplier_approvals', $data);
     }
 
-    public function approveSupplier() {
+    public function approveSupplier()
+    {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
             header('Location: ' . URLROOT . '/admin/login');
             exit();
@@ -172,7 +209,8 @@ class AdminController extends Controller {
         exit();
     }
 
-    public function rejectSupplier() {
+    public function rejectSupplier()
+    {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
             header('Location: ' . URLROOT . '/admin/login');
             exit();
@@ -189,121 +227,165 @@ class AdminController extends Controller {
     }
 
 
-    public function products() {
+    public function products()
+    {
         $this->requireAdmin();
         require_once '../app/Models/AdminProductModeration.php';
-        $model=new AdminProductModeration();
-        $search=trim(substr((string)($_GET['q']??''),0,100));
-        $status=(string)($_GET['status']??'Pending');
-        if (!in_array($status,['all','Pending','Approved','Rejected'],true)) $status='Pending';
-        $category=max(0,(int)($_GET['category']??0));
-        $sort=($_GET['sort']??'newest')==='oldest'?'oldest':'newest';
-        $incomplete=($_GET['incomplete']??'')==='1';
-        if (empty($_SESSION['product_moderation_csrf'])) $_SESSION['product_moderation_csrf']=bin2hex(random_bytes(32));
-        $filters=[$search,$status,$category,$incomplete,$sort];
-        if (($_GET['export']??'')==='csv') {
+        $model = new AdminProductModeration();
+        $search = trim(substr((string)($_GET['q'] ?? ''), 0, 100));
+        $status = (string)($_GET['status'] ?? 'Pending');
+        if (!in_array($status, ['all', 'Pending', 'Approved', 'Rejected'], true)) $status = 'Pending';
+        $category = max(0, (int)($_GET['category'] ?? 0));
+        $sort = ($_GET['sort'] ?? 'newest') === 'oldest' ? 'oldest' : 'newest';
+        $incomplete = ($_GET['incomplete'] ?? '') === '1';
+        if (empty($_SESSION['product_moderation_csrf'])) $_SESSION['product_moderation_csrf'] = bin2hex(random_bytes(32));
+        $filters = [$search, $status, $category, $incomplete, $sort];
+        if (($_GET['export'] ?? '') === 'csv') {
             $this->requireAdmin();
-            $rows=$model->listing(...array_merge($filters,[1,10000]))['rows'];
+            $rows = $model->listing(...array_merge($filters, [1, 10000]))['rows'];
             header('Content-Type: text/csv; charset=utf-8');
             header('Content-Disposition: attachment; filename="product-moderation.csv"');
-            $output=fopen('php://output','w');
-            fputcsv($output,['ID','Product','SKU(s)','Category','Supplier','Supplier Email','Status','Created']);
-            foreach($rows as $r) { $cells=[$r['id'],$r['name'],$r['skus'],$r['category_name'],$r['supplier_name'],$r['supplier_email'],$r['admin_verification'],$r['created_at']]; foreach($cells as &$cell) { $cell=(string)$cell; if (preg_match('/^[\\s]*[=+@-]/u',$cell)) $cell="'".$cell; } unset($cell); fputcsv($output,$cells); }
-            fclose($output);exit;
+            $output = fopen('php://output', 'w');
+            fputcsv($output, ['ID', 'Product', 'SKU(s)', 'Category', 'Supplier', 'Supplier Email', 'Status', 'Created']);
+            foreach ($rows as $r) {
+                $cells = [$r['id'], $r['name'], $r['skus'], $r['category_name'], $r['supplier_name'], $r['supplier_email'], $r['admin_verification'], $r['created_at']];
+                foreach ($cells as &$cell) {
+                    $cell = (string)$cell;
+                    if (preg_match('/^[\\s]*[=+@-]/u', $cell)) $cell = "'" . $cell;
+                }
+                unset($cell);
+                fputcsv($output, $cells);
+            }
+            fclose($output);
+            exit;
         }
-        $data=['stats'=>$model->stats(),'categories'=>$model->categories(),'filters'=>['q'=>$search,'status'=>$status,'category'=>$category,'incomplete'=>$incomplete,'sort'=>$sort],
-            'results'=>$model->listing(...array_merge($filters,[max(1,(int)($_GET['page']??1))])),
-            'flash'=>$_SESSION['product_moderation_flash']??'','flash_type'=>$_SESSION['product_moderation_flash_type']??'success',
-            'csrf'=>$_SESSION['product_moderation_csrf']];
-        unset($_SESSION['product_moderation_flash'],$_SESSION['product_moderation_flash_type']);
-        $this->view('admin/admin_product_moderation',$data);
+        $data = [
+            'stats' => $model->stats(),
+            'categories' => $model->categories(),
+            'filters' => ['q' => $search, 'status' => $status, 'category' => $category, 'incomplete' => $incomplete, 'sort' => $sort],
+            'results' => $model->listing(...array_merge($filters, [max(1, (int)($_GET['page'] ?? 1))])),
+            'flash' => $_SESSION['product_moderation_flash'] ?? '',
+            'flash_type' => $_SESSION['product_moderation_flash_type'] ?? 'success',
+            'csrf' => $_SESSION['product_moderation_csrf']
+        ];
+        unset($_SESSION['product_moderation_flash'], $_SESSION['product_moderation_flash_type']);
+        $this->view('admin/admin_product_moderation', $data);
     }
 
-    public function moderateProduct() {
+    public function moderateProduct()
+    {
         $this->requireAdmin();
-        if ($_SERVER['REQUEST_METHOD']!=='POST' || empty($_SESSION['product_moderation_csrf']) ||
-            !hash_equals($_SESSION['product_moderation_csrf'],(string)($_POST['csrf']??''))) {
-            http_response_code(403);exit('Invalid request or security token.');
+        if (
+            $_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_SESSION['product_moderation_csrf']) ||
+            !hash_equals($_SESSION['product_moderation_csrf'], (string)($_POST['csrf'] ?? ''))
+        ) {
+            http_response_code(403);
+            exit('Invalid request or security token.');
         }
-        $id=filter_var($_POST['id']??null,FILTER_VALIDATE_INT);
-        $action=(string)($_POST['action']??'');
-        $type='error';$message='Invalid moderation request.';
-        if ($id && in_array($action,['approve','reject'],true)) {
+        $id = filter_var($_POST['id'] ?? null, FILTER_VALIDATE_INT);
+        $action = (string)($_POST['action'] ?? '');
+        $type = 'error';
+        $message = 'Invalid moderation request.';
+        if ($id && in_array($action, ['approve', 'reject'], true)) {
             try {
                 require_once '../app/Models/AdminProductModeration.php';
-                $message=(new AdminProductModeration())->moderate((int)$id,$action);$type='success';
-            } catch(Throwable $e) {$message=$e instanceof RuntimeException?$e->getMessage():'Could not update product. Please check the database.';error_log('Product moderation: '.$e->getMessage());}
+                $message = (new AdminProductModeration())->moderate((int)$id, $action);
+                $type = 'success';
+            } catch (Throwable $e) {
+                $message = $e instanceof RuntimeException ? $e->getMessage() : 'Could not update product. Please check the database.';
+                error_log('Product moderation: ' . $e->getMessage());
+            }
         }
-        $_SESSION['product_moderation_flash']=$message;
-        $_SESSION['product_moderation_flash_type']=$type;
-        header('Location: '.URLROOT.'/admin/products');exit;
+        $_SESSION['product_moderation_flash'] = $message;
+        $_SESSION['product_moderation_flash_type'] = $type;
+        header('Location: ' . URLROOT . '/admin/products');
+        exit;
     }
 
-    public function security() {
+    public function security()
+    {
         $this->requireSecurityAdmin();
         try {
             $audit = new SecurityAudit();
             $data = $audit->overview();
             foreach ($data['alerts'] as &$alert) {
-                $resolvedAt = $audit->resolved($alert['email'],$alert['role'],$alert['ip_address']);
+                $resolvedAt = $audit->resolved($alert['email'], $alert['role'], $alert['ip_address']);
                 $alert['resolved'] = $resolvedAt && strtotime($resolvedAt) >= strtotime($alert['last_attempt']);
             }
             unset($alert);
             $data['error'] = '';
         } catch (Throwable $e) {
-            error_log('Security page: '.$e->getMessage());
-            $data = ['error'=>'Security audit tables are not available. Import security_audit_migration.sql first.', 'failed'=>0,'resets'=>0,'sessions'=>0,'alerts'=>[],'recent'=>[]];
+            error_log('Security page: ' . $e->getMessage());
+            $data = ['error' => 'Security audit tables are not available. Import security_audit_migration.sql first.', 'failed' => 0, 'resets' => 0, 'sessions' => 0, 'alerts' => [], 'recent' => []];
         }
         $data['flash'] = $_SESSION['security_flash'] ?? '';
         unset($_SESSION['security_flash']);
         if (empty($_SESSION['security_csrf'])) $_SESSION['security_csrf'] = bin2hex(random_bytes(32));
         $this->view('admin/security', $data);
     }
-    private function requireSecurityAdmin() {
+    private function requireSecurityAdmin()
+    {
         if (empty($_SESSION['user_id']) || ($_SESSION['user_role'] ?? '') !== 'admin') {
-            header('Location: '.URLROOT.'/admin/login'); exit();
+            header('Location: ' . URLROOT . '/admin/login');
+            exit();
         }
     }
-    private function securityPost() {
+    private function securityPost()
+    {
         $this->requireSecurityAdmin();
         if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_SESSION['security_csrf']) || !hash_equals($_SESSION['security_csrf'], (string)($_POST['csrf'] ?? ''))) {
-            http_response_code(403); exit('Invalid request');
+            http_response_code(403);
+            exit('Invalid request');
         }
     }
-    public function resolveSecurityAlert() {
+    public function resolveSecurityAlert()
+    {
         $this->securityPost();
-        $email=trim($_POST['email'] ?? ''); $role=trim($_POST['role'] ?? ''); $ip=trim($_POST['ip'] ?? '');
-        if ($email !== '' && in_array($role,['admin','supplier','customer'],true) && filter_var($ip,FILTER_VALIDATE_IP)) {
-            (new SecurityAudit())->resolve($email,$role,$ip,(int)$_SESSION['user_id']);
-            $_SESSION['security_flash']='Alert marked as reviewed. New failures will appear again.';
+        $email = trim($_POST['email'] ?? '');
+        $role = trim($_POST['role'] ?? '');
+        $ip = trim($_POST['ip'] ?? '');
+        if ($email !== '' && in_array($role, ['admin', 'supplier', 'customer'], true) && filter_var($ip, FILTER_VALIDATE_IP)) {
+            (new SecurityAudit())->resolve($email, $role, $ip, (int)$_SESSION['user_id']);
+            $_SESSION['security_flash'] = 'Alert marked as reviewed. New failures will appear again.';
         }
-        header('Location: '.URLROOT.'/admin/security');exit();
+        header('Location: ' . URLROOT . '/admin/security');
+        exit();
     }
-    public function revokeSecuritySessions() {
+    public function revokeSecuritySessions()
+    {
         $this->securityPost();
-        $count=(new SecurityAudit())->revokeOthers((int)$_SESSION['user_id']);
-        $_SESSION['security_flash']=$count.' tracked sessions revoked (excluding your account).';
-        header('Location: '.URLROOT.'/admin/security');exit();
+        $count = (new SecurityAudit())->revokeOthers((int)$_SESSION['user_id']);
+        $_SESSION['security_flash'] = $count . ' tracked sessions revoked (excluding your account).';
+        header('Location: ' . URLROOT . '/admin/security');
+        exit();
     }
-    public function exportSecurityAudit() {
+    public function exportSecurityAudit()
+    {
         $this->requireSecurityAdmin();
-        $rows=(new SecurityAudit())->exportRows();
+        $rows = (new SecurityAudit())->exportRows();
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="security-audit.csv"');
         header('Cache-Control: no-store');
-        $out=fopen('php://output','w');
-        fputcsv($out,['Date and time','Email','Role','IP','Browser','Result']);
-        foreach($rows as $row) {
-            foreach($row as &$value) { $value=(string)$value; if (preg_match('/^[=+@\-\t\r]/',$value)) $value="'".$value; } unset($value);
-            $row['successful']=$row['successful'] ? 'Success':'Failed';
-            fputcsv($out,array_values($row));
+        $out = fopen('php://output', 'w');
+        fputcsv($out, ['Date and time', 'Email', 'Role', 'IP', 'Browser', 'Result']);
+        foreach ($rows as $row) {
+            foreach ($row as &$value) {
+                $value = (string)$value;
+                if (preg_match('/^[=+@\-\t\r]/', $value)) $value = "'" . $value;
+            }
+            unset($value);
+            $row['successful'] = $row['successful'] ? 'Success' : 'Failed';
+            fputcsv($out, array_values($row));
         }
-        fclose($out);exit();
+        fclose($out);
+        exit();
     }
 
-    public function reports() {
+    public function reports()
+    {
         if (empty($_SESSION['user_id']) || ($_SESSION['user_role'] ?? '') !== 'admin') {
-            header('Location: '.URLROOT.'/admin/login'); exit();
+            header('Location: ' . URLROOT . '/admin/login');
+            exit();
         }
         require_once '../app/Models/AdminReports.php';
         $days = filter_input(INPUT_GET, 'days', FILTER_VALIDATE_INT);
@@ -311,7 +393,8 @@ class AdminController extends Controller {
         $this->view('admin/admin_reports', $data);
     }
 
-    public function settings() {
+    public function settings()
+    {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
             header('Location: ' . URLROOT . '/admin/login');
             exit();
@@ -333,7 +416,8 @@ class AdminController extends Controller {
     }
 
     // ─── Avatar: Upload ───────────────────────────────────────────────────────
-    public function uploadAvatar() {
+    public function uploadAvatar()
+    {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
             header('Location: ' . URLROOT . '/admin/login');
             exit();
@@ -401,7 +485,8 @@ class AdminController extends Controller {
     }
 
     // ─── Avatar: Delete ───────────────────────────────────────────────────────
-    public function deleteAvatar() {
+    public function deleteAvatar()
+    {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'admin') {
             header('Location: ' . URLROOT . '/admin/login');
             exit();
@@ -429,14 +514,16 @@ class AdminController extends Controller {
 
 
     // ─── Admin: Notice Management CRUD ───────────────────────────────────────
-    private function requireAdmin() {
+    private function requireAdmin()
+    {
         if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] ?? '') !== 'admin') {
             header('Location: ' . URLROOT . '/admin/login');
             exit();
         }
     }
 
-    public function notices() {
+    public function notices()
+    {
         $this->requireAdmin();
         $data = [
             'notices' => $this->noticeModel->getAll(),
@@ -448,57 +535,78 @@ class AdminController extends Controller {
         $this->view('admin/admin_notice_management', $data);
     }
 
-    private function noticePayload() {
+    private function noticePayload()
+    {
         $audience = $_POST['audience'] ?? 'all';
         $status = $_POST['status'] ?? 'active';
         return [
             'title' => trim($_POST['title'] ?? ''),
             'message' => trim($_POST['message'] ?? ''),
-            'audience' => in_array($audience, ['customer','supplier','all'], true) ? $audience : 'all',
-            'status' => in_array($status, ['active','inactive'], true) ? $status : 'active',
+            'audience' => in_array($audience, ['customer', 'supplier', 'all'], true) ? $audience : 'all',
+            'status' => in_array($status, ['active', 'inactive'], true) ? $status : 'active',
             'expires_at' => !empty($_POST['expires_at']) ? $_POST['expires_at'] : null,
         ];
     }
 
-    public function createNotice() {
+    public function createNotice()
+    {
         $this->requireAdmin();
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: '.URLROOT.'/admin/notices'); exit(); }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . URLROOT . '/admin/notices');
+            exit();
+        }
         $data = $this->noticePayload();
         if ($data['title'] === '' || $data['message'] === '') {
-            $_SESSION['admin_flash']='Title and message are required.'; $_SESSION['admin_flash_type']='error';
+            $_SESSION['admin_flash'] = 'Title and message are required.';
+            $_SESSION['admin_flash_type'] = 'error';
         } else {
             $data['created_by'] = (int)$_SESSION['user_id'];
             $ok = $this->noticeModel->create($data);
             $_SESSION['admin_flash'] = $ok ? 'Notice created successfully.' : 'Could not create the notice.';
             $_SESSION['admin_flash_type'] = $ok ? 'success' : 'error';
         }
-        header('Location: '.URLROOT.'/admin/notices'); exit();
+        header('Location: ' . URLROOT . '/admin/notices');
+        exit();
     }
 
-    public function updateNotice() {
+    public function updateNotice()
+    {
         $this->requireAdmin();
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: '.URLROOT.'/admin/notices'); exit(); }
-        $id=(int)($_POST['notice_id'] ?? 0); $data=$this->noticePayload();
-        if (!$id || $data['title']==='' || $data['message']==='') {
-            $_SESSION['admin_flash']='Invalid notice data.'; $_SESSION['admin_flash_type']='error';
-        } else {
-            $ok=$this->noticeModel->update($id,$data);
-            $_SESSION['admin_flash']=$ok?'Notice updated successfully.':'Could not update the notice.';
-            $_SESSION['admin_flash_type']=$ok?'success':'error';
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . URLROOT . '/admin/notices');
+            exit();
         }
-        header('Location: '.URLROOT.'/admin/notices'); exit();
+        $id = (int)($_POST['notice_id'] ?? 0);
+        $data = $this->noticePayload();
+        if (!$id || $data['title'] === '' || $data['message'] === '') {
+            $_SESSION['admin_flash'] = 'Invalid notice data.';
+            $_SESSION['admin_flash_type'] = 'error';
+        } else {
+            $ok = $this->noticeModel->update($id, $data);
+            $_SESSION['admin_flash'] = $ok ? 'Notice updated successfully.' : 'Could not update the notice.';
+            $_SESSION['admin_flash_type'] = $ok ? 'success' : 'error';
+        }
+        header('Location: ' . URLROOT . '/admin/notices');
+        exit();
     }
 
-    public function deleteNotice() {
+    public function deleteNotice()
+    {
         $this->requireAdmin();
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: '.URLROOT.'/admin/notices'); exit(); }
-        $id=(int)($_POST['notice_id'] ?? 0); $ok=$id ? $this->noticeModel->delete($id) : false;
-        $_SESSION['admin_flash']=$ok?'Notice deleted successfully.':'Could not delete the notice.';
-        $_SESSION['admin_flash_type']=$ok?'success':'error';
-        header('Location: '.URLROOT.'/admin/notices'); exit();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . URLROOT . '/admin/notices');
+            exit();
+        }
+        $id = (int)($_POST['notice_id'] ?? 0);
+        $ok = $id ? $this->noticeModel->delete($id) : false;
+        $_SESSION['admin_flash'] = $ok ? 'Notice deleted successfully.' : 'Could not delete the notice.';
+        $_SESSION['admin_flash_type'] = $ok ? 'success' : 'error';
+        header('Location: ' . URLROOT . '/admin/notices');
+        exit();
     }
 
-    public function login() {
+    public function login()
+    {
         // දත්ත යවන්න Array එකක් හදාගන්නවා
         $data = [
             'error' => '',
@@ -506,7 +614,7 @@ class AdminController extends Controller {
         ];
 
         // කවුරුහරි Form එක Submit කරලා නම් (POST Request එකක් නම්)
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $email = $_POST['email'];
             $password = $_POST['password'];
 
@@ -538,13 +646,14 @@ class AdminController extends Controller {
     }
 
 
-    public function logout() {
+    public function logout()
+    {
         // Session එකේ තියෙන ඔක්කොම දත්ත මකලා දානවා
         unset($_SESSION['user_id']);
         unset($_SESSION['user_email']);
         unset($_SESSION['user_name']);
         unset($_SESSION['user_role']);
-        
+
         // මුළු Session එකම විනාශ කරලා දානවා
         session_destroy();
 
@@ -552,8 +661,4 @@ class AdminController extends Controller {
         header('Location: ' . URLROOT . '/admin/login');
         exit();
     }
-
-
 }
-
-?>

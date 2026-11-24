@@ -6,8 +6,8 @@ require_once '../app/Models/Notice.php';
 require_once '../app/Models/CustomerAuth.php';
 require_once '../app/Models/Household.php';
 require_once '../app/Models/CustomerSettings.php';
-require_once '../app/Models/Budget.php';
-require_once '../app/Models/Expense.php';
+require_once '../app/Models/BudgetModel.php';
+require_once '../app/Models/ExpenseModel.php';
 
 class CustomerController extends Controller {
 
@@ -27,14 +27,40 @@ class CustomerController extends Controller {
         $this->authModel = new CustomerAuth();
         $this->householdModel = new Household();
         $this->settingsModel = new CustomerSettings();
-        $this->budgetModel = new Budget();
-        $this->expenseModel = new Expense();
+        $this->budgetModel = new BudgetModel();
+        $this->expenseModel = new ExpenseModel();
     }
 
     private function requireCustomer() {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'customer') {
             header('Location: ' . URLROOT . '/customer/login');
             exit();
+        }
+        // Ensure household_id is always set for customer
+        if (empty($_SESSION['household_id'])) {
+            try {
+                $db = (new Database())->getConnection();
+                $stmt = $db->prepare("SELECT household_id, household_role, name FROM users WHERE id = ?");
+                $stmt->execute([(int)$_SESSION['user_id']]);
+                $u = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($u && !empty($u['household_id'])) {
+                    $_SESSION['household_id'] = (int)$u['household_id'];
+                    $_SESSION['household_role'] = $u['household_role'] ?? 'head';
+                } else if ($u) {
+                    $hstmt = $db->prepare("INSERT INTO households (name, created_by_user_id) VALUES (?, ?)");
+                    $hstmt->execute([($u['name'] ?? 'My') . ' Household', (int)$_SESSION['user_id']]);
+                    $newHid = (int)$db->lastInsertId();
+
+                    $ustmt = $db->prepare("UPDATE users SET household_id = ?, household_role = 'head' WHERE id = ?");
+                    $ustmt->execute([$newHid, (int)$_SESSION['user_id']]);
+
+                    $_SESSION['household_id'] = $newHid;
+                    $_SESSION['household_role'] = 'head';
+                }
+            } catch (Throwable $e) {
+                error_log('Household resolution error: ' . $e->getMessage());
+            }
         }
         // topbar photo (also for sessions started before the photo was added)
         if (!isset($_SESSION['user_photo'])) {
@@ -223,7 +249,7 @@ class CustomerController extends Controller {
             }
         }
 
-        $data['isHead']  = $isHead;
+        $data['is_head'] = $isHead;
         $data['members'] = $this->householdModel->getMembers($householdId);
         $data['summary'] = $this->householdModel->getSummary($householdId);
         $data['flash']   = $_SESSION['customer_flash'] ?? '';
@@ -420,8 +446,13 @@ class CustomerController extends Controller {
             $action = $_POST['action'] ?? '';
 
             if ($action == 'incomes') {                 // 1 + 2: main and family incomes
+                $month = (int)date('m');
+                $year = (int)date('Y');
                 foreach ($_POST['income'] ?? [] as $userId => $amount) {
-                    $this->budgetModel->updateIncome((int) $userId, $householdId, max(0, (float) $amount));
+                    $amt = max(0, (float) $amount);
+                    $targetId = (int)$userId;
+                    $this->budgetModel->updateIncome($targetId, $householdId, $amt);
+                    $this->budgetModel->saveIncome($targetId, 'Primary Income', $amt, $month, $year);
                 }
                 $this->setFlash('Income saved.');
             }
@@ -439,12 +470,85 @@ class CustomerController extends Controller {
                 $this->budgetModel->removeAdditionalIncome((int) ($_POST['id'] ?? 0), $householdId);
                 $this->setFlash('Additional income removed.');
             }
-            if ($action == 'save_plan') {               // monthly plan limits
-                $limits = [];
-                foreach ($categories as $c) {
-                    $limits[$c['id']] = max(0, (float) ($_POST['limit'][$c['id']] ?? 0));
+            if ($action == 'add_fixed') {
+                $userId = (int)$_SESSION['user_id'];
+                $month = (int)date('m');
+                $year = (int)date('Y');
+                $catId = (int)($_POST['category_id'] ?? 0);
+                $customName = trim($_POST['custom_name'] ?? '');
+                $amount = max(0.00, (float)($_POST['limit'] ?? 0));
+                $dueDate = !empty($_POST['due_date']) ? $_POST['due_date'] : null;
+                $penaltyRate = isset($_POST['penalty_rate']) ? (float)$_POST['penalty_rate'] : 0.00;
+                $durationMonths = !empty($_POST['duration_months']) ? (int)$_POST['duration_months'] : null;
+
+                if ($catId > 0 && $amount > 0) {
+                    $this->budgetModel->setOrUpdateBudget(
+                        $userId, $catId, $amount, $month, $year, $dueDate, $penaltyRate, $customName, null, $durationMonths
+                    );
+                    $this->setFlash('Fixed expense added to monthly plan.');
+                } else {
+                    $error = 'Please select a category and enter an amount greater than 0.';
                 }
-                $this->budgetModel->savePlan($householdId, $limits);
+            }
+            if ($action == 'delete_fixed') {
+                $delId = (int)($_POST['budget_id'] ?? 0);
+                if ($delId > 0) {
+                    $this->budgetModel->deleteBudget($delId, $householdId);
+                    $this->setFlash('Fixed expense removed.');
+                }
+            }
+            if ($action == 'save_plan') {               // monthly plan limits
+                $userId = (int)$_SESSION['user_id'];
+                $month = (int)date('m');
+                $year = (int)date('Y');
+
+                // 1. Process existing fixed items
+                if (!empty($_POST['fixed']) && is_array($_POST['fixed'])) {
+                    foreach ($_POST['fixed'] as $item) {
+                        $catId = (int)($item['category_id'] ?? 0);
+                        $amount = max(0.00, (float)($item['limit'] ?? 0));
+                        $customName = trim($item['custom_name'] ?? '');
+                        $dueDate = !empty($item['due_date']) ? $item['due_date'] : null;
+                        $penaltyRate = max(0.00, (float)($item['penalty_rate'] ?? 0));
+                        $durationMonths = !empty($item['duration_months']) ? (int)$item['duration_months'] : null;
+                        $budgetId = !empty($item['budget_id']) ? (int)$item['budget_id'] : null;
+
+                        if ($catId > 0) {
+                            $this->budgetModel->setOrUpdateBudget(
+                                $userId, $catId, $amount, $month, $year, $dueDate, $penaltyRate, $customName, $budgetId, $durationMonths
+                            );
+                        }
+                    }
+                }
+
+                // 2. Process dynamically appended fixed items
+                if (!empty($_POST['fixed_new']) && is_array($_POST['fixed_new'])) {
+                    foreach ($_POST['fixed_new'] as $item) {
+                        $catId = (int)($item['category_id'] ?? 0);
+                        $amount = max(0.00, (float)($item['limit'] ?? 0));
+                        $customName = trim($item['custom_name'] ?? '');
+                        $dueDate = !empty($item['due_date']) ? $item['due_date'] : null;
+                        $penaltyRate = max(0.00, (float)($item['penalty_rate'] ?? 0));
+                        $durationMonths = !empty($item['duration_months']) ? (int)$item['duration_months'] : null;
+
+                        if ($catId > 0 && $amount > 0) {
+                            $this->budgetModel->setOrUpdateBudget(
+                                $userId, $catId, $amount, $month, $year, $dueDate, $penaltyRate, $customName, null, $durationMonths
+                            );
+                        }
+                    }
+                }
+
+                // 3. Process variable category limits
+                $varLimits = $_POST['variable'] ?? $_POST['limit'] ?? $_POST['limits'] ?? [];
+                foreach ($varLimits as $catId => $amount) {
+                    $catId = (int)$catId;
+                    $amount = max(0.00, (float)$amount);
+                    if ($catId > 0) {
+                        $this->budgetModel->setOrUpdateBudget($userId, $catId, $amount, $month, $year, null, 0.00, null, null);
+                    }
+                }
+
                 $this->setFlash('Monthly plan saved.');
             }
 
@@ -463,45 +567,136 @@ class CustomerController extends Controller {
             else $familyIncome += $i['monthly_income'];
         }
         foreach ($extras as $e) $extraIncome += $e['amount'];
-        $totalIncome = $mainIncome + $familyIncome + $extraIncome;
+        $userId = (int)$_SESSION['user_id'];
+        $month = (int)date('m');
+        $year = (int)date('Y');
+        $totalIncomeModel = $this->budgetModel->getTotalMonthlyIncome($userId, $month, $year);
+        $totalIncome = max($mainIncome + $familyIncome + $extraIncome, $totalIncomeModel);
 
         // ---- Money for the plan = income - savings goal ----
         $goal      = $this->budgetModel->getSavingsGoal($householdId); // savings_goals row
-        $savings   = (float) $goal['target_amount'];
+        $savings   = (float) ($goal['target_amount'] ?? 0);
         $available = max(0, $totalIncome - $savings);
 
-        // ---- One row per category: suggested amount and the limit to show ----
-        $saved = $this->budgetModel->getPlan($householdId);   // [category_id => amount]
-        $useSuggestion = isset($_GET['suggest']);            // "Auto-Suggest" button
-        $rows = [];
-        $totalPlanned = 0;
-        $totalPercent = 0;
+        // Run early reminder checks (1st to 7th of the month)
+        $this->budgetModel->checkEarlyReminders($userId, $month, $year);
+
+        // Run overdue checks for past-due fixed expenses
+        $this->budgetModel->checkOverdueBudgets($userId, $month, $year);
+
+        // Separate fixed and variable categories
+        $fixedCategories = [];
+        $variableCategories = [];
         foreach ($categories as $c) {
-            $percent   = (float) $c['suggested_percent'];
-            $suggested = round($available * $percent / 100, 2);
-            $limit     = (!$useSuggestion && isset($saved[$c['id']])) ? (float) $saved[$c['id']] : $suggested;
-            $rows[] = ['id' => $c['id'], 'name' => $c['name'], 'percent' => $percent, 'suggested' => $suggested, 'limit' => $limit];
-            $totalPlanned += $limit;
-            $totalPercent += $percent;
+            if (in_array(strtolower(trim($c['name'])), ['rent', 'loan', 'tuition'])) {
+                $fixedCategories[$c['id']] = $c;
+            } else {
+                $variableCategories[$c['id']] = $c;
+            }
         }
 
+        // Fetch all budget rows saved for this month (including multiple custom names)
+        $allMonthlyBudgets = $this->budgetModel->getMonthlyBudgets($householdId, date('Y-m-01'));
+
+        $savedFixed = [];
+        $savedVariable = [];
+        foreach ($allMonthlyBudgets as $b) {
+            $catLower = strtolower(trim($b['category_name'] ?: $b['category']));
+            if (in_array($catLower, ['rent', 'loan', 'tuition'])) {
+                $savedFixed[] = $b;
+            } else {
+                $savedVariable[$b['category_id']] = $b;
+            }
+        }
+
+        // Fixed rows: include all saved rows plus base categories if missing
+        $fixedRows = [];
+        $coveredBase = [];
+        foreach ($savedFixed as $sf) {
+            $fixedRows[] = [
+                'budget_id'       => (int)$sf['budget_id'],
+                'id'              => (int)$sf['category_id'],
+                'category_id'     => (int)$sf['category_id'],
+                'name'            => $sf['category_name'] ?: $sf['category'],
+                'category_name'   => $sf['category_name'] ?: $sf['category'],
+                'custom_name'     => $sf['custom_name'] ?? '',
+                'limit'           => (float)$sf['amount'],
+                'suggested'       => round($available * (($sf['suggested_percent'] ?? 0) / 100), 2),
+                'due_date'        => $sf['due_date'] ?? '',
+                'penalty_rate'    => (float)($sf['penalty_rate'] ?? 0.00),
+                'duration_months' => !empty($sf['duration_months']) ? (int)$sf['duration_months'] : null,
+                'penalty_applied' => !empty($sf['penalty_applied']),
+                'is_paid'         => !empty($sf['is_paid']),
+                'is_custom'       => !empty($sf['custom_name'])
+            ];
+            if (empty($sf['custom_name'])) {
+                $coveredBase[$sf['category_id']] = true;
+            }
+        }
+        foreach ($fixedCategories as $catId => $fc) {
+            if (!isset($coveredBase[$catId])) {
+                $suggested = round($available * ((float)$fc['suggested_percent'] / 100), 2);
+                $fixedRows[] = [
+                    'budget_id'       => 0,
+                    'id'              => $catId,
+                    'category_id'     => $catId,
+                    'name'            => $fc['name'],
+                    'category_name'   => $fc['name'],
+                    'custom_name'     => '',
+                    'limit'           => 0.00,
+                    'suggested'       => $suggested,
+                    'due_date'        => '',
+                    'penalty_rate'    => 0.00,
+                    'duration_months' => null,
+                    'penalty_applied' => false,
+                    'is_paid'         => false,
+                    'is_custom'       => false
+                ];
+            }
+        }
+
+        // Variable rows
+        $variableRows = [];
+        $useSuggestion = isset($_GET['suggest']);
+        foreach ($variableCategories as $catId => $vc) {
+            $percent   = (float)$vc['suggested_percent'];
+            $suggested = round($available * $percent / 100, 2);
+            $savedRow  = $savedVariable[$catId] ?? null;
+            $limit     = (!$useSuggestion && $savedRow) ? (float)$savedRow['amount'] : $suggested;
+
+            $variableRows[] = [
+                'budget_id'     => $savedRow ? (int)$savedRow['budget_id'] : 0,
+                'id'            => $catId,
+                'category_id'   => $catId,
+                'name'          => $vc['name'],
+                'percent'       => $percent,
+                'suggested'     => $suggested,
+                'limit'         => $limit
+            ];
+        }
+
+        $totalPlanned = array_sum(array_column($fixedRows, 'limit')) + array_sum(array_column($variableRows, 'limit'));
+        $totalPercent = 0;
+        foreach ($categories as $c) {
+            $totalPercent += (float)($c['suggested_percent'] ?? 0);
+        }
+        $rows = array_merge($fixedRows, $variableRows);
+
         $data = [
-            'isHead'       => $isHead,
-            'error'        => $error,
-            'incomes'      => $incomes,
-            'extras'       => $extras,
-            'mainIncome'   => $mainIncome,
-            'familyIncome' => $familyIncome,
-            'extraIncome'  => $extraIncome,
-            'totalIncome'  => $totalIncome,
-            'savings'      => $savings,
-            'goal'         => $goal,
-            'available'    => $available,
-            'rows'         => $rows,
-            'totalPlanned' => $totalPlanned,
-            'totalPercent' => $totalPercent,
-            'planSaved'    => !empty($saved) && !$useSuggestion,
-            'flash'        => $_SESSION['customer_flash'] ?? ''
+            'is_head'            => $isHead,
+            'total_income'       => $totalIncome,
+            'savings_goal'       => $savings,
+            'available_to_spend' => $available,
+            'total_planned'      => $totalPlanned,
+            'total_percent'      => $totalPercent,
+            'total_spent'        => 0.00,
+            'incomes'            => $incomes,
+            'extras'             => $extras,
+            'fixed_rows'         => $fixedRows,
+            'variable_rows'      => $variableRows,
+            'fixed_categories'   => $fixedCategories,
+            'flash'              => $_SESSION['customer_flash'] ?? '',
+            'error'              => $error
         ];
         unset($_SESSION['customer_flash'], $_SESSION['customer_flash_type']);
 
@@ -513,27 +708,47 @@ class CustomerController extends Controller {
     public function dashboard() {
         $this->requireCustomer();
         $householdId = $_SESSION['household_id'];
+        $userId = (int)$_SESSION['user_id'];
+        $month = (int)date('m');
+        $year = (int)date('Y');
+
+        // Early reminder checks (1st to 7th of the month)
+        $this->budgetModel->checkEarlyReminders($userId, $month, $year);
+
+        // Check for overdue fixed expense budgets and apply penalties + notifications
+        $this->budgetModel->checkOverdueBudgets($userId, $month, $year);
 
         // income = everyone's monthly income + additional income this month
         $income = 0;
-        foreach ($this->budgetModel->getIncomes($householdId) as $i) $income += $i['monthly_income'];
-        foreach ($this->budgetModel->getAdditionalIncomes($householdId) as $e) $income += $e['amount'];
+        foreach ($this->budgetModel->getIncomes($householdId) as $i) $income += (float)$i['monthly_income'];
+        foreach ($this->budgetModel->getAdditionalIncomes($householdId) as $e) $income += (float)$e['amount'];
+
+        $totalIncomeModel = $this->budgetModel->getTotalMonthlyIncome($userId, $month, $year);
+        $totalIncome = max($income, $totalIncomeModel);
+
+        // savings goal
+        $goal = $this->budgetModel->getSavingsGoal($householdId);
+        $savings = (float)($goal['target_amount'] ?? 0);
+        $availableToSpend = max(0, $totalIncome - $savings);
 
         // spending this month per category (for the pie chart)
         $spending = $this->expenseModel->getSpendingByCategory($householdId);
         $spent = 0;
-        foreach ($spending as $c) $spent += $c['total'];
+        foreach ($spending as $c) $spent += (float)$c['total'];
 
         $budget = array_sum($this->budgetModel->getPlan($householdId)); // saved monthly plan
+        $remaining = $budget > 0 ? ($budget - $spent) : ($availableToSpend - $spent);
 
         $data = [
-            'notices'      => $this->noticeModel->getActiveForAudience('customer'),
-            'income'       => $income,
-            'spent'        => $spent,
-            'remaining'    => $budget - $spent,
-            'spending'     => $spending,
-            'transactions' => $this->expenseModel->getTransactions($householdId),
-            'flash'        => $_SESSION['customer_flash'] ?? ''
+            'notices'            => $this->noticeModel->getActiveForAudience('customer'),
+            'total_income'       => $totalIncome,
+            'savings_goal'       => $savings,
+            'available_to_spend' => $availableToSpend,
+            'total_expenses'     => $spent,
+            'remaining_budget'   => $remaining,
+            'spending'           => $spending,
+            'transactions'       => $this->expenseModel->getTransactions($householdId),
+            'flash'              => $_SESSION['customer_flash'] ?? ''
         ];
         unset($_SESSION['customer_flash'], $_SESSION['customer_flash_type']);
         $this->view('Customer/dashboard', $data);
@@ -545,8 +760,19 @@ class CustomerController extends Controller {
     public function addExpense() {
         $this->requireCustomer();
         $householdId = $_SESSION['household_id'];
+        $userId = (int)$_SESSION['user_id'];
         $categories  = $this->budgetModel->getCategories();
         $data = ['error' => '', 'old' => $_POST];
+
+        // Handle one-click payment actions
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && ($_POST['action'] ?? '') == 'mark_as_paid') {
+            $this->markAsPaid();
+            return;
+        }
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && ($_POST['action'] ?? '') == 'mark_all_as_paid') {
+            $this->markAllAsPaid();
+            return;
+        }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $amount      = (float) ($_POST['amount'] ?? 0);
@@ -562,18 +788,73 @@ class CustomerController extends Controller {
                 $data['error'] = 'Please choose a date.';
             } else {
                 $this->expenseModel->addExpense($householdId, $_SESSION['user_id'], $categoryId, $amount, $date, $description);
+                $this->budgetModel->markBudgetPaidIfCovered((int)$_SESSION['user_id'], $categoryId, $date, $householdId);
                 $this->setFlash('Expense saved.');
                 header('Location: ' . URLROOT . '/customer/addExpense');
                 exit();
             }
         }
 
-        $data['categories'] = $categories;
-        $data['spending']   = $this->expenseModel->getSpendingByCategory($householdId); // this month
-        $data['plan']       = $this->budgetModel->getPlan($householdId);                // [category_id => limit]
-        $data['flash']      = $_SESSION['customer_flash'] ?? '';
+        $currentMonth = date('Y-m-01');
+        $spending = [];
+        $plan = [];
+
+        foreach ($categories as $c) {
+            $catId = (int)$c['id'];
+            $limit = $this->budgetModel->getBudgetByCategory((int)$_SESSION['user_id'], $catId, $currentMonth, $householdId);
+            $spent = $this->expenseModel->getTotalExpensesByCategory((int)$_SESSION['user_id'], $catId, date('Y-m'), $householdId);
+            $remaining = round($limit - $spent, 2);
+
+            $plan[$catId] = $limit;
+            $spending[] = [
+                'id'        => $catId,
+                'name'      => $c['name'],
+                'total'     => $spent,
+                'limit'     => $limit,
+                'remaining' => $remaining
+            ];
+        }
+
+        $data['categories']   = $categories;
+        $data['spending']     = $spending;
+        $data['plan']         = $plan;
+        $data['pending_fixed'] = $this->budgetModel->getPendingFixedBudgets($userId, $householdId);
+        $data['flash']        = $_SESSION['customer_flash'] ?? '';
         unset($_SESSION['customer_flash'], $_SESSION['customer_flash_type']);
         $this->view('Customer/addExpense', $data);
+    }
+
+    public function markAsPaid() {
+        $this->requireCustomer();
+        $userId = (int)$_SESSION['user_id'];
+        $householdId = $_SESSION['household_id'] ?? null;
+        $budgetId = (int)($_POST['budget_id'] ?? 0);
+
+        if ($budgetId > 0) {
+            $success = $this->budgetModel->markBudgetAsPaid($budgetId, $userId, $householdId);
+            if ($success) {
+                $this->setFlash('Fixed payment recorded as an expense and marked as paid.');
+            } else {
+                $this->setFlash('Could not mark payment as paid.');
+            }
+        }
+        header('Location: ' . URLROOT . '/customer/addExpense');
+        exit();
+    }
+
+    public function markAllAsPaid() {
+        $this->requireCustomer();
+        $userId = (int)$_SESSION['user_id'];
+        $householdId = $_SESSION['household_id'] ?? null;
+
+        $count = $this->budgetModel->markAllBudgetsAsPaid($userId, $householdId);
+        if ($count > 0) {
+            $this->setFlash("All {$count} pending fixed payments have been marked as paid and recorded.");
+        } else {
+            $this->setFlash('No pending fixed payments were found to mark as paid.');
+        }
+        header('Location: ' . URLROOT . '/customer/addExpense');
+        exit();
     }
 
     public function logout() {
@@ -583,16 +864,89 @@ class CustomerController extends Controller {
         exit();
     }
 
-    public function grocery()       { $this->requireCustomer(); $this->view('Customer/grocery'); }
-    public function cart()          { $this->requireCustomer(); $this->view('Customer/cart'); }
+    public function grocery() {
+        $this->requireCustomer();
+        $products = [];
+        try {
+            $db = (new Database())->getConnection();
+            $stmt = $db->query("
+                SELECT p.id, p.name, p.description, 
+                       COALESCE(MAX(pc.name), p.category, 'General') AS category_name, 
+                       COALESCE(MAX(pv.price), p.price, 0.00) AS price, 
+                       COALESCE(MAX(pv.variant_name), p.size, 'unit') AS variant_name, 
+                       MAX(pi.image_url) AS image_url, 
+                       COALESCE(p.brand, MAX(b.company_name), MAX(u.name), 'BudgetPilot Brand') AS brand_name
+                FROM products p
+                LEFT JOIN product_categories pc ON p.category_id = pc.id
+                LEFT JOIN product_variants pv ON p.id = pv.product_id
+                LEFT JOIN product_images pi ON pv.id = pi.variant_id AND pi.image_type = 'Front'
+                LEFT JOIN users u ON p.supplier_id = u.id
+                LEFT JOIN brands_companies b ON p.supplier_id = b.user_id
+                WHERE (p.status = 'Active' OR p.status = 'approved' OR p.status = 'active' OR p.status IS NULL OR p.status = '')
+                  AND (p.admin_verification = 'Approved' OR p.admin_verification = 'approved' OR p.admin_verification IS NULL OR p.admin_verification = '')
+                GROUP BY p.id
+                ORDER BY p.id ASC
+            ");
+            if ($stmt) {
+                $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (Throwable $e) {
+            error_log('Grocery catalog error: ' . $e->getMessage());
+        }
+        $this->view('customer/grocery', ['products' => $products]);
+    }
+
+    public function cart() {
+        $this->requireCustomer();
+        require_once '../app/Controllers/CartController.php';
+        (new CartController())->index();
+    }
+
+    public function addToCart($productId = null) {
+        $this->requireCustomer();
+        require_once '../app/Controllers/CartController.php';
+        return (new CartController())->add($productId);
+    }
+
+    public function swap() {
+        $this->requireCustomer();
+        require_once '../app/Controllers/CartController.php';
+        return (new CartController())->swap();
+    }
     public function analytics()     { $this->requireCustomer(); $this->view('Customer/analytics'); }
     public function notifications() { $this->requireCustomer(); $this->view('Customer/notifications'); }
     public function product()       { $this->requireCustomer(); $this->view('Customer/product'); }
     public function privacy()       { $this->view('Customer/privacy'); }
     public function terms()         { $this->view('Customer/terms'); }
-    public function product_detail() {
+    public function product_detail($id = 1) {
         $this->requireCustomer();
-        $this->view('customer/product_detail');
+        $id = (int)$id;
+        if ($id <= 0) $id = 1;
+        $product = null;
+        try {
+            $db = (new Database())->getConnection();
+            $stmt = $db->prepare("
+                SELECT p.*, 
+                       COALESCE(MAX(pc.name), p.category, 'General') AS category_name, 
+                       COALESCE(MAX(pv.price), p.price, 0.00) AS price, 
+                       COALESCE(MAX(pv.variant_name), p.size, 'unit') AS variant_name, 
+                       MAX(pi.image_url) AS image_url, 
+                       COALESCE(p.brand, MAX(b.company_name), MAX(u.name), 'GreenHarvest') AS brand_name
+                FROM products p
+                LEFT JOIN product_categories pc ON p.category_id = pc.id
+                LEFT JOIN product_variants pv ON p.id = pv.product_id
+                LEFT JOIN product_images pi ON pv.id = pi.variant_id AND pi.image_type = 'Front'
+                LEFT JOIN users u ON p.supplier_id = u.id
+                LEFT JOIN brands_companies b ON p.supplier_id = b.user_id
+                WHERE p.id = ?
+                GROUP BY p.id
+            ");
+            $stmt->execute([$id]);
+            $product = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (Throwable $e) {
+            error_log('Product detail error: ' . $e->getMessage());
+        }
+        $this->view('customer/product_detail', ['product' => $product]);
     }
 }
 

@@ -1,278 +1,177 @@
 <?php
 $product = $data['product'];
+$spActive = 'catalog';
+$spActiveLink = true;
+$pageCss = ['supplier/supplier', 'supplier/edit-product'];
+require APPROOT . '/Views/shared/header.php';
 ?>
 
-<?php
-$product = $data['product'];
-?>
-
-<?php $spActive = 'catalog'; $spActiveLink = true; ?>
-<?php require APPROOT . '/Views/shared/header.php'; ?>
-
-
-        <div class="card" style="max-width:900px; margin:40px auto;">
+        <div class="card edit-product-card">
 
             <h2 class="section-title">Edit Product</h2>
 
-            <p style="margin-bottom:25px;">
+            <p class="edit-product-desc-lead">
                 Update the product information below.
             </p>
-
 
             <form method="POST"
                 enctype="multipart/form-data"
                 action="<?php echo URLROOT; ?>/supplier/editProduct/<?php echo $product['id']; ?>">
 
                 <!-- Product Name -->
-                <div style="margin-bottom:18px;">
+                <div class="edit-product-group">
                     <label>Product Name *</label>
-
                     <input
-                        class="input"
+                        class="input w-100"
                         type="text"
                         name="name"
                         required
-                        value="<?php echo htmlspecialchars($product['name']); ?>"
-                        style="width:100%;">
+                        value="<?php echo htmlspecialchars($product['name']); ?>">
                 </div>
 
+                <!-- Variant Details -->
+                <div class="edit-product-row-3">
+                    <div>
+                        <label>Variant *</label>
+                        <input
+                            class="input w-100"
+                            type="text"
+                            name="variant_name"
+                            required
+                            value="<?= htmlspecialchars($product['variant_name'] ?? '') ?>">
+                    </div>
+
+                    <div>
+                        <label>Price (USD $) *</label>
+                        <input
+                            class="input w-100"
+                            type="number"
+                            name="price"
+                            step="0.01"
+                            min="0"
+                            required
+                            value="<?= htmlspecialchars($product['price'] ?? '') ?>">
+                    </div>
+
+                    <div>
+                        <label>Stock Quantity *</label>
+                        <input
+                            class="input w-100"
+                            type="number"
+                            name="stock_quantity"
+                            min="0"
+                            required
+                            value="<?= htmlspecialchars($product['stock_quantity'] ?? '') ?>">
+                    </div>
+                </div>
 
                 <!-- Category -->
-                 <!-- Variant Details -->
-<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:15px; margin-bottom:18px;">
-
-    <div>
-        <label>Variant *</label>
-        <input
-            class="input"
-            type="text"
-            name="variant_name"
-            required
-            value="<?= htmlspecialchars($product['variant_name'] ?? '') ?>"
-            style="width:100%;">
-    </div>
-
-    <div>
-        <label>Price (USD $) *</label>
-        <input
-            class="input"
-            type="number"
-            name="price"
-            step="0.01"
-            min="0"
-            required
-            value="<?= htmlspecialchars($product['price'] ?? '') ?>"
-            style="width:100%;">
-    </div>
-
-    <div>
-        <label>Stock Quantity *</label>
-        <input
-            class="input"
-            type="number"
-            name="stock_quantity"
-            min="0"
-            required
-            value="<?= htmlspecialchars($product['stock_quantity'] ?? '') ?>"
-            style="width:100%;">
-    </div>
-
-</div>
-                <div style="margin-bottom:18px;">
+                <div class="edit-product-group">
                     <label>Category *</label>
-
                     <select
-                        class="input"
+                        class="input w-100"
                         name="category_id"
-                        required
-                        style="width:100%;">
+                        required>
 
                         <option value="">Select Category</option>
-
-                        <option value="1"
-                            <?php echo $product['category_id'] == 1 ? 'selected' : ''; ?>>
-                            Detergents &amp; Cleaning
-                        </option>
-
-                        <option value="2"
-                            <?php echo $product['category_id'] == 2 ? 'selected' : ''; ?>>
-                            Personal Care
-                        </option>
-
-                        <option value="3"
-                            <?php echo $product['category_id'] == 3 ? 'selected' : ''; ?>>
-                            Packaged Food
-                        </option>
-
-                        <option value="4"
-                            <?php echo $product['category_id'] == 4 ? 'selected' : ''; ?>>
-                            Cooking Essentials
-                        </option>
-
-                        <option value="5"
-                            <?php echo $product['category_id'] == 5 ? 'selected' : ''; ?>>
-                            Beverages
-                        </option>
-
-                        <option value="6"
-                            <?php echo $product['category_id'] == 6 ? 'selected' : ''; ?>>
-                            Snacks &amp; Spreads
-                        </option>
-
-                        <option value="7"
-                            <?php echo $product['category_id'] == 7 ? 'selected' : ''; ?>>
-                            Household Consumables
-                        </option>
-
+                        <option value="1" <?php echo $product['category_id'] == 1 ? 'selected' : ''; ?>>Detergents &amp; Cleaning</option>
+                        <option value="2" <?php echo $product['category_id'] == 2 ? 'selected' : ''; ?>>Personal Care</option>
+                        <option value="3" <?php echo $product['category_id'] == 3 ? 'selected' : ''; ?>>Packaged Food</option>
+                        <option value="4" <?php echo $product['category_id'] == 4 ? 'selected' : ''; ?>>Cooking Essentials</option>
+                        <option value="5" <?php echo $product['category_id'] == 5 ? 'selected' : ''; ?>>Beverages</option>
+                        <option value="6" <?php echo $product['category_id'] == 6 ? 'selected' : ''; ?>>Snacks &amp; Spreads</option>
+                        <option value="7" <?php echo $product['category_id'] == 7 ? 'selected' : ''; ?>>Household Consumables</option>
                     </select>
                 </div>
 
-                <div style="margin-bottom:18px;">
-    <label>Product Image</label><br>
+                <div class="edit-product-group">
+                    <label>Product Image</label><br>
 
-    <?php if (!empty($product['image_url'])): ?>
-        <div style="margin:8px 0 10px 0;">
-            <p style="margin:0 0 5px 0; font-size:13px; color:#666;">
-                Current Image
-            </p>
-
-            <img
-                src="<?= URLROOT . '/' . htmlspecialchars($product['image_url']) ?>"
-                alt="<?= htmlspecialchars($product['name']) ?>"
-                style="
-                    width:90px;
-                    height:90px;
-                    object-fit:cover;
-                    border-radius:8px;
-                    border:1px solid #ddd;
-                "
-            >
-        </div>
-    <?php endif; ?>
-
-    <input
-        class="input"
-        type="file"
-        name="product_image"
-        accept="image/jpeg,image/png,image/webp"
-        style="width:100%;"
-    >
-
-    <small style="color:#777;">
-        Leave this empty to keep the current image. JPG, PNG or WEBP.
-    </small>
-</div>
-                <!-- Description -->
-                <div style="margin-bottom:18px;">
-                    <label>Description</label>
-
-                    <textarea
-                        class="input"
-                        name="description"
-                        rows="3"
-                        style="width:100%;"><?php
-                        echo htmlspecialchars($product['description'] ?? '');
-                    ?></textarea>
-                </div>
-
-
-                <!-- Ingredients -->
-                <div style="margin-bottom:18px;">
-                    <label>Ingredients</label>
-
-                    <textarea
-                        class="input"
-                        name="ingredients"
-                        rows="3"
-                        style="width:100%;"><?php
-                        echo htmlspecialchars($product['ingredients'] ?? '');
-                    ?></textarea>
-                </div>
-
-
-                <!-- Nutritional Value -->
-                <div style="margin-bottom:18px;">
-                    <label>Nutritional Value</label>
-
-                    <textarea
-                        class="input"
-                        name="nutritional_value"
-                        rows="3"
-                        style="width:100%;"><?php
-                        echo htmlspecialchars($product['nutritional_value'] ?? '');
-                    ?></textarea>
-                </div>
-
-
-                <!-- Document URL -->
-                <div style="margin-bottom:18px;">
-                    <label>Document URL</label>
+                    <?php if (!empty($product['image_url'])): ?>
+                        <div class="edit-product-img-preview">
+                            <p class="edit-product-img-label">
+                                Current Image
+                            </p>
+                            <img
+                                src="<?= URLROOT . '/' . htmlspecialchars($product['image_url']) ?>"
+                                alt="<?= htmlspecialchars($product['name']) ?>"
+                                class="edit-product-thumb">
+                        </div>
+                    <?php endif; ?>
 
                     <input
-                        class="input"
-                        type="text"
-                        name="document_url"
-                        value="<?php echo htmlspecialchars($product['document_url'] ?? ''); ?>"
-                        style="width:100%;">
+                        class="input w-100"
+                        type="file"
+                        name="product_image"
+                        accept="image/jpeg,image/png,image/webp">
+
+                    <small class="edit-product-hint">
+                        Leave this empty to keep the current image. JPG, PNG or WEBP.
+                    </small>
                 </div>
 
+                <!-- Description -->
+                <div class="edit-product-group">
+                    <label>Description</label>
+                    <textarea
+                        class="input w-100"
+                        name="description"
+                        rows="3"><?php echo htmlspecialchars($product['description'] ?? ''); ?></textarea>
+                </div>
+
+                <!-- Ingredients -->
+                <div class="edit-product-group">
+                    <label>Ingredients</label>
+                    <textarea
+                        class="input w-100"
+                        name="ingredients"
+                        rows="3"><?php echo htmlspecialchars($product['ingredients'] ?? ''); ?></textarea>
+                </div>
+
+                <!-- Nutritional Value -->
+                <div class="edit-product-group">
+                    <label>Nutritional Value</label>
+                    <textarea
+                        class="input w-100"
+                        name="nutritional_value"
+                        rows="3"><?php echo htmlspecialchars($product['nutritional_value'] ?? ''); ?></textarea>
+                </div>
+
+                <!-- Document URL -->
+                <div class="edit-product-group">
+                    <label>Document URL</label>
+                    <input
+                        class="input w-100"
+                        type="text"
+                        name="document_url"
+                        value="<?php echo htmlspecialchars($product['document_url'] ?? ''); ?>">
+                </div>
 
                 <!-- Status -->
-                <div style="margin-bottom:25px;">
+                <div class="edit-product-group mb-25">
                     <label>Status</label>
-
                     <select
-                        class="input"
-                        name="status"
-                        style="width:100%;">
-
-                        <option value="Active"
-                            <?php echo $product['status'] === 'Active' ? 'selected' : ''; ?>>
-                            Active
-                        </option>
-
-                        <option value="Inactive"
-                            <?php echo $product['status'] === 'Inactive' ? 'selected' : ''; ?>>
-                            Inactive
-                        </option>
-
-                        <option value="Discontinued"
-                            <?php echo $product['status'] === 'Discontinued' ? 'selected' : ''; ?>>
-                            Discontinued
-                        </option>
-
-                        <option value="Coming Soon"
-                            <?php echo $product['status'] === 'Coming Soon' ? 'selected' : ''; ?>>
-                            Coming Soon
-                        </option>
-
+                        class="input w-100"
+                        name="status">
+                        <option value="Active" <?php echo $product['status'] === 'Active' ? 'selected' : ''; ?>>Active</option>
+                        <option value="Inactive" <?php echo $product['status'] === 'Inactive' ? 'selected' : ''; ?>>Inactive</option>
+                        <option value="Discontinued" <?php echo $product['status'] === 'Discontinued' ? 'selected' : ''; ?>>Discontinued</option>
+                        <option value="Coming Soon" <?php echo $product['status'] === 'Coming Soon' ? 'selected' : ''; ?>>Coming Soon</option>
                     </select>
                 </div>
 
-
                 <!-- Buttons -->
-                <div style="display:flex; gap:12px;">
-
+                <div class="edit-product-btn-row">
                     <button class="btn" type="submit">
                         Save Changes
                     </button>
-
-                    <a class="btn"
-                       href="<?php echo URLROOT; ?>/supplier/catalog">
+                    <a class="btn" href="<?php echo URLROOT; ?>/supplier/catalog">
                         Cancel
                     </a>
-
                 </div>
 
             </form>
 
         </div>
 
-    
 <?php require APPROOT . '/Views/shared/footer.php'; ?>
-
-
-
-
-
-

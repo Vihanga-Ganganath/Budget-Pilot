@@ -1,4 +1,4 @@
-<?php $spActive = 'overview'; $spActiveLink = false; ?>
+<?php $spActive = 'overview'; $spActiveLink = false; $pageCss = 'supplier/supplier'; ?>
 <?php require APPROOT . '/Views/shared/header.php'; ?>
 
     <h1 class="page-title">Brand Overview</h1>
@@ -43,7 +43,7 @@
     </section>
 
     <!-- Registered Brands -->
-    <div class="card" style="margin-bottom:22px">
+    <div class="card card-mb-22">
       <div class="toolbar">
         <div>
           <h2 class="section-title">Registered Brands</h2>
@@ -51,7 +51,7 @@
         </div>
         <span class="pill green"> ACTIVE</span>
       </div>
-      <div id="brandList" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:18px"></div>
+      <div id="brandList" class="brand-grid"></div>
     </div>
 
     <!-- Stats -->
@@ -106,7 +106,7 @@
     </div>
 
     <!-- Charts & Activities -->
-    <div class="grid2" style="margin-top:22px">
+    <div class="grid2 grid-mt-22">
       <div class="card">
         <div class="toolbar">
           <div>
@@ -115,29 +115,29 @@
           </div>
           <div class="legend">
             <span><i class="dot"></i>Your Brand</span>
-            <span><i class="dot" style="background:#c6c7d3"></i>Market Avg</span>
+            <span><i class="dot dot-gray"></i>Market Avg</span>
           </div>
         </div>
         <div class="chart" id="chart"></div>
       </div>
       <div class="card">
         <h2 class="section-title">Recent Activities</h2>
-        <div style="margin-top:22px">
-          <b style="color:#17752b"> &nbsp; Organic Produce Updated</b>
+        <div class="activity-box">
+          <b class="text-success"> &nbsp; Organic Produce Updated</b>
           <p class="small">12 new SKUs added to 'Seasonal Fruits'</p>
           <hr>
-          <b style="color:var(--navy)"> &nbsp; Freshness Certification</b>
+          <b class="text-navy"> &nbsp; Freshness Certification</b>
           <p class="small">'Dairy Essentials' line received USDA Organic Badge</p>
           <hr>
-          <b style="color:#0b3154"> &nbsp; Inventory Restock</b>
+          <b class="text-dark-navy"> &nbsp; Inventory Restock</b>
           <p class="small">Inventory restocked for 'Premium Whole Milk'</p>
-          <button class="btn" id="activities" style="width:100%;margin-top:10px">View All Activities</button>
+          <button class="btn btn-full-mt10" id="activities">View All Activities</button>
         </div>
       </div>
     </div>
 
     
-    <div style="margin-top:22px">
+    <div class="widget-wrap-mt22">
       <button class="card insight-widget" id="addInsight" type="button"
         onclick="alert('Custom insight widgets will be available in the next development phase.')">
         <span class="insight-plus"></span>
@@ -154,10 +154,3 @@
 <script src="<?php echo URLROOT; ?>/js/supplier/overview.js"></script>
 
 <?php require APPROOT . '/Views/shared/footer.php'; ?>
-
-
-
-
-
-
-

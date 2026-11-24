@@ -147,9 +147,35 @@
     padding: 4px 8px;
 }
 
+.dashboard-note {
+    color: var(--color-text-muted, #64748b);
+    font-size: .85rem;
+    margin-top: 12px;
+}
 
+.dashboard-card table th,
+.dashboard-card table td {
+    padding: 11px;
+    border-bottom: 1px solid #e2e8f0;
+}
 
+.stat-card small {
+    display: block;
+    color: #64748b;
+    margin-top: 5px;
+}
 
+.legend-dot-navy { background: #00106B; }
+.legend-dot-green { background: #10B981; }
+.legend-dot-admin { background: #CBD5E1; }
 
+.admin-table-responsive {
+    overflow-x: auto;
+}
 
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
 

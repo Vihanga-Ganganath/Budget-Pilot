@@ -1,5 +1,5 @@
 
-<?php require APPROOT . '/Views/shared/header.php'; ?>
+<?php $pageCss = 'customer-css/analytics'; require APPROOT . '/Views/shared/header.php'; ?>
 <div class="content analytics-page">
 
       <header class="analytics-head">

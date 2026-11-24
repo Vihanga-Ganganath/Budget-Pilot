@@ -160,8 +160,40 @@
 .top-supplier-trend.up { color: #059669; }
 .top-supplier-trend.down { color: #DC2626; }
 
+.empty-state-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #6B7280;
+}
 
+.empty-state-desc {
+    font-size: .9rem;
+}
 
+.approval-form-flex {
+    flex: 1;
+}
 
+.dashboard-card-flush {
+    padding: 0;
+}
 
+.card-header-padded {
+    padding: 24px 24px 0;
+}
+
+.heading-mb-16 {
+    margin-bottom: 16px;
+}
+
+.empty-table-cell {
+    text-align: center;
+    color: #9CA3AF;
+    padding: 28px;
+}
+
+.supplier-email-sub {
+    font-size: .82rem;
+    color: #9CA3AF;
+}
 

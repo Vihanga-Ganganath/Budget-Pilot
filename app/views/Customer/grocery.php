@@ -1,107 +1,117 @@
-<?php require APPROOT . '/Views/shared/header.php'; ?>
+<?php $pageCss = 'customer-css/grocery'; require APPROOT . '/Views/shared/header.php'; ?>
 <main class="main-content">
 <header class="content-header">
     <div class="header-left">
-        <h2 class="page-title" style="color: var(--color-primary);">Grocery Catalog</h2>
-        <p class="page-subtitle" style="color: var(--color-text);">Comparing prices across verified brands</p>
+        <h2 class="page-title text-navy">Grocery Catalog</h2>
+        <p class="page-subtitle">Comparing prices across verified brands</p>
     </div>
 </header>
 
-<section class="dashboard-card" style="background: #fff; padding: 24px; border-radius: var(--radius-main); border: 1px solid #CBD5E1; margin-bottom: 24px;">
-    <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-        <select style="padding: 10px 14px; border: 1px solid #CBD5E1; border-radius: 8px; color: var(--color-text); min-width: 200px; background: #fff;">
+<?php if (!empty($_SESSION['cart_flash'])): 
+    $flashMsg = $_SESSION['cart_flash'];
+    $flashType = $_SESSION['cart_flash_type'] ?? 'success';
+    unset($_SESSION['cart_flash'], $_SESSION['cart_flash_type']);
+?>
+    <div class="cart-flash <?= $flashType === 'error' ? 'error' : 'success' ?>">
+        <?= htmlspecialchars($flashMsg) ?>
+    </div>
+<?php endif; ?>
+
+<section class="dashboard-card catalog-filters-card">
+    <div class="catalog-filters-row">
+        <select class="catalog-select">
             <option>All Categories</option>
             <option>Fresh Produce</option>
             <option>Dairy</option>
+            <option>Bakery</option>
+            <option>Pantry</option>
         </select>
-        <select style="padding: 10px 14px; border: 1px solid #CBD5E1; border-radius: 8px; color: var(--color-text); min-width: 200px; background: #fff;">
+        <select class="catalog-select">
             <option>Brand: All</option>
         </select>
-        <select style="padding: 10px 14px; border: 1px solid #CBD5E1; border-radius: 8px; color: var(--color-text); min-width: 200px; background: #fff;">
+        <select class="catalog-select">
             <option>Price Range</option>
         </select>
-        <button class="btn" style="background: transparent; border: 1px solid var(--color-primary); color: var(--color-primary); padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;">More Filters</button>
+        <button class="btn catalog-more-btn">More Filters</button>
     </div>
 </section>
 
 <!-- Product Grid -->
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; padding-bottom: 40px;">
-    
-    <!-- Dummy Product Card 1 -->
-    <div style="background: #fff; border: 1px solid #CBD5E1; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;">
-        <div style="height: 180px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #CBD5E1;">
-            <span style="color: var(--color-text-muted); font-size: 14px;">[Product Image]</span>
-        </div>
-        <div style="padding: 16px; display: flex; flex-direction: column; flex-grow: 1;">
-            <span style="color: var(--color-text-muted); font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">GreenHarvest</span>
-            <h3 style="margin: 0 0 12px 0; color: var(--color-primary); font-size: 16px; line-height: 1.4;">Organic Bananas</h3>
-            <div style="margin-top: auto; display: flex; align-items: baseline; gap: 8px; margin-bottom: 16px;">
-                <strong style="color: var(--color-primary); font-size: 20px;">$2.99</strong>
-                <span style="color: var(--color-text-muted); font-size: 13px;">/ bunch</span>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <a href="<?php echo URLROOT; ?>/customer/product_detail" style="text-align: center; color: var(--color-primary); font-size: 13px; font-weight: 600; text-decoration: underline;">View Details</a>
-                <button class="btn" style="background: var(--color-success); border: 1px solid var(--color-success); color: #fff; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer;">Add to Cart</button>
-            </div>
-        </div>
-    </div>
+<div class="catalog-product-grid">
 
-    <!-- Dummy Product Card 2 -->
-    <div style="background: #fff; border: 1px solid #CBD5E1; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;">
-        <div style="height: 180px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #CBD5E1;">
-            <span style="color: var(--color-text-muted); font-size: 14px;">[Product Image]</span>
-        </div>
-        <div style="padding: 16px; display: flex; flex-direction: column; flex-grow: 1;">
-            <span style="color: var(--color-text-muted); font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">DairyPure</span>
-            <h3 style="margin: 0 0 12px 0; color: var(--color-primary); font-size: 16px; line-height: 1.4;">Whole Milk (1 Gallon)</h3>
-            <div style="margin-top: auto; display: flex; align-items: baseline; gap: 8px; margin-bottom: 16px;">
-                <strong style="color: var(--color-primary); font-size: 20px;">$3.49</strong>
-                <span style="color: var(--color-text-muted); font-size: 13px;">/ gal</span>
+    <?php 
+        $products = $data['products'] ?? [];
+        if (!empty($products)): 
+            foreach ($products as $p):
+                $pId = (int)$p['id'];
+                $pName = htmlspecialchars($p['name']);
+                $pBrand = htmlspecialchars($p['brand_name'] ?? 'Verified Brand');
+                $pPrice = number_format((float)$p['price'], 2);
+                $pUnit = htmlspecialchars($p['variant_name'] ?? 'unit');
+                $pImg = !empty($p['image_url']) ? URLROOT . '/' . htmlspecialchars($p['image_url']) : '';
+    ?>
+        <div class="catalog-product-card">
+            <div class="catalog-img-box">
+                <?php if ($pImg): ?>
+                    <img src="<?= $pImg ?>" alt="<?= $pName ?>">
+                <?php else: ?>
+                    <span class="catalog-img-placeholder">[Product Image]</span>
+                <?php endif; ?>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <a href="<?php echo URLROOT; ?>/customer/product_detail" style="text-align: center; color: var(--color-primary); font-size: 13px; font-weight: 600; text-decoration: underline;">View Details</a>
-                <button class="btn" style="background: var(--color-success); border: 1px solid var(--color-success); color: #fff; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer;">Add to Cart</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Dummy Product Card 3 -->
-    <div style="background: #fff; border: 1px solid #CBD5E1; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;">
-        <div style="height: 180px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #CBD5E1;">
-            <span style="color: var(--color-text-muted); font-size: 14px;">[Product Image]</span>
-        </div>
-        <div style="padding: 16px; display: flex; flex-direction: column; flex-grow: 1;">
-            <span style="color: var(--color-text-muted); font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Crunchies</span>
-            <h3 style="margin: 0 0 12px 0; color: var(--color-primary); font-size: 16px; line-height: 1.4;">Oat Cereal</h3>
-            <div style="margin-top: auto; display: flex; align-items: baseline; gap: 8px; margin-bottom: 16px;">
-                <strong style="color: var(--color-primary); font-size: 20px;">$4.15</strong>
-                <span style="color: var(--color-text-muted); font-size: 13px;">/ box</span>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <a href="<?php echo URLROOT; ?>/customer/product_detail" style="text-align: center; color: var(--color-primary); font-size: 13px; font-weight: 600; text-decoration: underline;">View Details</a>
-                <button class="btn" style="background: var(--color-success); border: 1px solid var(--color-success); color: #fff; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer;">Add to Cart</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Dummy Product Card 4 -->
-    <div style="background: #fff; border: 1px solid #CBD5E1; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;">
-        <div style="height: 180px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #CBD5E1;">
-            <span style="color: var(--color-text-muted); font-size: 14px;">[Product Image]</span>
-        </div>
-        <div style="padding: 16px; display: flex; flex-direction: column; flex-grow: 1;">
-            <span style="color: var(--color-text-muted); font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">GoldenHarvest</span>
-            <h3 style="margin: 0 0 12px 0; color: var(--color-primary); font-size: 16px; line-height: 1.4;">Whole Wheat Bread</h3>
-            <div style="margin-top: auto; display: flex; align-items: baseline; gap: 8px; margin-bottom: 16px;">
-                <strong style="color: var(--color-primary); font-size: 20px;">$3.00</strong>
-                <span style="color: var(--color-text-muted); font-size: 13px;">/ loaf</span>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <a href="<?php echo URLROOT; ?>/customer/product_detail" style="text-align: center; color: var(--color-primary); font-size: 13px; font-weight: 600; text-decoration: underline;">View Details</a>
-                <button class="btn" style="background: var(--color-success); border: 1px solid var(--color-success); color: #fff; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer;">Add to Cart</button>
+            <div class="catalog-card-body">
+                <span class="catalog-brand-label"><?= $pBrand ?></span>
+                <h3 class="catalog-product-title"><?= $pName ?></h3>
+                <div class="catalog-price-row">
+                    <strong class="catalog-price-val">$<?= $pPrice ?></strong>
+                    <span class="catalog-unit-label">/ <?= $pUnit ?></span>
+                </div>
+                <div>
+                    <a href="<?= URLROOT; ?>/customer/product_detail/<?= $pId ?>" class="catalog-details-link">View Details</a>
+                    <form method="POST" action="<?= URLROOT; ?>/cart/add" class="m-0">
+                        <input type="hidden" name="product_id" value="<?= $pId ?>">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="btn catalog-add-cart-btn">Add to Cart</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    <?php 
+            endforeach;
+        else: 
+            // Fallback default catalog items with working Add to Cart forms
+            $defaultItems = [
+                ['id' => 1, 'brand' => 'GreenHarvest', 'name' => 'Organic Bananas', 'price' => '2.99', 'unit' => 'bunch'],
+                ['id' => 2, 'brand' => 'DairyPure', 'name' => 'Whole Milk (1 Gallon)', 'price' => '3.49', 'unit' => 'gal'],
+                ['id' => 3, 'brand' => 'Crunchies', 'name' => 'Oat Cereal', 'price' => '4.15', 'unit' => 'box'],
+                ['id' => 4, 'brand' => 'GoldenHarvest', 'name' => 'Whole Wheat Bread', 'price' => '3.00', 'unit' => 'loaf']
+            ];
+            foreach ($defaultItems as $item):
+    ?>
+        <div class="catalog-product-card">
+            <div class="catalog-img-box">
+                <span class="catalog-img-placeholder">[Product Image]</span>
+            </div>
+            <div class="catalog-card-body">
+                <span class="catalog-brand-label"><?= $item['brand'] ?></span>
+                <h3 class="catalog-product-title"><?= $item['name'] ?></h3>
+                <div class="catalog-price-row">
+                    <strong class="catalog-price-val">$<?= $item['price'] ?></strong>
+                    <span class="catalog-unit-label">/ <?= $item['unit'] ?></span>
+                </div>
+                <div>
+                    <a href="<?= URLROOT; ?>/customer/product_detail/<?= $item['id'] ?>" class="catalog-details-link">View Details</a>
+                    <form method="POST" action="<?= URLROOT; ?>/cart/add" class="m-0">
+                        <input type="hidden" name="product_id" value="<?= $item['id'] ?>">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="btn catalog-add-cart-btn">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <?php 
+            endforeach;
+        endif; 
+    ?>
 
 </div>
 

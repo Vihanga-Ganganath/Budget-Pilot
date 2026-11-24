@@ -1,4 +1,130 @@
-/* Users specific styles */
+/* ==========================================================================
+   Budget Pilot — Admin User Management Styles
+   ========================================================================== */
 
+.filter-bar-wrap {
+    flex-wrap: wrap;
+    gap: 10px;
+}
 
+.user-avatar-indigo {
+    background: #E0E7FF;
+    color: #3730A3;
+}
 
+.users-empty-cell {
+    text-align: center;
+    color: var(--text-light);
+    padding: 32px;
+}
+
+.users-pagination-link {
+    padding: 6px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    color: #334155;
+    text-decoration: none;
+    background: white;
+}
+
+.users-page-number {
+    padding: 6px 14px;
+    margin: 0 4px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 600;
+}
+
+.users-page-number.active {
+    background: #1e293b;
+    color: #ffffff;
+}
+
+.users-page-number.inactive {
+    background: #ffffff;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+}
+
+.users-modal-overlay {
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.users-modal-edit {
+    max-width: 440px;
+    width: 95%;
+    margin: auto;
+    padding: 24px;
+}
+
+.users-modal-admin {
+    max-width: 460px;
+    width: 100%;
+    margin: auto;
+}
+
+.users-modal-error {
+    background: #FDF6F6;
+    border: 1px solid #F0BCBC;
+    color: #C2373C;
+    border-radius: 8px;
+    padding: 11px 14px;
+    margin: 0 0 16px;
+    font-size: .88rem;
+    font-weight: 500;
+}
+
+.users-modal-desc {
+    font-size: .88rem;
+    color: #6B7280;
+    margin: 0 0 18px;
+}
+
+.users-req-star {
+    color: #C2373C;
+}
+
+.users-pw-wrapper {
+    position: relative;
+}
+
+.users-pw-input {
+    width: 100%;
+    padding-right: 42px;
+}
+
+.users-pw-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: #9CA3AF;
+    padding: 4px;
+}
+
+.users-help-text {
+    font-size: .8rem;
+    color: #9CA3AF;
+    margin: 4px 0 0;
+}
+
+.users-match-msg {
+    font-size: .8rem;
+    margin: 4px 0 0;
+    display: none;
+}
+
+.users-modal-actions {
+    margin-top: 22px;
+}
+
+.users-manage-note {
+    font-size: .85rem;
+    color: #64748b;
+}

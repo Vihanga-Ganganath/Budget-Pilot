@@ -1,0 +1,267 @@
+/* ==========================================================================
+   Budget Pilot — Product Detail Page Styles
+   ========================================================================== */
+
+.pd-back-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.pd-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+    background: #fff;
+    padding: 32px;
+    border-radius: var(--radius-main);
+    border: 1px solid #CBD5E1;
+}
+
+@media (max-width: 900px) {
+    .pd-hero-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pd-image-box {
+    background: #f8f9fa;
+    border: 1px solid #CBD5E1;
+    border-radius: 12px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.pd-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pd-image-placeholder {
+    color: var(--color-text-muted);
+    font-size: 16px;
+}
+
+.pd-info-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.pd-brand-tag {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.pd-title {
+    margin: 0 0 16px 0;
+    color: var(--color-primary);
+    font-size: 32px;
+    line-height: 1.2;
+}
+
+.pd-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.pd-price-val {
+    color: var(--color-primary);
+    font-size: 36px;
+}
+
+.pd-price-unit {
+    color: var(--color-text-muted);
+    font-size: 16px;
+}
+
+.pd-desc {
+    color: var(--color-text);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.pd-form-action {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.pd-stepper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.pd-stepper-btn {
+    background: #f8f9fa;
+    border: none;
+    padding: 12px 16px;
+    cursor: pointer;
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.pd-stepper-input {
+    width: 60px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid #CBD5E1;
+    border-right: 1px solid #CBD5E1;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.pd-add-cart-btn {
+    background: var(--color-success);
+    border: 1px solid var(--color-success);
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    flex-grow: 1;
+}
+
+.pd-tabs-card {
+    background: #fff;
+    border-radius: var(--radius-main);
+    border: 1px solid #CBD5E1;
+    margin-bottom: 40px;
+}
+
+.pd-tabs-nav {
+    display: flex;
+    border-bottom: 1px solid #CBD5E1;
+    overflow-x: auto;
+}
+
+.pd-tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    font-weight: 600;
+    padding: 16px 24px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.pd-tab-btn.active {
+    border-bottom: 3px solid var(--color-primary);
+    color: var(--color-primary);
+}
+
+.pd-tab-body {
+    padding: 24px;
+    color: var(--color-text);
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.pd-tab-body p {
+    margin: 0 0 16px 0;
+}
+
+.pd-tab-body ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.pd-compare-card {
+    background: #fff;
+    border-radius: var(--radius-main);
+    border: 1px solid #CBD5E1;
+    padding: 24px;
+    margin-bottom: 40px;
+}
+
+.pd-compare-title {
+    margin: 0 0 16px 0;
+    color: var(--color-primary);
+    font-size: 18px;
+}
+
+.pd-compare-subtitle {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.pd-compare-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.pd-compare-table thead tr {
+    border-bottom: 2px solid #CBD5E1;
+    background: #f8f9fa;
+}
+
+.pd-compare-table th {
+    padding: 16px;
+    color: var(--color-primary);
+    font-weight: 600;
+    text-align: left;
+}
+
+.pd-compare-table th.text-right {
+    text-align: right;
+}
+
+.pd-compare-table tbody tr {
+    border-bottom: 1px solid #CBD5E1;
+}
+
+.pd-compare-table tbody tr.is-active-item {
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.pd-compare-table td {
+    padding: 16px;
+    color: var(--color-text);
+}
+
+.pd-compare-table td.cell-primary {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.pd-compare-table td.text-right {
+    text-align: right;
+}
+
+.pd-badge-viewing {
+    color: var(--color-success);
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.pd-btn-view-details {
+    background: transparent;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}

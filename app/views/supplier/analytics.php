@@ -1,4 +1,4 @@
-<?php $spActive = 'analytics'; $spActiveLink = false; ?>
+<?php $spActive = 'analytics'; $spActiveLink = false; $pageCss = 'supplier/supplier'; ?>
 <?php require APPROOT . '/Views/shared/header.php'; ?>
 
     <div class="toolbar">
@@ -34,7 +34,7 @@
     </div>
 
     <!-- Charts -->
-    <div class="grid2" style="margin-top:22px">
+    <div class="grid2 grid-mt-22">
       <div class="card">
         <div class="toolbar">
           <div>
@@ -51,18 +51,18 @@
       <div class="card">
         <h2 class="section-title">Market Share Heatmap</h2>
         <div class="section-sub">Category Distribution</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
-          <div style="background:#19742b;color:#fff;border-radius:8px;padding:18px;height:90px"><b style="font-size:25px">42%</b><br>Fresh Produce</div>
-          <div style="background:#9bf18f;border-radius:8px;padding:18px;height:90px"><b style="font-size:25px">18%</b><br>Dairy &amp; Eggs</div>
-          <div style="background:#062443;color:#fff;border-radius:8px;padding:18px;height:120px"><b style="font-size:25px">25%</b><br>Organic Pantry</div>
-          <div style="background:#dddfe3;border-radius:8px;padding:18px;height:90px"><b style="font-size:25px">10%</b><br>Frozen Goods</div>
-          <div style="background:#c7c5d6;border-radius:8px;padding:18px;height:75px"><b style="font-size:25px">5%</b><br>Other</div>
+        <div class="heatmap-grid">
+          <div class="heatmap-cell-1"><b class="heatmap-val">42%</b><br>Fresh Produce</div>
+          <div class="heatmap-cell-2"><b class="heatmap-val">18%</b><br>Dairy &amp; Eggs</div>
+          <div class="heatmap-cell-3"><b class="heatmap-val">25%</b><br>Organic Pantry</div>
+          <div class="heatmap-cell-4"><b class="heatmap-val">10%</b><br>Frozen Goods</div>
+          <div class="heatmap-cell-5"><b class="heatmap-val">5%</b><br>Other</div>
         </div>
       </div>
     </div>
 
     <!-- Pricing Comparison Table -->
-    <div class="card" style="margin-top:22px">
+    <div class="card card-mt-22">
       <h2 class="section-title">Pricing Strategy Comparison</h2>
       <div class="section-sub">Your Pricing vs. Market Top 3 Competitors</div>
       <table>
@@ -108,9 +108,3 @@
 <script src="<?php echo URLROOT; ?>/js/supplier/analytics.js"></script>
 
 <?php require APPROOT . '/Views/shared/footer.php'; ?>
-
-
-
-
-
-

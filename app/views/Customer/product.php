@@ -1,5 +1,5 @@
 
-<?php require APPROOT . '/Views/shared/header.php'; ?>
+<?php $pageCss = 'customer-css/product'; require APPROOT . '/Views/shared/header.php'; ?>
 
       <nav class="crumbs" aria-label="Breadcrumb">
         <a href="<?php echo URLROOT; ?>/customer/grocery">Catalog</a>

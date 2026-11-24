@@ -1,5 +1,5 @@
 
-<?php require APPROOT . '/Views/shared/header.php'; ?>
+<?php $pageCss = 'customer-css/notifications'; require APPROOT . '/Views/shared/header.php'; ?>
 
       <div class="nothead">
         <div>

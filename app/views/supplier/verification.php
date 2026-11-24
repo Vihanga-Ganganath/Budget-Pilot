@@ -1,4 +1,4 @@
-<?php $spActive = 'verification'; $spActiveLink = false; ?>
+<?php $spActive = 'verification'; $spActiveLink = false; $pageCss = 'supplier/supplier'; ?>
 <?php require APPROOT . '/Views/shared/header.php'; ?>
 
     <h1 class="page-title">Verification Status</h1>
@@ -6,55 +6,55 @@
 
     <!-- Trust Stats -->
     <div class="grid3">
-      <div class="card" style="border-left:4px solid var(--navy)">
+      <div class="card card-border-navy">
         <div class="stat-label">VERIFICATION PROGRESS</div>
-        <div class="stat-value" style="font-size:38px">In Progress</div>
-        <div style="height:7px;background:#e2e4f0;border-radius:8px">
-        <div style="height:100%;width:50%;background:var(--navy);border-radius:8px"></div>
+        <div class="stat-value stat-value-lg">In Progress</div>
+        <div class="v-progress-track">
+          <div class="v-progress-fill"></div>
         </div>
-        <div class="trend" style="margin-top:14px">Supplier verification workflow</div>
+        <div class="trend trend-mt-14">Supplier verification workflow</div>
       </div>
-      <div class="card" style="border-left:4px solid #062443">
+      <div class="card card-border-dark">
         <div class="stat-label">DOCUMENT REVIEW</div>
-        <div class="stat-value" style="font-size:38px">Pending</div>
+        <div class="stat-value stat-value-lg">Pending</div>
         <p class="small">Compliance document integration in progress</p>
       </div>
-      <div class="card" style="border-left:4px solid #18802b">
+      <div class="card card-border-green">
         <div class="stat-label">VERIFICATION STATUS</div>
-        <div class="stat-value" style="font-size:38px;color:#222">Pending</div>
+        <div class="stat-value stat-value-lg-dark">Pending</div>
         <span class="pill blue">AWAITING REVIEW</span>
       </div>
     </div>
 
     <!-- Verification Journey -->
-    <div class="card" style="margin-top:22px">
+    <div class="card card-mt-22">
       <h2 class="section-title">Verification Journey</h2>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;text-align:center;margin-top:30px">
+      <div class="journey-grid">
         <div>
-          <div class="iconbox" style="margin:auto;border-radius:50%;font-weight:800;font-size:18px;background:var(--navy);color:#fff">1</div>
-          <b style="display:block;margin-top:10px;color:var(--navy)">Identity</b>
+          <div class="iconbox iconbox-step-active">1</div>
+          <b class="step-title-navy">Identity</b>
           <span class="small">Brand Entity Validation</span>
         </div>
         <div>
-          <div class="iconbox" style="margin:auto;border-radius:50%;font-weight:800;font-size:18px;background:var(--navy);color:#fff">2</div>
-          <b style="display:block;margin-top:10px;color:var(--navy)">Credentials</b>
+          <div class="iconbox iconbox-step-active">2</div>
+          <b class="step-title-navy">Credentials</b>
           <span class="small">Legal Documentation</span>
         </div>
         <div>
-          <div class="iconbox" style="margin:auto;border-radius:50%;font-weight:800;font-size:18px;border:2px solid var(--navy)">3</div>
-          <b style="display:block;margin-top:10px;color:var(--navy)">Auth Tier</b>
+          <div class="iconbox iconbox-step-current">3</div>
+          <b class="step-title-navy">Auth Tier</b>
           <span class="small">Brand Rights Review</span>
         </div>
         <div>
-          <div class="iconbox" style="margin:auto;border-radius:50%;font-weight:800;font-size:18px;background:#eee;color:#777">4</div>
-          <b style="display:block;margin-top:10px;color:#777">Market Ready</b>
+          <div class="iconbox iconbox-step-pending">4</div>
+          <b class="step-title-gray">Market Ready</b>
           <span class="small">Final Global Approval</span>
         </div>
       </div>
     </div>
 
     <!-- Compliance Documents Table -->
-    <div class="card table-card" style="margin-top:22px">
+    <div class="card table-card card-mt-22">
       <div class="toolbar">
         <h2 class="section-title">Compliance Documents <span class="small">(Prototype)</span></h2>
         <button class="btn" id="updateAll">Update All</button>
@@ -109,9 +109,3 @@
 <script src="<?php echo URLROOT; ?>/js/supplier/verification.js"></script>
 
 <?php require APPROOT . '/Views/shared/footer.php'; ?>
-
-
-
-
-
-
